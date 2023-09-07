@@ -10,8 +10,6 @@ import lombok.*;
 @Table
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class UserCard extends Base {
 
@@ -28,4 +26,23 @@ public class UserCard extends Base {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cardName", referencedColumnName = "name")
     private Card card;
+
+    @Builder
+    public UserCard(long userCardSeq, User user, Card card) {
+        this.userCardSeq = userCardSeq;
+        this.user = user;
+        this.card = card;
+    }
+
+    @Builder
+    public UserCard(BaseBuilder<?, ?> b, long userCardSeq, User user, Card card) {
+        super(b);
+        this.userCardSeq = userCardSeq;
+        this.user = user;
+        this.card = card;
+    }
+
+    public UserCard() {
+
+    }
 }

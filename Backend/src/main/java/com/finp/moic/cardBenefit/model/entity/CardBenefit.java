@@ -11,8 +11,6 @@ import lombok.*;
 })
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class CardBenefit extends Base {
 
@@ -42,4 +40,33 @@ public class CardBenefit extends Base {
 
     @Column(length = 20)
     private String cashBack;
+
+    @Builder
+    public CardBenefit(long cardBenefitSeq, Card card, String category, String shopName, String content, String discount, String point, String cashBack) {
+        this.cardBenefitSeq = cardBenefitSeq;
+        this.card = card;
+        this.category = category;
+        this.shopName = shopName;
+        this.content = content;
+        this.discount = discount;
+        this.point = point;
+        this.cashBack = cashBack;
+    }
+
+    @Builder
+    public CardBenefit(BaseBuilder<?, ?> b, long cardBenefitSeq, Card card, String category, String shopName, String content, String discount, String point, String cashBack) {
+        super(b);
+        this.cardBenefitSeq = cardBenefitSeq;
+        this.card = card;
+        this.category = category;
+        this.shopName = shopName;
+        this.content = content;
+        this.discount = discount;
+        this.point = point;
+        this.cashBack = cashBack;
+    }
+
+    public CardBenefit() {
+
+    }
 }

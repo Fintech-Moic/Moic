@@ -4,11 +4,16 @@ import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class UserRegistResponseDTO {
 
     private String id;
 
+    public UserRegistResponseDTO() {
+
+    }
+    @Builder
+    public UserRegistResponseDTO(String id) {
+        this.id = id;
+    }
 }
