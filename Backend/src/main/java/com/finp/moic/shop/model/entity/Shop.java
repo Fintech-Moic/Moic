@@ -33,6 +33,9 @@ public class Shop extends Base {
     @Column(length = 50, nullable = false)
     private String address;
 
+    @Column(length = 20, nullable = false)
+    private String guName;
+
     @Column(nullable = false)
     private long latitude;
 
