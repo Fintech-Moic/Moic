@@ -11,8 +11,7 @@
 <br>
 
 ### Test Checklist ☑️
-	- [ ] 배경 BGM 재생 확인
-	- [ ] 이미지 로딩 확인
+	- [ ] 
 <br>
 
 ### Screenshot(option)
