@@ -13,8 +13,6 @@ import java.util.List;
 })
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class Card extends Base {
 
@@ -36,4 +34,29 @@ public class Card extends Base {
 
     @OneToMany(mappedBy = "card")
     private List<CardBenefit> cardBenefits;
+
+    @Builder
+    public Card(long cardSeq, String company, String type, String name, String cardImage, List<CardBenefit> cardBenefits) {
+        this.cardSeq = cardSeq;
+        this.company = company;
+        this.type = type;
+        this.name = name;
+        this.cardImage = cardImage;
+        this.cardBenefits = cardBenefits;
+    }
+
+    @Builder
+    public Card(BaseBuilder<?, ?> b, long cardSeq, String company, String type, String name, String cardImage, List<CardBenefit> cardBenefits) {
+        super(b);
+        this.cardSeq = cardSeq;
+        this.company = company;
+        this.type = type;
+        this.name = name;
+        this.cardImage = cardImage;
+        this.cardBenefits = cardBenefits;
+    }
+
+    public Card() {
+
+    }
 }

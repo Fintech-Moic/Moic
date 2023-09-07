@@ -10,8 +10,6 @@ import lombok.*;
 })
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class UserSecurity extends Base {
 
@@ -24,4 +22,23 @@ public class UserSecurity extends Base {
 
     @Column(length = 500, nullable = false)
     private String salt;
+
+    @Builder
+    public UserSecurity(long userSecuritySeq, String userId, String salt) {
+        this.userSecuritySeq = userSecuritySeq;
+        this.userId = userId;
+        this.salt = salt;
+    }
+
+    @Builder
+    public UserSecurity(BaseBuilder<?, ?> b, long userSecuritySeq, String userId, String salt) {
+        super(b);
+        this.userSecuritySeq = userSecuritySeq;
+        this.userId = userId;
+        this.salt = salt;
+    }
+
+    public UserSecurity() {
+
+    }
 }

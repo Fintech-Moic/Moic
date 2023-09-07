@@ -17,8 +17,6 @@ import java.util.List;
 })
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class User extends Base {
 
@@ -52,4 +50,37 @@ public class User extends Base {
 
     @OneToMany(mappedBy = "user")
     private List<UserBookMark> userBookMarks;
+
+    @Builder
+    public User(long userSeq, String id, String password, String name, String email, String gender, int yearOfBirth, List<GiftCard> giftCards, List<UserCard> userCards, List<UserBookMark> userBookMarks) {
+        this.userSeq = userSeq;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.yearOfBirth = yearOfBirth;
+        this.giftCards = giftCards;
+        this.userCards = userCards;
+        this.userBookMarks = userBookMarks;
+    }
+
+    @Builder
+    public User(BaseBuilder<?, ?> b, long userSeq, String id, String password, String name, String email, String gender, int yearOfBirth, List<GiftCard> giftCards, List<UserCard> userCards, List<UserBookMark> userBookMarks) {
+        super(b);
+        this.userSeq = userSeq;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.yearOfBirth = yearOfBirth;
+        this.giftCards = giftCards;
+        this.userCards = userCards;
+        this.userBookMarks = userBookMarks;
+    }
+
+    public User() {
+
+    }
 }

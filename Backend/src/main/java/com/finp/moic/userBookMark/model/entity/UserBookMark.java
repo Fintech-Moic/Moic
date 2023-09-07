@@ -10,8 +10,6 @@ import lombok.*;
 @Table
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class UserBookMark extends Base {
 
@@ -28,4 +26,23 @@ public class UserBookMark extends Base {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="shopSeq", referencedColumnName = "shopSeq")
     private Shop shop;
+
+    @Builder
+    public UserBookMark(long userBookMarkSeq, User user, Shop shop) {
+        this.userBookMarkSeq = userBookMarkSeq;
+        this.user = user;
+        this.shop = shop;
+    }
+
+    @Builder
+    public UserBookMark(BaseBuilder<?, ?> b, long userBookMarkSeq, User user, Shop shop) {
+        super(b);
+        this.userBookMarkSeq = userBookMarkSeq;
+        this.user = user;
+        this.shop = shop;
+    }
+
+    public UserBookMark() {
+
+    }
 }
