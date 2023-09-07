@@ -6,8 +6,6 @@ import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class UserRegistRequestDTO {
 
@@ -35,4 +33,18 @@ public class UserRegistRequestDTO {
     private String gender;
 
     private int yearOfBirth;
+
+    public UserRegistRequestDTO() {
+
+    }
+    @Builder
+    public UserRegistRequestDTO(@NotNull String id, @NotNull String password, @NotNull String passwordCheck, @NotNull String name, @NotNull String email, String gender, int yearOfBirth) {
+        this.id = id;
+        this.password = password;
+        this.passwordCheck = passwordCheck;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.yearOfBirth = yearOfBirth;
+    }
 }

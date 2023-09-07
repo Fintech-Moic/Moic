@@ -11,8 +11,6 @@ import java.util.List;
 @Table
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class Shop extends Base {
 
@@ -43,4 +41,35 @@ public class Shop extends Base {
 
     @OneToMany(mappedBy = "shop")
     private List<UserBookMark> userBookMarks;
+
+    @Builder
+    public Shop(long shopSeq, String mainCategory, String category, String name, String location, String address, long latitude, long longitude, List<UserBookMark> userBookMarks) {
+        this.shopSeq = shopSeq;
+        this.mainCategory = mainCategory;
+        this.category = category;
+        this.name = name;
+        this.location = location;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.userBookMarks = userBookMarks;
+    }
+
+    @Builder
+    public Shop(BaseBuilder<?, ?> b, long shopSeq, String mainCategory, String category, String name, String location, String address, long latitude, long longitude, List<UserBookMark> userBookMarks) {
+        super(b);
+        this.shopSeq = shopSeq;
+        this.mainCategory = mainCategory;
+        this.category = category;
+        this.name = name;
+        this.location = location;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.userBookMarks = userBookMarks;
+    }
+
+    public Shop() {
+
+    }
 }

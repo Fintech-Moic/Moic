@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 })
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class GiftCard extends Base {
 
@@ -45,4 +43,32 @@ public class GiftCard extends Base {
     @Column(nullable = false)
     private LocalDateTime dueDate;
 
+    @Builder
+    public GiftCard(long giftCardSeq, User user, String category, String shopName, String productName, String barcodeImage, long barcodeNumber, LocalDateTime dueDate) {
+        this.giftCardSeq = giftCardSeq;
+        this.user = user;
+        this.category = category;
+        this.shopName = shopName;
+        this.productName = productName;
+        this.barcodeImage = barcodeImage;
+        this.barcodeNumber = barcodeNumber;
+        this.dueDate = dueDate;
+    }
+
+    @Builder
+    public GiftCard(BaseBuilder<?, ?> b, long giftCardSeq, User user, String category, String shopName, String productName, String barcodeImage, long barcodeNumber, LocalDateTime dueDate) {
+        super(b);
+        this.giftCardSeq = giftCardSeq;
+        this.user = user;
+        this.category = category;
+        this.shopName = shopName;
+        this.productName = productName;
+        this.barcodeImage = barcodeImage;
+        this.barcodeNumber = barcodeNumber;
+        this.dueDate = dueDate;
+    }
+
+    public GiftCard() {
+
+    }
 }
