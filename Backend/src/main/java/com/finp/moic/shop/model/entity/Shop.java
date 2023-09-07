@@ -33,6 +33,9 @@ public class Shop extends Base {
     @Column(length = 50, nullable = false)
     private String address;
 
+    @Column(length = 20, nullable = false)
+    private String guName;
+
     @Column(nullable = false)
     private long latitude;
 
@@ -43,20 +46,21 @@ public class Shop extends Base {
     private List<UserBookMark> userBookMarks;
 
     @Builder
-    public Shop(long shopSeq, String mainCategory, String category, String name, String location, String address, long latitude, long longitude, List<UserBookMark> userBookMarks) {
+    public Shop(long shopSeq, String mainCategory, String category, String name, String location, String address, String guName, long latitude, long longitude, List<UserBookMark> userBookMarks) {
         this.shopSeq = shopSeq;
         this.mainCategory = mainCategory;
         this.category = category;
         this.name = name;
         this.location = location;
         this.address = address;
+        this.guName = guName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.userBookMarks = userBookMarks;
     }
 
     @Builder
-    public Shop(BaseBuilder<?, ?> b, long shopSeq, String mainCategory, String category, String name, String location, String address, long latitude, long longitude, List<UserBookMark> userBookMarks) {
+    public Shop(BaseBuilder<?, ?> b, long shopSeq, String mainCategory, String category, String name, String location, String address, String guName, long latitude, long longitude, List<UserBookMark> userBookMarks) {
         super(b);
         this.shopSeq = shopSeq;
         this.mainCategory = mainCategory;
@@ -64,6 +68,7 @@ public class Shop extends Base {
         this.name = name;
         this.location = location;
         this.address = address;
+        this.guName = guName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.userBookMarks = userBookMarks;
