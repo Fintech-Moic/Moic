@@ -25,7 +25,7 @@ public abstract class Base {
     @Column/*(nullable = true)*/
     private LocalDateTime deletedAt;
 
-    @Column(nullable = false)
+    @Column
     @ColumnDefault("0")
     private Boolean isDelete;
 
