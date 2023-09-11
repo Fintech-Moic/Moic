@@ -17,10 +17,13 @@ import java.util.stream.Stream;
 
 @EnableWebSecurity
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     private static final String[] PERMIT_ALL_PATTERNS = new String[] {
             "/h2-console/**",

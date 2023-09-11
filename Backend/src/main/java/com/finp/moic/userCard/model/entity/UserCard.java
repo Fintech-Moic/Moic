@@ -27,6 +27,9 @@ public class UserCard extends Base {
     @JoinColumn(name="cardName", referencedColumnName = "name")
     private Card card;
 
+    public UserCard() {
+    }
+
     @Builder
     public UserCard(long userCardSeq, User user, Card card) {
         this.userCardSeq = userCardSeq;
@@ -35,14 +38,12 @@ public class UserCard extends Base {
     }
 
     @Builder
-    public UserCard(BaseBuilder<?, ?> b, long userCardSeq, User user, Card card) {
+    public UserCard(BaseBuilder<?, ?> b, long userCardSeq, User user,
+                    Card card) {
         super(b);
         this.userCardSeq = userCardSeq;
         this.user = user;
         this.card = card;
     }
 
-    public UserCard() {
-
-    }
 }

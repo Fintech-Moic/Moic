@@ -1,4 +1,4 @@
-package com.finp.moic.util.config;
+package com.finp.moic.util.dbconfig.nosql;
 
 import org.springframework.context.annotation.Configuration;
 

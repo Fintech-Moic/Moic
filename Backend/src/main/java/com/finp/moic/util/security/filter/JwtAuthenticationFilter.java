@@ -20,17 +20,20 @@ import java.util.Optional;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
+
+    public JwtAuthenticationFilter(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
+
     private static final String BEARER_TYPE = "Bearer";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("리퀘 : " + request);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String token = parseBearerToken(request);
-        System.out.println("토큰 : " + token);
         User user = parseUserSpecification(token);
         AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(user,token,null);
         authenticated.setDetails(new WebAuthenticationDetails(request));
@@ -40,13 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String parseBearerToken(HttpServletRequest request) {
-        System.out.println("헤더에 있는 토큰값 : " + request.getHeader(AUTHORIZATION));
         String authorization = request.getHeader(AUTHORIZATION);
         if(authorization!=null && authorization.startsWith(BEARER_TYPE)){
-            System.out.println("이거 반환");
             return authorization.substring(BEARER_TYPE.length());
         }
-        System.out.println("실패ㅠㅠ");
         return authorization;
 //        return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
 //                .filter(token -> token.substring(0, 7).equalsIgnoreCase("Bearer"))
@@ -61,8 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .map(jwtProvider::getSubject)
                 .orElse("anonymous:anonymous")
                 .split(":");
-        System.out.println("필터1: " + split[0]);
-        System.out.println("필터2: " + split[1]);
         return new User(null, split[0], "",split[1]);
 //        List.of(new SimpleGrantedAuthority(split[1]))
     }

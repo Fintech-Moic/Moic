@@ -1,30 +1,76 @@
 package com.finp.moic.user.model.entity;
 
+import com.finp.moic.giftCard.model.entity.GiftCard;
+import com.finp.moic.userBookMark.model.entity.UserBookMark;
+import com.finp.moic.userCard.model.entity.UserCard;
+import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity
-@Table(name="Users")
-@Getter
+import java.util.List;
+
+@Entity(name="user")
+@Table(indexes = {
+        @Index(name = "user_id",columnList = "id"),
+        @Index(name = "user_email",columnList = "email"),
+})
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
+@Getter
+@ToString
+public class User extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userSeq")
-    private Long seq;
+    private long userSeq;
 
-    @Column(name = "id", length = 20, unique = true, nullable = false)
+    @Column(length = 20, unique = true, nullable = false)
     private String id;
 
-    @Column(name = "password", length = 500, unique = false, nullable = false)
-    private String pw;
+    @Column(length = 500, nullable = false)
+    private String password;
 
-    @Column(name = "name", length = 20, unique = false, nullable = false)
+    @Column(length = 20, nullable = false)
     private String name;
+
+    @Column(length = 20, nullable = false)
+    private String email;
+
+    @Column(length = 10)
+    private String gender;
+
+    @Column
+    private int yearOfBirth;
+
+    @OneToMany(mappedBy = "user")
+    private List<GiftCard> giftCards;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserCard> userCards;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserBookMark> userBookMarks;
+
+    public User() {
+    }
+
+    public User(Object o, String s, String s1, String s2) {
+    }
+
+    @Builder
+    public User(long userSeq, String id, String password,
+                String name, String email, String gender,
+                int yearOfBirth, List<GiftCard> giftCards, List<UserCard> userCards,
+                List<UserBookMark> userBookMarks) {
+        this.userSeq = userSeq;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.yearOfBirth = yearOfBirth;
+        this.giftCards = giftCards;
+        this.userCards = userCards;
+        this.userBookMarks = userBookMarks;
+    }
+
 }

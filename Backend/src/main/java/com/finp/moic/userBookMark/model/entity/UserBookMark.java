@@ -34,15 +34,16 @@ public class UserBookMark extends Base {
         this.shop = shop;
     }
 
+    public UserBookMark() {
+    }
+
     @Builder
-    public UserBookMark(BaseBuilder<?, ?> b, long userBookMarkSeq, User user, Shop shop) {
+    public UserBookMark(BaseBuilder<?, ?> b, long userBookMarkSeq, User user,
+                        Shop shop) {
         super(b);
         this.userBookMarkSeq = userBookMarkSeq;
         this.user = user;
         this.shop = shop;
     }
 
-    public UserBookMark() {
-
-    }
 }
