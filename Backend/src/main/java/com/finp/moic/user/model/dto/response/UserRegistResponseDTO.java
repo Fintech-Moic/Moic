@@ -5,10 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserRegistResponseDto {
+@Builder
+public class UserRegistResponseDTO {
     private String id;
+
+    public UserRegistResponseDTO() {
+    }
+
+    @Builder
+    public UserRegistResponseDTO(String id) {
+        this.id = id;
+    }
 }

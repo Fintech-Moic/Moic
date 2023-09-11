@@ -43,8 +43,13 @@ public class GiftCard extends Base {
     @Column(nullable = false)
     private LocalDateTime dueDate;
 
+    public GiftCard() {
+    }
+
     @Builder
-    public GiftCard(long giftCardSeq, User user, String category, String shopName, String productName, String barcodeImage, long barcodeNumber, LocalDateTime dueDate) {
+    public GiftCard(long giftCardSeq, User user, String category,
+                    String shopName, String productName, String barcodeImage,
+                    long barcodeNumber, LocalDateTime dueDate) {
         this.giftCardSeq = giftCardSeq;
         this.user = user;
         this.category = category;
@@ -56,7 +61,9 @@ public class GiftCard extends Base {
     }
 
     @Builder
-    public GiftCard(BaseBuilder<?, ?> b, long giftCardSeq, User user, String category, String shopName, String productName, String barcodeImage, long barcodeNumber, LocalDateTime dueDate) {
+    public GiftCard(BaseBuilder<?, ?> b, long giftCardSeq, User user,
+                    String category, String shopName, String productName,
+                    String barcodeImage, long barcodeNumber, LocalDateTime dueDate) {
         super(b);
         this.giftCardSeq = giftCardSeq;
         this.user = user;
@@ -68,7 +75,4 @@ public class GiftCard extends Base {
         this.dueDate = dueDate;
     }
 
-    public GiftCard() {
-
-    }
 }

@@ -41,8 +41,13 @@ public class CardBenefit extends Base {
     @Column(length = 20)
     private String cashBack;
 
+    public CardBenefit() {
+    }
+
     @Builder
-    public CardBenefit(long cardBenefitSeq, Card card, String category, String shopName, String content, String discount, String point, String cashBack) {
+    public CardBenefit(long cardBenefitSeq, Card card, String category,
+                       String shopName, String content, String discount,
+                       String point, String cashBack) {
         this.cardBenefitSeq = cardBenefitSeq;
         this.card = card;
         this.category = category;
@@ -54,7 +59,9 @@ public class CardBenefit extends Base {
     }
 
     @Builder
-    public CardBenefit(BaseBuilder<?, ?> b, long cardBenefitSeq, Card card, String category, String shopName, String content, String discount, String point, String cashBack) {
+    public CardBenefit(BaseBuilder<?, ?> b, long cardBenefitSeq, Card card,
+                       String category, String shopName, String content,
+                       String discount, String point, String cashBack) {
         super(b);
         this.cardBenefitSeq = cardBenefitSeq;
         this.card = card;
@@ -66,7 +73,4 @@ public class CardBenefit extends Base {
         this.cashBack = cashBack;
     }
 
-    public CardBenefit() {
-
-    }
 }

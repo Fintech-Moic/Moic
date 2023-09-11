@@ -8,14 +8,6 @@ import lombok.*;
 @ToString
 public class CardRegistRequestDTO {
 
-    @Builder
-    public CardRegistRequestDTO(@NotNull String company, @NotNull String type, @NotNull String name, @NotNull String cardImage) {
-        this.company = company;
-        this.type = type;
-        this.name = name;
-        this.cardImage = cardImage;
-    }
-
     @NotNull
     @NotBlank
     private String company;
@@ -31,5 +23,14 @@ public class CardRegistRequestDTO {
     @NotNull
     @NotBlank
     private String cardImage;
+
+    @Builder
+    public CardRegistRequestDTO(@NotNull String company, @NotNull String type, @NotNull String name,
+                                @NotNull String cardImage) {
+        this.company = company;
+        this.type = type;
+        this.name = name;
+        this.cardImage = cardImage;
+    }
 
 }

@@ -1,15 +1,15 @@
 package com.finp.moic.user.model.service;
 
 
-import com.finp.moic.user.model.dto.request.UserLoginRequestDto;
-import com.finp.moic.user.model.dto.request.UserRegistRequestDto;
-import com.finp.moic.user.model.dto.response.UserLoginResponseDto;
-import com.finp.moic.user.model.dto.response.UserRegistResponseDto;
+import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
+import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
+import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
+import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
 
 public interface UserService {
 
-    UserLoginResponseDto login(UserLoginRequestDto dto);
+    UserLoginResponseDTO login(UserLoginRequestDTO dto);
 
-    UserRegistResponseDto regist(UserRegistRequestDto dto);
+    UserRegistResponseDTO regist(UserRegistRequestDTO dto);
 
 }

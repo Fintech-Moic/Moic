@@ -1,4 +1,4 @@
-package com.finp.moic.util.config;
+package com.finp.moic.util.dbconfig.rdb;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -45,8 +45,14 @@ public class Shop extends Base {
     @OneToMany(mappedBy = "shop")
     private List<UserBookMark> userBookMarks;
 
+    public Shop() {
+    }
+
     @Builder
-    public Shop(long shopSeq, String mainCategory, String category, String name, String location, String address, String guName, long latitude, long longitude, List<UserBookMark> userBookMarks) {
+    public Shop(long shopSeq, String mainCategory, String category,
+                String name, String location, String address,
+                String guName, long latitude, long longitude,
+                List<UserBookMark> userBookMarks) {
         this.shopSeq = shopSeq;
         this.mainCategory = mainCategory;
         this.category = category;
@@ -60,7 +66,10 @@ public class Shop extends Base {
     }
 
     @Builder
-    public Shop(BaseBuilder<?, ?> b, long shopSeq, String mainCategory, String category, String name, String location, String address, String guName, long latitude, long longitude, List<UserBookMark> userBookMarks) {
+    public Shop(BaseBuilder<?, ?> b, long shopSeq, String mainCategory,
+                String category, String name, String location,
+                String address, String guName, long latitude,
+                long longitude, List<UserBookMark> userBookMarks) {
         super(b);
         this.shopSeq = shopSeq;
         this.mainCategory = mainCategory;
@@ -74,7 +83,4 @@ public class Shop extends Base {
         this.userBookMarks = userBookMarks;
     }
 
-    public Shop() {
-
-    }
 }
