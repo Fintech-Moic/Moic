@@ -14,18 +14,22 @@ import java.util.Date;
 
 @Service
 public class JwtProvider {
+    private static final long MILLI_SECOND = 1000L;
     private final String secretKey;
     private final long expirationHours;
     private final String issuer;
+    private final int refreshTokenExpire;
 
     public JwtProvider(
             @Value("${issuer}") String issuer,
             @Value("${expiration-hours}") long expirationHours,
-            @Value("${secret-key}") String secretKey
+            @Value("${secret-key}") String secretKey,
+            @Value("3") int refreshTokenExpire
     ) {
         this.issuer=issuer;
         this.expirationHours=expirationHours;
         this.secretKey=secretKey;
+        this.refreshTokenExpire = refreshTokenExpire;
     }
 
     public String createToken(String userSpecification){
@@ -35,6 +39,17 @@ public class JwtProvider {
                 .setIssuer(issuer) //발급자
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now())) //발급시간
                 .setExpiration(Date.from(Instant.now().plus(expirationHours, ChronoUnit.HOURS))) //만료시간
+                .compact();
+    }
+
+    public String createRefreshToken(){
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshTokenExpire * MILLI_SECOND);
+
+        return Jwts.builder()
+                .setIssuer(issuer)
+                .setIssuedAt(now)
+                .setExpiration(validity)
                 .compact();
     }
 

@@ -39,7 +39,9 @@ public class UserServiceImpl implements UserService{
             throw new IdOrPasswordNotMatchedException(ExceptionEnum.USER_INVALID);
         }
 
-        String token = jwtProvider.createToken(String.format("%s:%s", user.getId(),user.getName()));
+        //로그인 하고 토큰에 id 저장
+        String token = jwtProvider.createToken(user.getId());
+        String refreshToken = jwtProvider.createRefreshToken();
 
         return UserLoginResponseDTO.builder()
                 .name(user.getName())
@@ -67,9 +69,6 @@ public class UserServiceImpl implements UserService{
 
         User registUser = userRepository.save(user);
 
-        /**
-        TO DO :: 반환 DTO 확인 필요
-        */
         /*** DTO Builder ***/
         return UserRegistResponseDTO.builder()
                 .id(registUser.getId())

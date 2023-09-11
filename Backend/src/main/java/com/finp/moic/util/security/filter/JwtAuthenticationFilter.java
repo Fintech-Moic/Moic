@@ -1,6 +1,7 @@
 package com.finp.moic.util.security.filter;
 
 import com.finp.moic.user.model.entity.User;
+import com.finp.moic.util.security.dto.UserAuthentication;
 import com.finp.moic.util.security.service.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,8 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String token = parseBearerToken(request);
-        User user = parseUserSpecification(token);
-        AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(user,token,null);
+        UserAuthentication userAuthentication = parseUserSpecification(token);
+        AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(userAuthentication,token,null);
         authenticated.setDetails(new WebAuthenticationDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticated);
 
@@ -54,14 +55,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //                .orElse(null);
     }
 
-    private User parseUserSpecification(String token) {
+    private UserAuthentication parseUserSpecification(String token) {
 
-        String[] split = Optional.ofNullable(token)
+        String id = Optional.ofNullable(token)
                 .filter(subject -> subject.length() >= 1)
                 .map(jwtProvider::getSubject)
-                .orElse("anonymous:anonymous")
-                .split(":");
-        return new User(null, split[0], "",split[1]);
+                .orElse("null");
+        return new UserAuthentication(id);
 //        List.of(new SimpleGrantedAuthority(split[1]))
     }
 
