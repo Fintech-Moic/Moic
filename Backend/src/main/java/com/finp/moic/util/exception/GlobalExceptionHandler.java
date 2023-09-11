@@ -53,4 +53,21 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler({IdOrPasswordNotMatchedException.class})
+    public ResponseEntity<BusinessExceptionEntity> exceptionHandler(HttpServletRequest request, final IdOrPasswordNotMatchedException e){
+        return ResponseEntity.status(e.getError().getStatus())
+                .body(BusinessExceptionEntity.builder()
+                        .errorCode(e.getError().getErrorCode())
+                        . errorMessage(e.getError().getErrorMessage())
+                        .build());
+    }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<BusinessExceptionEntity> exceptionHandler(HttpServletRequest request, final UserNotFoundException e){
+        return ResponseEntity.status(e.getError().getStatus())
+                .body(BusinessExceptionEntity.builder()
+                        .errorCode(e.getError().getErrorCode())
+                        . errorMessage(e.getError().getErrorMessage())
+                        .build());
+    }
 }
