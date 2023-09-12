@@ -7,6 +7,7 @@ import com.finp.moic.card.model.repository.CardRepository;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
