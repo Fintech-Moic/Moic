@@ -2,12 +2,15 @@ package com.finp.moic.card.model.service;
 
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.response.CardRegistResponseDTO;
+import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.repository.CardRepository;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -48,4 +51,11 @@ public class CardServiceImpl implements CardService {
 
         return dto;
     }
+
+    @Override
+    public List<CardResponseDTO> getCardList(String token) {
+        return null;
+    }
+
+
 }

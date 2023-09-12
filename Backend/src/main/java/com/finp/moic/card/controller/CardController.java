@@ -1,8 +1,8 @@
 package com.finp.moic.card.controller;
 
-import com.finp.moic.card.model.dto.response.CardGetListResponseDTO;
 import com.finp.moic.card.model.dto.response.CardRegistResponseDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
+import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.service.CardServiceImpl;
 import com.finp.moic.util.dto.ResponseDTO;
 import jakarta.validation.Valid;
@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/card")
@@ -35,10 +37,16 @@ public class CardController {
                         .build());
     }
 
-//    @GetMapping("/all")
-//    public ResponseEntity<ResponseDTO> getCardList(@RequestHeader("Authorization") String authorization){
-//        String token = authorization.split(" ")[1];
-//
-//        CardGetListResponseDTO response=cardServiceImpl.getCardList(token);
-//    }
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDTO> getCardList(@RequestHeader("Authorization") String authorization){
+        String token = authorization.split(" ")[1];
+
+        List<CardResponseDTO> response=cardServiceImpl.getCardList(token);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("내 카드 목록 조회")
+                .data(response)
+                .build());
+    }
+
 }
