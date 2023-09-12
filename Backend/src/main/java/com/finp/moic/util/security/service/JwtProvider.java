@@ -14,27 +14,45 @@ import java.util.Date;
 
 @Service
 public class JwtProvider {
+    private static final long MILLI_SECOND = 1000L;
     private final String secretKey;
-    private final long expirationHours;
+
+    //30분
+    private final long expirationHours = 60 * 30;
     private final String issuer;
+
+    //30일
+    private final long refreshTokenExpire = 60 * 60 * 24 * 30;
 
     public JwtProvider(
             @Value("${issuer}") String issuer,
-            @Value("${expiration-hours}") long expirationHours,
             @Value("${secret-key}") String secretKey
     ) {
         this.issuer=issuer;
-        this.expirationHours=expirationHours;
         this.secretKey=secretKey;
     }
 
     public String createToken(String userSpecification){
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + expirationHours * MILLI_SECOND);
+
         return Jwts.builder()
                 .signWith((new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName()))) //HS512 알고리즘 이용, secretKey 이용
                 .setSubject(userSpecification) //토큰 이름
                 .setIssuer(issuer) //발급자
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now())) //발급시간
-                .setExpiration(Date.from(Instant.now().plus(expirationHours, ChronoUnit.HOURS))) //만료시간
+                .setIssuedAt(now) //발급시간
+                .setExpiration(validity) //만료시간
+                .compact();
+    }
+
+    public String createRefreshToken(){
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshTokenExpire * MILLI_SECOND);
+
+        return Jwts.builder()
+                .setIssuer(issuer)
+                .setIssuedAt(now)
+                .setExpiration(validity)
                 .compact();
     }
 

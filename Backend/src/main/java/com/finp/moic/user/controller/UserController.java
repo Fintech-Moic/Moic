@@ -5,11 +5,10 @@ import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
 import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
 import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
 import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
-import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.service.UserService;
 import com.finp.moic.util.dto.ResponseDTO;
+import com.finp.moic.util.security.dto.UserAuthentication;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,13 +25,6 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-    /*
-    @GetMapping("/")
-    public String home(){
-        return "hi";
-    }
-    */
 
     @PostMapping(value = "/login", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> login(
@@ -59,13 +51,9 @@ public class UserController {
 
     @GetMapping("/test")
     public String test(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal UserAuthentication userAuthentication
     ){
-        System.out.println("아이디 : " + user.getId());
-        System.out.println("이름 : " + user.getName());
-        System.out.println("비번 : " + user.getPassword());
-        System.out.println("시퀀스 : " + user.getUserSeq());
+        System.out.println("아이디 : " + userAuthentication.getId());
         return "성공";
     }
 }
-
