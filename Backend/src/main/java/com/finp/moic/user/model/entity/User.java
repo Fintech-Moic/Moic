@@ -53,7 +53,8 @@ public class User extends Base {
     public User() {
     }
 
-    public User(Object o, String s, String s1, String s2) {
+    public User(String id) {
+        this.id = id;
     }
 
     @Builder
