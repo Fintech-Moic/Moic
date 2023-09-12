@@ -1,4 +1,4 @@
-package com.finp.moic.util.dbconfig.nosql;
+package com.finp.moic.util.database.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -1,4 +1,4 @@
-package com.finp.moic.userCard.model.entity;
+package com.finp.moic.card.model.entity;
 
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.user.model.entity.User;
@@ -36,14 +36,4 @@ public class UserCard extends Base {
         this.user = user;
         this.card = card;
     }
-
-    @Builder
-    public UserCard(BaseBuilder<?, ?> b, long userCardSeq, User user,
-                    Card card) {
-        super(b);
-        this.userCardSeq = userCardSeq;
-        this.user = user;
-        this.card = card;
-    }
-
 }
