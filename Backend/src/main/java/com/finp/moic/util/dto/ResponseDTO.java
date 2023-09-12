@@ -9,13 +9,13 @@ public class ResponseDTO {
     private Object data;
 
     @Builder
-    public ResponseDTO(String message) {
-        this.message = message;
-    }
-
-    @Builder
     public ResponseDTO(String message, Object data) {
         this.message = message;
         this.data = data;
+    }
+
+    @Builder
+    public ResponseDTO(String message) {
+        this.message = message;
     }
 }
