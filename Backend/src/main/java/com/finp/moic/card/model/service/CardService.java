@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CardService {
 
-    public void registCard(CardRegistRequestDTO cardRegistRequestDTO, String userId);
+    void registCard(CardRegistRequestDTO cardRegistRequestDTO, String userId);
 
-    public List<CardResponseDTO> getCardList(String userId);
+    List<CardResponseDTO> getCardList(String userId);
 
 }

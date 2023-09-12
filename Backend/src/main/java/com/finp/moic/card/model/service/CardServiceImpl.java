@@ -34,23 +34,21 @@ public class CardServiceImpl implements CardService {
     @Override
     public void registCard(CardRegistRequestDTO cardRegistRequestDTO, String userId) {
 
-        System.out.println("CARD REGIST :: SERVICE ARRIVAL");
-
         /*** Validation ***/
-        Card card=cardRepository.findByName(cardRegistRequestDTO.getCardName()).orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
-        User user=userRepository.findById(userId).orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
+        Card card=cardRepository.findByName(cardRegistRequestDTO.getCardName())
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         /*** RDB Access ***/
         UserCard userCard=userCardRepository.save(UserCard.builder()
                 .build());
-        System.out.println("CREATE USERCARD :: "+userCard.getUserCardSeq());
 
         userCard=UserCard.builder()
                 .userCardSeq(userCard.getUserCardSeq())
                 .card(card)
                 .user(user)
                 .build();
-        System.out.println("USERCARD :: "+userCard);
 
         userCardRepository.save(userCard);
     }
@@ -59,6 +57,11 @@ public class CardServiceImpl implements CardService {
     public List<CardResponseDTO> getCardList(String userId) {
 
         /*** Validation ***/
+        List<Card> userCardList=userCardRepository.findAllByUserId(userId);
+        System.out.println("GET CARD LIST :: "+userId);
+        for(Card userCard:userCardList){
+            System.out.println(userCard);
+        }
 
         /*** Entity Builder ***/
 

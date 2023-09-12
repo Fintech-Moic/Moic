@@ -26,13 +26,12 @@ public class CardController {
     }
 
     /**
-     * TO DO :: Delete userId
-     */
+     * TO DO :: userId 삭제 및 주석 해제
+     * **/
     @PostMapping("/regist")
     public ResponseEntity<ResponseDTO> registCard(@RequestBody @Valid CardRegistRequestDTO cardRegistRequestDTO/*,
                                                   @AuthenticationPrincipal UserAuthentication userAuthentication*/){
 
-        System.out.println("CARD REGIST :: SERVER ARRIVAL");
         cardServiceImpl.registCard(cardRegistRequestDTO, /*userAuthentication.getId()*/cardRegistRequestDTO.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
@@ -40,10 +39,13 @@ public class CardController {
                         .build());
     }
 
+    /**
+     * TO DO :: userId 삭제 및 주석 해제
+     * **/
     @GetMapping("/all")
-    public ResponseEntity<ResponseDTO> getCardList(@AuthenticationPrincipal UserAuthentication userAuthentication){
+    public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody String userId){
 
-        List<CardResponseDTO> response=cardServiceImpl.getCardList(userAuthentication.getId());
+        List<CardResponseDTO> response=cardServiceImpl.getCardList(/*userAuthentication.getId()*/userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("전체 카드 목록 조회")

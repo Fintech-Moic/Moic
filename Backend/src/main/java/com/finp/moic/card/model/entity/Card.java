@@ -13,7 +13,6 @@ import java.util.List;
 })
 @Getter
 @Builder
-@ToString
 public class Card extends Base {
 
     @Id
@@ -62,4 +61,14 @@ public class Card extends Base {
         this.cardBenefits = cardBenefits;
     }
 
+    @Override
+    public String toString() {
+        return "Card{" +
+//                "cardSeq=" + cardSeq +
+                ", company='" + company + '\'' +
+                ", type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", cardImage='" + cardImage + '\'' +
+                '}';
+    }
 }

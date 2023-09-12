@@ -10,7 +10,6 @@ import lombok.*;
 @Table
 @Getter
 @Builder
-@ToString
 public class UserCard extends Base {
 
     @Id
@@ -35,5 +34,14 @@ public class UserCard extends Base {
         this.userCardSeq = userCardSeq;
         this.user = user;
         this.card = card;
+    }
+
+    @Override
+    public String toString() {
+        return "UserCard{" +
+                "userCardSeq=" + userCardSeq +
+                ", userId="+user.getId() +
+                ", cardName="+card.getName() +
+                '}';
     }
 }
