@@ -1,11 +1,9 @@
 package com.finp.moic.user.model.dto.request;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
-@Builder
 @ToString
 public class UserRegistRequestDTO {
 
@@ -35,10 +33,12 @@ public class UserRegistRequestDTO {
     private int yearOfBirth;
 
     public UserRegistRequestDTO() {
-
     }
+
     @Builder
-    public UserRegistRequestDTO(@NotNull String id, @NotNull String password, @NotNull String passwordCheck, @NotNull String name, @NotNull String email, String gender, int yearOfBirth) {
+    public UserRegistRequestDTO(@NotNull String id, @NotNull String password, @NotNull String passwordCheck,
+                                @NotNull String name, @NotNull String email, String gender,
+                                int yearOfBirth) {
         this.id = id;
         this.password = password;
         this.passwordCheck = passwordCheck;

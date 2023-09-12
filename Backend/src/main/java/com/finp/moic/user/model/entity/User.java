@@ -1,6 +1,5 @@
 package com.finp.moic.user.model.entity;
 
-
 import com.finp.moic.giftCard.model.entity.GiftCard;
 import com.finp.moic.userBookMark.model.entity.UserBookMark;
 import com.finp.moic.userCard.model.entity.UserCard;
@@ -15,8 +14,8 @@ import java.util.List;
         @Index(name = "user_id",columnList = "id"),
         @Index(name = "user_email",columnList = "email"),
 })
-@Getter
 @Builder
+@Getter
 @ToString
 public class User extends Base {
 
@@ -51,36 +50,27 @@ public class User extends Base {
     @OneToMany(mappedBy = "user")
     private List<UserBookMark> userBookMarks;
 
-    @Builder
-    public User(long userSeq, String id, String password, String name, String email, String gender, int yearOfBirth, List<GiftCard> giftCards, List<UserCard> userCards, List<UserBookMark> userBookMarks) {
-        this.userSeq = userSeq;
-        this.id = id;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.gender = gender;
-        this.yearOfBirth = yearOfBirth;
-        this.giftCards = giftCards;
-        this.userCards = userCards;
-        this.userBookMarks = userBookMarks;
-    }
-
-    @Builder
-    public User(BaseBuilder<?, ?> b, long userSeq, String id, String password, String name, String email, String gender, int yearOfBirth, List<GiftCard> giftCards, List<UserCard> userCards, List<UserBookMark> userBookMarks) {
-        super(b);
-        this.userSeq = userSeq;
-        this.id = id;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.gender = gender;
-        this.yearOfBirth = yearOfBirth;
-        this.giftCards = giftCards;
-        this.userCards = userCards;
-        this.userBookMarks = userBookMarks;
-    }
-
     public User() {
-
     }
+
+    public User(Object o, String s, String s1, String s2) {
+    }
+
+    @Builder
+    public User(long userSeq, String id, String password,
+                String name, String email, String gender,
+                int yearOfBirth, List<GiftCard> giftCards, List<UserCard> userCards,
+                List<UserBookMark> userBookMarks) {
+        this.userSeq = userSeq;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.yearOfBirth = yearOfBirth;
+        this.giftCards = giftCards;
+        this.userCards = userCards;
+        this.userBookMarks = userBookMarks;
+    }
+
 }

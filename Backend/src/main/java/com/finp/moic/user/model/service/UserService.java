@@ -1,15 +1,15 @@
 package com.finp.moic.user.model.service;
 
-import com.finp.moic.user.model.repository.UserRepository;
-import org.springframework.stereotype.Service;
 
-@Service
-public class UserService {
+import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
+import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
+import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
+import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
 
-    private final UserRepository userRepository;
+public interface UserService {
 
+    UserLoginResponseDTO login(UserLoginRequestDTO dto);
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    UserRegistResponseDTO regist(UserRegistRequestDTO dto);
+
 }

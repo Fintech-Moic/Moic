@@ -1,7 +1,6 @@
-package com.finp.moic.util.config;
+package com.finp.moic.util.dbconfig.nosql;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
