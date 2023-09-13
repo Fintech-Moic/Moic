@@ -28,8 +28,10 @@ public enum ExceptionEnum {
     // 6. USER BOOKMARK (UB)
 
     // 7. SERVER ERROR (E)
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "서버 에러가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "서버 에러가 발생했습니다."),
 
+    // 8. SECURITY ERROR(SE)
+    FORGERY_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SE001", "토큰이 조작 되었습니다. 누구야!!!");
 
     private final HttpStatus status;
     private final String errorCode;

@@ -26,7 +26,7 @@ import java.util.HashMap;
         transactionManagerRef = "moicSecurityTransactionManager",
 
         /* 혜지 : 패키지 추가 완료 */
-        basePackages = {"com.finp.moic.util.security.repository",}
+        basePackages = {"com.finp.moic.auth.model.repository",}
 )
 public class MoicSecurityDBConfig {
 
@@ -71,7 +71,7 @@ public class MoicSecurityDBConfig {
         bean.setDataSource(moicSecurityDataSource());
 
         /* 혜지 : 패키지 추가 완료 */
-        bean.setPackagesToScan(new String[]{"com.finp.moic.util.security.entity"});
+        bean.setPackagesToScan(new String[]{"com.finp.moic.auth.model.entity"});
 
         bean.setJpaVendorAdapter(vendorAdapter);
         properties.put("hibernate.hbm2ddl.auto",env.getProperty("spring.moicSecurityDB.hibernate.hbm2ddl.auto"));
