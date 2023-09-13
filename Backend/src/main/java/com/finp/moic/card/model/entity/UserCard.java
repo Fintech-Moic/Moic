@@ -6,24 +6,25 @@ import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name="userCard")
+@Entity(name="user_card")
 @Table
 @Getter
 @Builder
 public class UserCard extends Base {
 
     @Id
+    @Column(name="user_card_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userCardSeq;
 
     /* 혜지 : FK 확인 필요 (양방향) */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="userId", referencedColumnName = "id")
+    @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;
 
     /* 혜지 : FK 확인 필요 (단방향) */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="cardName", referencedColumnName = "name")
+    @JoinColumn(name="card_name", referencedColumnName = "name")
     private Card card;
 
     public UserCard() {
@@ -40,8 +41,8 @@ public class UserCard extends Base {
     public String toString() {
         return "UserCard{" +
                 "userCardSeq=" + userCardSeq +
-                ", userId="+user.getId() +
-                ", cardName="+card.getName() +
+                ", user="+user.getId() +
+                ", card="+card.getName() +
                 '}';
     }
 }

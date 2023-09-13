@@ -1,7 +1,7 @@
 package com.finp.moic.user.model.entity;
 
-import com.finp.moic.giftCard.model.entity.GiftCard;
-import com.finp.moic.userBookMark.model.entity.UserBookMark;
+import com.finp.moic.giftcard.model.entity.Giftcard;
+import com.finp.moic.userBookmark.model.entity.UserBookmark;
 import com.finp.moic.card.model.entity.UserCard;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
@@ -16,39 +16,39 @@ import java.util.List;
 })
 @Builder
 @Getter
-@ToString
 public class User extends Base {
 
     @Id
+    @Column(name="user_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userSeq;
 
-    @Column(length = 20, unique = true, nullable = false)
+    @Column(name="id", length = 20, unique = true, nullable = false)
     private String id;
 
-    @Column(length = 500, nullable = false)
+    @Column(name="password", length = 500, nullable = false)
     private String password;
 
-    @Column(length = 20, nullable = false)
+    @Column(name="name", length = 20, nullable = false)
     private String name;
 
-    @Column(length = 20, nullable = false)
+    @Column(name="email", length = 20, nullable = false)
     private String email;
 
-    @Column(length = 10)
+    @Column(name="gender", length = 10)
     private String gender;
 
-    @Column
+    @Column(name="year_of_birth")
     private int yearOfBirth;
 
     @OneToMany(mappedBy = "user")
-    private List<GiftCard> giftCards;
+    private List<Giftcard> giftCards;
 
     @OneToMany(mappedBy = "user")
     private List<UserCard> userCards;
 
     @OneToMany(mappedBy = "user")
-    private List<UserBookMark> userBookMarks;
+    private List<UserBookmark> userBookMarks;
 
     public User() {
     }
@@ -60,8 +60,8 @@ public class User extends Base {
     @Builder
     public User(long userSeq, String id, String password,
                 String name, String email, String gender,
-                int yearOfBirth, List<GiftCard> giftCards, List<UserCard> userCards,
-                List<UserBookMark> userBookMarks) {
+                int yearOfBirth, List<Giftcard> giftCards, List<UserCard> userCards,
+                List<UserBookmark> userBookMarks) {
         this.userSeq = userSeq;
         this.id = id;
         this.password = password;
@@ -74,4 +74,16 @@ public class User extends Base {
         this.userBookMarks = userBookMarks;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userSeq=" + userSeq +
+                ", id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", gender='" + gender + '\'' +
+                ", yearOfBirth=" + yearOfBirth +
+                '}';
+    }
 }

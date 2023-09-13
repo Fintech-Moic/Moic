@@ -57,11 +57,7 @@ public class CardServiceImpl implements CardService {
     public List<CardResponseDTO> getCardList(String userId) {
 
         /*** Validation ***/
-        List<Card> userCardList=userCardRepository.findAllByUserId(userId);
-        System.out.println("GET CARD LIST :: "+userId);
-        for(Card userCard:userCardList){
-            System.out.println(userCard);
-        }
+        List<UserCard> cardNameList=userCardRepository.findAllCardNameByUserId(userId);
 
         /*** Entity Builder ***/
 

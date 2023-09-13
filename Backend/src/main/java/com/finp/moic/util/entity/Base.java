@@ -18,16 +18,16 @@ import java.time.LocalDateTime;
 /* 혜지 : 인스턴스화할 필요 없으므로 abstract 선언 */
 public abstract class Base {
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name="created_at", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name="updated_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @Column/*(nullable = true)*/
+    @Column(name="deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column
+    @Column(name="is_delete")
     @ColumnDefault("0")
     private Boolean isDelete;
 
