@@ -4,11 +4,10 @@ import com.finp.moic.card.model.entity.UserCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface UserCardRepository extends JpaRepository<UserCard,Long> {
-
-    @Query(value = "SELECT card_name FROM user_card WHERE user_id= :userid", nativeQuery = true)
-    List<UserCard> findAllCardNameByUserId(@Param("userid") String userId);
 }

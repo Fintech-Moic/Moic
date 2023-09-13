@@ -13,6 +13,7 @@ import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,18 +58,49 @@ public class CardServiceImpl implements CardService {
     public List<CardResponseDTO> getCardList(String userId) {
 
         /*** Validation ***/
-        List<UserCard> cardNameList=userCardRepository.findAllCardNameByUserId(userId);
 
         /*** Entity Builder ***/
 
         /*** RDB Access ***/
-
+        List<Card> cardList=cardRepository.findAll();
+        List<Card> cardNameList=cardRepository.findAllCardNameByUserId(userId);
+        for(Card card:cardNameList){
+            System.out.println(card);
+        }
 
         /*** DTO Builder ***/
+        List<CardResponseDTO> dtoList=new ArrayList<>();
+        for(Card card:cardList){
+            boolean mine=false;
+            for(Card userCard:cardNameList){
+                if(userCard.getName().equals(card.getName())){
+                    mine=true;
+                    dtoList.add(
+                            CardResponseDTO.builder()
+                            .company(card.getCompany())
+                            .type(card.getType())
+                            .name(card.getName())
+                            .cardImage(card.getCardImage())
+                            .mine(true)
+                            .build()
+                    );
+                    break;
+                }
+            }
+            if(!mine) {
+                dtoList.add(
+                        CardResponseDTO.builder()
+                                .company(card.getCompany())
+                                .type(card.getType())
+                                .name(card.getName())
+                                .cardImage(card.getCardImage())
+                                .mine(false)
+                                .build()
+                );
+            }
+        }
 
-
-
-        return null;
+        return dtoList;
     }
 
 

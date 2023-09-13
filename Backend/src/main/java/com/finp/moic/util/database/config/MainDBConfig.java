@@ -26,9 +26,9 @@ import java.util.HashMap;
                 "com.finp.moic.user.model.repository",
                 "com.finp.moic.card.model.repository",
                 "com.finp.moic.cardBenefit.model.repository",
-                "com.finp.moic.giftCard.model.repository",
+                "com.finp.moic.giftcard.model.repository",
                 "com.finp.moic.shop.model.repository",
-                "com.finp.moic.userBookMark.model.repository",
+                "com.finp.moic.userBookmark.model.repository",
         }
 )
 public class MainDBConfig {
@@ -65,9 +65,9 @@ public class MainDBConfig {
                 "com.finp.moic.user.model.entity",
                 "com.finp.moic.card.model.entity",
                 "com.finp.moic.cardBenefit.model.entity",
-                "com.finp.moic.giftCard.model.entity",
+                "com.finp.moic.giftcard.model.entity",
                 "com.finp.moic.shop.model.entity",
-                "com.finp.moic.userBookMark.model.entity",
+                "com.finp.moic.userBookmark.model.entity",
         });
 
         bean.setJpaVendorAdapter(vendorAdapter);
