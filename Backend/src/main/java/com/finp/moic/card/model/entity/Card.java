@@ -9,7 +9,8 @@ import java.util.List;
 
 @Entity(name="card")
 @Table(indexes = {
- @Index(name = "card_name", columnList = "name"),
+    @Index(name = "card_name", columnList = "name"),
+    @Index(name = "card_delete", columnList = "deleted_at,is_delete"),
 })
 @Getter
 @Builder

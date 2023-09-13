@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name="user_bookmark")
-@Table
+@Table(indexes = {
+        @Index(name = "userbookmark_delete", columnList = "deleted_at,is_delete"),
+})
 @Getter
 @Builder
 public class UserBookmark extends Base {

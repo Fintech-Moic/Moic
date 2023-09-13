@@ -8,7 +8,9 @@ import lombok.*;
 import java.util.List;
 
 @Entity(name="shop")
-@Table
+@Table(indexes = {
+        @Index(name = "shop_delete", columnList = "deleted_at,is_delete"),
+})
 @Getter
 @Builder
 public class Shop extends Base {

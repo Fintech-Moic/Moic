@@ -8,6 +8,7 @@ import lombok.*;
 @Entity(name="card_benefit")
 @Table(indexes = {
         @Index(name="card_benefit_shop", columnList = "category, shop_name"),
+        @Index(name = "cardbenefit_delete", columnList = "deleted_at,is_delete"),
 })
 @Getter
 @Builder

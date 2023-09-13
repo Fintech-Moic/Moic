@@ -42,6 +42,11 @@ public class CardServiceImpl implements CardService {
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         /*** RDB Access ***/
+
+        /**
+         * TO DO :: SOFT DELETE 확인해, 존재 시 회복하기
+         * */
+
         UserCard userCard=userCardRepository.save(UserCard.builder()
                 .build());
 
@@ -62,6 +67,11 @@ public class CardServiceImpl implements CardService {
         /*** Entity Builder ***/
 
         /*** RDB Access ***/
+
+        /**
+         * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
+         * */
+
         List<Card> cardList=cardRepository.findAll();
         List<Card> cardNameList=cardRepository.findAllCardNameByUserId(userId);
         for(Card card:cardNameList){

@@ -13,6 +13,7 @@ import java.util.List;
 @Table(indexes = {
         @Index(name = "user_id",columnList = "id"),
         @Index(name = "user_email",columnList = "email"),
+        @Index(name = "user_delete", columnList = "deleted_at,is_delete"),
 })
 @Builder
 @Getter

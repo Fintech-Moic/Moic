@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity(name="giftcard")
 @Table(indexes = {
         @Index(name="giftcard_shop",columnList = "category, shop_name"),
+        @Index(name = "giftcard_delete", columnList = "deleted_at,is_delete"),
 })
 @Getter
 @Builder
