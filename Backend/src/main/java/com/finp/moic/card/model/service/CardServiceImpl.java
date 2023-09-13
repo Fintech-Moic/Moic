@@ -78,9 +78,6 @@ public class CardServiceImpl implements CardService {
         /*** RDB Access ***/
         List<Card> cardList=cardRepository.findAll();
         List<Card> cardNameList=cardRepository.findAllCardNameByUserId(userId);
-        for(Card card:cardNameList){
-            System.out.println(card);
-        }
 
         /*** DTO Builder ***/
         List<CardResponseDTO> dtoList=new ArrayList<>();
@@ -123,7 +120,6 @@ public class CardServiceImpl implements CardService {
         /*** Validation ***/
         UserCard userCard=userCardRepository.findByCardName(cardDeleteRequestDTO.getCardName())
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_USER_NOT_FOUND));
-        System.out.println("CARD DELETE :: "+userCard);
 
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
