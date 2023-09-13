@@ -1,5 +1,6 @@
 package com.finp.moic.card.model.service;
 
+import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 
@@ -11,4 +12,5 @@ public interface CardService {
 
     List<CardResponseDTO> getCardList(String userId);
 
+    void deleteCard(CardDeleteRequestDTO cardDeleteRequestDTO, String userId);
 }

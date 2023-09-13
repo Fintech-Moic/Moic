@@ -4,6 +4,9 @@ import com.finp.moic.user.model.entity.User;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
 })
 @Getter
 @Builder
+@SQLDelete(sql = "UPDATE giftcard SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE giftcard_seq = ?")
 public class Giftcard extends Base {
 
     @Id

@@ -4,17 +4,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
 @SuperBuilder
-@NoArgsConstructor
 /* 혜지 : 인스턴스화할 필요 없으므로 abstract 선언 */
 public abstract class Base {
 
@@ -30,6 +31,9 @@ public abstract class Base {
     @Column(name="is_delete")
     @ColumnDefault("0")
     private Boolean isDelete;
+
+    public Base() {
+    }
 
     @PrePersist
     public void prePersist(){

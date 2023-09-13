@@ -1,5 +1,6 @@
 package com.finp.moic.card.model.service;
 
+import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
@@ -17,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * CONFIRM :: Transaction
+ **/
 @Service
 public class CardServiceImpl implements CardService {
 
@@ -41,21 +45,22 @@ public class CardServiceImpl implements CardService {
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
-        /*** RDB Access ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 존재 시 회복하기
          * */
 
+        /*** RDB Access ***/
         UserCard userCard=userCardRepository.save(UserCard.builder()
                 .build());
 
+        /*** Entity Builder ***/
         userCard=UserCard.builder()
                 .userCardSeq(userCard.getUserCardSeq())
                 .card(card)
                 .user(user)
                 .build();
 
+        /*** RDB Access ***/
         userCardRepository.save(userCard);
     }
 
@@ -66,12 +71,11 @@ public class CardServiceImpl implements CardService {
 
         /*** Entity Builder ***/
 
-        /*** RDB Access ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
+        /*** RDB Access ***/
         List<Card> cardList=cardRepository.findAll();
         List<Card> cardNameList=cardRepository.findAllCardNameByUserId(userId);
         for(Card card:cardNameList){
@@ -113,5 +117,19 @@ public class CardServiceImpl implements CardService {
         return dtoList;
     }
 
+    @Override
+    public void deleteCard(CardDeleteRequestDTO cardDeleteRequestDTO, String userId) {
 
+        /*** Validation ***/
+        UserCard userCard=userCardRepository.findByCardName(cardDeleteRequestDTO.getCardName())
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_USER_NOT_FOUND));
+        System.out.println("CARD DELETE :: "+userCard);
+
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
+        /*** RDB Access ***/
+        userCardRepository.delete(userCard);
+
+    }
 }

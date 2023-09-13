@@ -1,15 +1,14 @@
 package com.finp.moic.card.controller;
 
+import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.service.CardServiceImpl;
 import com.finp.moic.util.dto.ResponseDTO;
-import com.finp.moic.util.security.dto.UserAuthentication;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,6 +49,20 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("전체 카드 목록 조회")
                 .data(response)
+                .build());
+    }
+
+    /**
+     * TO DO :: userId 삭제 및 주석 해제
+     * **/
+    @PostMapping("/delete")
+    public ResponseEntity<ResponseDTO> deleteCard(@RequestBody @Valid CardDeleteRequestDTO cardDeleteRequestDTO
+                                                /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+
+        cardServiceImpl.deleteCard(cardDeleteRequestDTO,/*userAuthentication.getId()*/cardDeleteRequestDTO.getUserId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("카드 삭제가 완료되었습니다.")
                 .build());
     }
 

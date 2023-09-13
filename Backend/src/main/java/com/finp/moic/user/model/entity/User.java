@@ -6,6 +6,9 @@ import com.finp.moic.card.model.entity.UserCard;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 
@@ -17,6 +20,7 @@ import java.util.List;
 })
 @Builder
 @Getter
+@SQLDelete(sql = "UPDATE user SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE user_seq = ?")
 public class User extends Base {
 
     @Id

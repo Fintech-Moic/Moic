@@ -5,6 +5,12 @@ import com.finp.moic.user.model.entity.User;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @Entity(name="user_card")
 @Table(indexes = {
@@ -12,6 +18,7 @@ import lombok.*;
 })
 @Getter
 @Builder
+@SQLDelete(sql = "UPDATE user_card SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE user_card_seq = ?")
 public class UserCard extends Base {
 
     @Id
@@ -47,4 +54,5 @@ public class UserCard extends Base {
                 ", card="+card.getName() +
                 '}';
     }
+
 }

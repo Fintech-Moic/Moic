@@ -4,6 +4,9 @@ import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 @Entity(name="card_benefit")
 @Table(indexes = {
@@ -12,6 +15,7 @@ import lombok.*;
 })
 @Getter
 @Builder
+@SQLDelete(sql = "UPDATE card_benefit SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE card_benefit_seq = ?")
 public class CardBenefit extends Base {
 
     @Id

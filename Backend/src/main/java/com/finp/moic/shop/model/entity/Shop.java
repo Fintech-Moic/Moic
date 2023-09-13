@@ -4,6 +4,9 @@ import com.finp.moic.userBookmark.model.entity.UserBookmark;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 
@@ -13,6 +16,7 @@ import java.util.List;
 })
 @Getter
 @Builder
+@SQLDelete(sql = "UPDATE shop SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE shop_seq = ?")
 public class Shop extends Base {
 
     @Id
