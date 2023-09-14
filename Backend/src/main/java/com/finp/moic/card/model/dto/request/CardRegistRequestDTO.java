@@ -17,6 +17,9 @@ public class CardRegistRequestDTO {
 
     private String userId;
 
+    public CardRegistRequestDTO() {
+    }
+
     @Builder
     public CardRegistRequestDTO(@NotNull String cardName, String userId) {
         this.cardName = cardName;
