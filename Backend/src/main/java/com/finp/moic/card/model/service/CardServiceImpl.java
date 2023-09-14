@@ -2,6 +2,7 @@ package com.finp.moic.card.model.service;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
+import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.UserCard;
@@ -40,6 +41,11 @@ public class CardServiceImpl implements CardService {
     public void registCard(CardRegistRequestDTO cardRegistRequestDTO, String userId) {
 
         /*** Validation ***/
+        
+        /**
+         * TO DO :: 중복된 카드에 대해 저장되지 않도록 처리 (삭제에서 예외 발생)
+         * */
+        
         Card card=cardRepository.findByName(cardRegistRequestDTO.getCardName())
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
         User user=userRepository.findById(userId)
@@ -109,6 +115,41 @@ public class CardServiceImpl implements CardService {
                                 .build()
                 );
             }
+        }
+
+        return dtoList;
+    }
+
+    @Override
+    public List<CardMineResponseDTO> getMyCardList(String userId) {
+
+        /*** Validation ***/
+
+        /*** Entity Builder ***/
+
+        /**
+         * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
+         * */
+
+        /*** RDB Access ***/
+
+        /**
+         * TO DO :: 내 카드 목록 조회로 변경
+         * */
+
+        List<Card> cardList=cardRepository.findAll();
+
+        /*** DTO Builder ***/
+        List<CardMineResponseDTO> dtoList=new ArrayList<>();
+        for(int i=0;i<cardList.size();i+=3){
+                dtoList.add(
+                        CardMineResponseDTO.builder()
+                                .company(cardList.get(i).getCompany())
+                                .type(cardList.get(i).getType())
+                                .name(cardList.get(i).getName())
+                                .cardImage(cardList.get(i).getCardImage())
+                                .build()
+                );
         }
 
         return dtoList;
