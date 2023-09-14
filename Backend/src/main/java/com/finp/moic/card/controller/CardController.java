@@ -2,6 +2,7 @@ package com.finp.moic.card.controller;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
+import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.service.CardServiceImpl;
 import com.finp.moic.util.dto.ResponseDTO;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -44,10 +46,28 @@ public class CardController {
     @GetMapping("/all")
     public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody String userId){
 
-        List<CardResponseDTO> response=cardServiceImpl.getCardList(/*userAuthentication.getId()*/userId);
+        List<CardResponseDTO> dto=cardServiceImpl.getCardList(/*userAuthentication.getId()*/userId);
+        HashMap<String, List<CardResponseDTO>> response=new HashMap<>();
+        response.put("cardList",dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("전체 카드 목록 조회")
+                .data(response)
+                .build());
+    }
+
+    /**
+     * TO DO :: userId 삭제 및 주석 해제
+     * **/
+    @GetMapping("/mycards")
+    public ResponseEntity<ResponseDTO> getMyCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody String userId){
+
+        List<CardMineResponseDTO> dto=cardServiceImpl.getMyCardList(/*userAuthentication.getId()*/userId);
+        HashMap<String, List<CardMineResponseDTO>> response=new HashMap<>();
+        response.put("cardList",dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("내 카드 목록 조회")
                 .data(response)
                 .build());
     }
@@ -62,8 +82,8 @@ public class CardController {
         cardServiceImpl.deleteCard(cardDeleteRequestDTO,/*userAuthentication.getId()*/cardDeleteRequestDTO.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("카드 삭제가 완료되었습니다.")
-                .build());
+                        .message("카드 삭제가 완료되었습니다.")
+                        .build());
     }
 
 }
