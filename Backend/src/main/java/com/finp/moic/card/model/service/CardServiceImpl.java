@@ -9,6 +9,7 @@ import com.finp.moic.card.model.repository.CardRepository;
 import com.finp.moic.card.model.repository.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
+import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,15 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
+    private final RedisService redisService;
 
     @Autowired
     public CardServiceImpl(CardRepository cardRepository, UserRepository userRepository,
-                           UserCardRepository userCardRepository) {
+                           UserCardRepository userCardRepository, RedisService redisService) {
         this.cardRepository = cardRepository;
         this.userRepository = userRepository;
         this.userCardRepository = userCardRepository;
+        this.redisService = redisService;
     }
 
     @Override
@@ -62,6 +65,7 @@ public class CardServiceImpl implements CardService {
 
         /*** RDB Access ***/
         userCardRepository.save(userCard);
+
     }
 
     @Override
