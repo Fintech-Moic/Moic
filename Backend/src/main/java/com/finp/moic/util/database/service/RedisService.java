@@ -1,6 +1,7 @@
 package com.finp.moic.util.database.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.entity.UserCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,7 +50,7 @@ public class RedisService {
     /**
      * 내 카드 목록 한번에 저장 (캐싱 데이터 날아가는 상황 발생 시 이용)
      *  **/
-    public void setUserCardList(String userId, List<UserCard> userCardList){
+    public void setUserCardList(String userId, List<CardMineResponseDTO> userCardList){
         redisTemplate1.opsForList().rightPushAll(setUserCardKey(userId),userCardList);
     }
 
