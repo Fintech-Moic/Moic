@@ -43,10 +43,10 @@ public class Shop extends Base {
     private String guName;
 
     @Column(name="latitude", nullable = false)
-    private long latitude;
+    private double latitude;
 
     @Column(name="longitude", nullable = false)
-    private long longitude;
+    private double longitude;
 
     @OneToMany(mappedBy = "shop")
     private List<UserBookmark> userBookMarks;
@@ -54,10 +54,9 @@ public class Shop extends Base {
     public Shop() {
     }
 
-    @Builder
     public Shop(long shopSeq, String mainCategory, String category,
                 String name, String location, String address,
-                String guName, long latitude, long longitude,
+                String guName, double latitude, double longitude,
                 List<UserBookmark> userBookMarks) {
         this.shopSeq = shopSeq;
         this.mainCategory = mainCategory;
