@@ -4,9 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Getter
 @ToString
-public class CardMineResponseDTO {
+public class CardMineResponseDTO implements Serializable {
 
     private String company;
     private String type;

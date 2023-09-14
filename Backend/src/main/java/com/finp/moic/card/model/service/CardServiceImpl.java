@@ -156,6 +156,14 @@ public class CardServiceImpl implements CardService {
                 );
         }
 
+
+        System.out.println("REDIS SAVE ");
+        redisService.setUserCardList(userId,dtoList);
+
+        System.out.println("REDIS RETURN ");
+        List<CardMineResponseDTO> responseDTOS=redisService.getUserCardList(userId);
+
+        System.out.println(responseDTOS.get(0));
         return dtoList;
     }
 
