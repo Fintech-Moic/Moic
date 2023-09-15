@@ -3,16 +3,12 @@ package com.finp.moic.util.security.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-@Service
+@Component
 public class JwtProvider {
     private static final long MILLI_SECOND = 1000L;
     private final String secretKey;

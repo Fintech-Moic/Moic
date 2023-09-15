@@ -1,7 +1,6 @@
 package com.finp.moic.util.security.config;
 
 import com.finp.moic.util.security.filter.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
