@@ -4,32 +4,36 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
 @SuperBuilder
-@NoArgsConstructor
 /* 혜지 : 인스턴스화할 필요 없으므로 abstract 선언 */
 public abstract class Base {
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name="created_at", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name="updated_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @Column/*(nullable = true)*/
+    @Column(name="deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column
+    @Column(name="is_delete")
     @ColumnDefault("0")
     private Boolean isDelete;
+
+    public Base() {
+    }
 
     @PrePersist
     public void prePersist(){

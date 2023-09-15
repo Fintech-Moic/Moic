@@ -1,9 +1,6 @@
-package com.finp.moic.util.dbconfig.rdb;
+package com.finp.moic.util.database.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,13 +26,12 @@ import java.util.HashMap;
                 "com.finp.moic.user.model.repository",
                 "com.finp.moic.card.model.repository",
                 "com.finp.moic.cardBenefit.model.repository",
-                "com.finp.moic.giftCard.model.repository",
+                "com.finp.moic.giftcard.model.repository",
                 "com.finp.moic.shop.model.repository",
-                "com.finp.moic.userCard.model.repository",
-                "com.finp.moic.userBookMark.model.repository",
+                "com.finp.moic.userBookmark.model.repository",
         }
 )
-public class MoicDBConfig {
+public class MainDBConfig {
 
     @Autowired
     private Environment env;
@@ -45,30 +41,13 @@ public class MoicDBConfig {
     public DataSource moicDataSource(){
         DriverManagerDataSource dataSource=new DriverManagerDataSource();
 
-        dataSource.setDriverClassName(env.getProperty("spring.moicDB.datasource.driver-class-name"));
-        dataSource.setUrl(env.getProperty("spring.moicDB.datasource.jdbc-url"));
-        dataSource.setUsername(env.getProperty("spring.moicDB.datasource.username"));
-        dataSource.setPassword(env.getProperty("spring.moicDB.datasource.password"));
+        dataSource.setDriverClassName(env.getProperty("spring.main.datasource.driver-class-name"));
+        dataSource.setUrl(env.getProperty("spring.main.datasource.jdbc-url"));
+        dataSource.setUsername(env.getProperty("spring.main.datasource.username"));
+        dataSource.setPassword(env.getProperty("spring.main.datasource.password"));
 
         return dataSource;
     }
-
-//    @Primary
-//    @Bean
-//    @ConfigurationProperties("spring.moicDB.datasource")
-//    public DataSourceProperties moicDataSourceProperties(){
-//        return new DataSourceProperties();
-//    }
-//
-//    @Primary
-//    @Bean
-//    @ConfigurationProperties("spring.moicDB.datasource.configuration")
-//    public DataSource moicDataSourceConfig(){
-//        return moicDataSourceProperties()
-//                .initializeDataSourceBuilder()
-//                .type(HikariDataSource.class)
-//                .build();
-//    }
 
     @Primary
     @Bean
@@ -86,15 +65,14 @@ public class MoicDBConfig {
                 "com.finp.moic.user.model.entity",
                 "com.finp.moic.card.model.entity",
                 "com.finp.moic.cardBenefit.model.entity",
-                "com.finp.moic.giftCard.model.entity",
+                "com.finp.moic.giftcard.model.entity",
                 "com.finp.moic.shop.model.entity",
-                "com.finp.moic.userCard.model.entity",
-                "com.finp.moic.userBookMark.model.entity",
+                "com.finp.moic.userBookmark.model.entity",
         });
 
         bean.setJpaVendorAdapter(vendorAdapter);
-        properties.put("hibernate.hbm2ddl.auto",env.getProperty("spring.moicDB.hibernate.hbm2ddl.auto"));
-        properties.put("hibernate.dialect", env.getProperty("spring.moicDB.hibernate.dialect"));
+        properties.put("hibernate.hbm2ddl.auto",env.getProperty("spring.main.hibernate.hbm2ddl.auto"));
+        properties.put("hibernate.dialect", env.getProperty("spring.main.hibernate.dialect"));
         bean.setJpaPropertyMap(properties);
         return bean;
     }

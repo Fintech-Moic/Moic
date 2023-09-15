@@ -1,58 +1,63 @@
 package com.finp.moic.shop.model.entity;
 
-import com.finp.moic.userBookMark.model.entity.UserBookMark;
+import com.finp.moic.userBookmark.model.entity.UserBookmark;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 
 @Entity(name="shop")
-@Table
+@Table(indexes = {
+        @Index(name = "shop_delete", columnList = "deleted_at,is_delete"),
+})
 @Getter
 @Builder
-@ToString
+@SQLDelete(sql = "UPDATE shop SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE shop_seq = ?")
 public class Shop extends Base {
 
     @Id
+    @Column(name="shop_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long shopSeq;
 
-    @Column(length = 20, nullable = false)
+    @Column(name="main_category", length = 20, nullable = false)
     private String mainCategory;
 
-    @Column(length = 20, nullable = false)
+    @Column(name="category", length = 20, nullable = false)
     private String category;
 
-    @Column(length = 20, nullable = false)
+    @Column(name="name", length = 20, nullable = false)
     private String name;
 
-    @Column(length = 20, nullable = false)
+    @Column(name="location", length = 20, nullable = false)
     private String location;
 
-    @Column(length = 50, nullable = false)
+    @Column(name="address", length = 50, nullable = false)
     private String address;
 
-    @Column(length = 20, nullable = false)
+    @Column(name="gu_name", length = 20, nullable = false)
     private String guName;
 
-    @Column(nullable = false)
-    private long latitude;
+    @Column(name="latitude", nullable = false)
+    private double latitude;
 
-    @Column(nullable = false)
-    private long longitude;
+    @Column(name="longitude", nullable = false)
+    private double longitude;
 
     @OneToMany(mappedBy = "shop")
-    private List<UserBookMark> userBookMarks;
+    private List<UserBookmark> userBookMarks;
 
     public Shop() {
     }
 
-    @Builder
     public Shop(long shopSeq, String mainCategory, String category,
                 String name, String location, String address,
-                String guName, long latitude, long longitude,
-                List<UserBookMark> userBookMarks) {
+                String guName, double latitude, double longitude,
+                List<UserBookmark> userBookMarks) {
         this.shopSeq = shopSeq;
         this.mainCategory = mainCategory;
         this.category = category;
@@ -65,22 +70,18 @@ public class Shop extends Base {
         this.userBookMarks = userBookMarks;
     }
 
-    @Builder
-    public Shop(BaseBuilder<?, ?> b, long shopSeq, String mainCategory,
-                String category, String name, String location,
-                String address, String guName, long latitude,
-                long longitude, List<UserBookMark> userBookMarks) {
-        super(b);
-        this.shopSeq = shopSeq;
-        this.mainCategory = mainCategory;
-        this.category = category;
-        this.name = name;
-        this.location = location;
-        this.address = address;
-        this.guName = guName;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.userBookMarks = userBookMarks;
+    @Override
+    public String toString() {
+        return "Shop{" +
+                "shopSeq=" + shopSeq +
+                ", mainCategory='" + mainCategory + '\'' +
+                ", category='" + category + '\'' +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", address='" + address + '\'' +
+                ", guName='" + guName + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
-
 }

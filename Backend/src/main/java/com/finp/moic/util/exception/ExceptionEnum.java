@@ -19,7 +19,10 @@ public enum ExceptionEnum {
 
     // 3. CARD (C)
     /* 혜지 : 인덱스 테스트용 Exception */
-    CARD_LOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"C001","카드를 불러오지 못했습니다."),
+    CARD_NOT_FOUND(HttpStatus.NOT_FOUND,"C001","존재하지 않는 카드입니다."),
+    CARD_REGIST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"C002","카드 등록에 실패했습니다."),
+    CARD_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"C003","사용자 카드 조회에 실패했습니다."),
+    CARD_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"C004","카드 삭제에 실패했습니다."),
 
     // 4. GIFT CARD (G)
 

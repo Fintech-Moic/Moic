@@ -1,29 +1,26 @@
 package com.finp.moic.card.model.dto.response;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+
+import java.io.Serializable;
 
 @Getter
 @ToString
-public class CardRegistResponseDTO {
-
-    private Long cardSeq;
+public class CardMineResponseDTO implements Serializable {
 
     private String company;
-
     private String type;
-
     private String name;
-
     private String cardImage;
 
     @Builder
-    public CardRegistResponseDTO(Long cardSeq, String company, String type,
-                                 String name, String cardImage) {
-        this.cardSeq = cardSeq;
+    public CardMineResponseDTO(String company, String type, String name,
+                               String cardImage) {
         this.company = company;
         this.type = type;
         this.name = name;
         this.cardImage = cardImage;
     }
-
 }

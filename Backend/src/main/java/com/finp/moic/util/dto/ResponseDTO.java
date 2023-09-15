@@ -13,4 +13,9 @@ public class ResponseDTO {
         this.message = message;
         this.data = data;
     }
+
+    @Builder
+    public ResponseDTO(String message) {
+        this.message = message;
+    }
 }
