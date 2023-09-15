@@ -10,6 +10,7 @@ import com.finp.moic.card.model.repository.CardRepository;
 import com.finp.moic.card.model.repository.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
+import com.finp.moic.util.database.config.RedisConfig;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
@@ -30,6 +31,7 @@ public class CardServiceImpl implements CardService {
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
     private final RedisService redisService;
+
 
     @Autowired
     public CardServiceImpl(CardRepository cardRepository, UserRepository userRepository,
@@ -140,6 +142,7 @@ public class CardServiceImpl implements CardService {
         /**
          * TO DO :: 내 카드 목록 조회로 변경
          * */
+
 
         List<Card> cardList=cardRepository.findAll();
 
