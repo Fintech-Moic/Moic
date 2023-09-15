@@ -1,4 +1,4 @@
-package com.finp.moic.util.security.entity;
+package com.finp.moic.auth.model.entity;
 
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ public class RefreshToken extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userSecuritySeq;
 
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(length = 20, nullable = false)
     private String userId;
 
     @Column(length = 500, nullable = false)

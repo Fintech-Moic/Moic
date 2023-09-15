@@ -56,4 +56,8 @@ public class UserController {
         System.out.println("아이디 : " + userAuthentication.getId());
         return "성공";
     }
+
+
+
+
 }
