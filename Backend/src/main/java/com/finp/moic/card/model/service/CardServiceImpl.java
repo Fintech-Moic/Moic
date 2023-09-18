@@ -79,10 +79,6 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardResponseDTO> getCardList(String userId) {
 
-        /*** Validation ***/
-
-        /*** Entity Builder ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
