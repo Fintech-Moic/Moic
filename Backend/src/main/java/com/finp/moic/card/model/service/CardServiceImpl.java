@@ -79,24 +79,20 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardResponseDTO> getCardList(String userId) {
 
-        /*** Validation ***/
-
-        /*** Entity Builder ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
         /*** RDB Access ***/
-        List<Card> cardList=cardRepository.findAll();
-        List<Card> cardNameList=cardRepository.findAllCardNameByUserId(userId);
+        List<Card> allCardList=cardRepository.findAll();
+        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardResponseDTO> dtoList=new ArrayList<>();
-        for(Card card:cardList){
+        for(Card card:allCardList){
             boolean mine=false;
-            for(Card userCard:cardNameList){
-                if(userCard.getName().equals(card.getName())){
+            for(Card userCard:myCardList){
+                if(card.getName().equals(userCard.getName())){
                     mine=true;
                     dtoList.add(
                             CardResponseDTO.builder()
@@ -129,31 +125,22 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardMineResponseDTO> getMyCardList(String userId) {
 
-        /*** Validation ***/
-
-        /*** Entity Builder ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
         /*** RDB Access ***/
-
-        /**
-         * TO DO :: 내 카드 목록 조회로 변경
-         * */
-
         List<Card> cardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardMineResponseDTO> dtoList=new ArrayList<>();
-        for(int i=0;i<cardList.size();i++){
+        for(Card card:cardList){
                 dtoList.add(
                         CardMineResponseDTO.builder()
-                                .company(cardList.get(i).getCompany())
-                                .type(cardList.get(i).getType())
-                                .name(cardList.get(i).getName())
-                                .cardImage(cardList.get(i).getCardImage())
+                                .company(card.getCompany())
+                                .type(card.getType())
+                                .name(card.getName())
+                                .cardImage(card.getCardImage())
                                 .build()
                 );
         }
