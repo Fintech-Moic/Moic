@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService{
         }
 
         //로그인 하고 토큰에 id 저장
-        String token = jwtProvider.createToken(user.getId());
+        String token = jwtProvider.createAccessToken(user.getId());
         String refreshToken = jwtProvider.createRefreshToken();
 
         //Redis에 저장

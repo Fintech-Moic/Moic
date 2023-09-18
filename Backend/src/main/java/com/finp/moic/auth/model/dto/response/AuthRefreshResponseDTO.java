@@ -8,15 +8,13 @@ public class AuthRefreshResponseDTO {
 
     private String token;
 
-    private String refreshToken;
 
     public AuthRefreshResponseDTO(){
 
     }
 
     @Builder
-    public AuthRefreshResponseDTO(String token, String refreshToken){
+    public AuthRefreshResponseDTO(String token){
         this.token = token;
-        this.refreshToken = refreshToken;
     }
 }
