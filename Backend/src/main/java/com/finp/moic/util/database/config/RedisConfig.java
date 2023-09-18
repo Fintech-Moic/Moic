@@ -63,8 +63,8 @@ public class RedisConfig {
         LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory();
         connectionFactory.setHostName(REDIS2_HOST); // 두 번째 Redis 서버 호스트
         connectionFactory.setPort(REDIS2_PORT); // 두 번째 Redis 서버 포트
-        connectionFactory.afterPropertiesSet();
         connectionFactory.setPassword(REDIS2_PW);
+        connectionFactory.afterPropertiesSet();
         return connectionFactory;
     }
 
@@ -80,11 +80,11 @@ public class RedisConfig {
     }
 
     @Bean(name = "redisTemplate2")
-    public RedisTemplate<String, Object> redisTemplate2(@Qualifier("redisConnectionFactory2") RedisConnectionFactory redisConnectionFactory2) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, String> redisTemplate2(@Qualifier("redisConnectionFactory2") RedisConnectionFactory redisConnectionFactory2) {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory2);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
         // 다른 설정을 추가할 수 있습니다.
         return redisTemplate;
     }

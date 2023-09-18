@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RedisService {
@@ -23,7 +24,7 @@ public class RedisService {
     /**
      * Refresh Token만 저장되있는 Redis 접근 : redisTemplate2
      */
-    private final RedisTemplate<String, Object> redisTemplate2; //
+    private final RedisTemplate<String, String> redisTemplate2; //
 
     @Autowired
     public RedisService(@Qualifier("redisTemplate1") RedisTemplate redisTemplate1,
@@ -67,6 +68,15 @@ public class RedisService {
 
     /***** [User GiftCards] *****/
 
+    /***** [Refresh Token] *****/
+    public void setRefreshToken(String userId, String refreshToken){
+        redisTemplate2.opsForValue().set(refreshToken,userId);
+        //일단 60초
+        redisTemplate2.expire(refreshToken,60L, TimeUnit.SECONDS);
+    }
 
+    public String getRefreshToken(String refreshToken){
+        return redisTemplate2.opsForValue().get(refreshToken);
+    }
 
 }
