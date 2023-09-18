@@ -15,6 +15,9 @@ public class CardMineResponseDTO implements Serializable {
     private String name;
     private String cardImage;
 
+    public CardMineResponseDTO() {
+    }
+
     @Builder
     public CardMineResponseDTO(String company, String type, String name,
                                String cardImage) {

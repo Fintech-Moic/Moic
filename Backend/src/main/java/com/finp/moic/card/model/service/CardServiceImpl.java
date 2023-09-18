@@ -143,12 +143,11 @@ public class CardServiceImpl implements CardService {
          * TO DO :: 내 카드 목록 조회로 변경
          * */
 
-
-        List<Card> cardList=cardRepository.findAll();
+        List<Card> cardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardMineResponseDTO> dtoList=new ArrayList<>();
-        for(int i=0;i<cardList.size();i+=3){
+        for(int i=0;i<cardList.size();i++){
                 dtoList.add(
                         CardMineResponseDTO.builder()
                                 .company(cardList.get(i).getCompany())
@@ -159,14 +158,6 @@ public class CardServiceImpl implements CardService {
                 );
         }
 
-
-        System.out.println("REDIS SAVE ");
-        redisService.setUserCardList(userId,dtoList);
-
-        System.out.println("REDIS RETURN ");
-        List<CardMineResponseDTO> responseDTOS=redisService.getUserCardList(userId);
-
-        System.out.println(responseDTOS.get(0));
         return dtoList;
     }
 
