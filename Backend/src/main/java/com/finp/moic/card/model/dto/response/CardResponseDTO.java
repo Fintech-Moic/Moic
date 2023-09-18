@@ -14,6 +14,9 @@ public class CardResponseDTO {
     private String cardImage;
     private boolean mine;
 
+    public CardResponseDTO() {
+    }
+
     @Builder
     public CardResponseDTO(String company, String type, String name,
                            String cardImage, boolean mine) {

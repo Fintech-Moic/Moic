@@ -2,6 +2,7 @@ package com.finp.moic.card.controller;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
+import com.finp.moic.card.model.dto.request.TempDTO;
 import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.service.CardServiceImpl;
@@ -44,9 +45,9 @@ public class CardController {
      * TO DO :: userId 삭제 및 주석 해제
      * **/
     @GetMapping("/all")
-    public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody String userId){
+    public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody TempDTO tempDTO){
 
-        List<CardResponseDTO> dto=cardServiceImpl.getCardList(/*userAuthentication.getId()*/userId);
+        List<CardResponseDTO> dto=cardServiceImpl.getCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
         HashMap<String, List<CardResponseDTO>> response=new HashMap<>();
         response.put("cardList",dto);
 
@@ -60,9 +61,9 @@ public class CardController {
      * TO DO :: userId 삭제 및 주석 해제
      * **/
     @GetMapping("/mycards")
-    public ResponseEntity<ResponseDTO> getMyCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody String userId){
+    public ResponseEntity<ResponseDTO> getMyCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody TempDTO tempDTO) {
 
-        List<CardMineResponseDTO> dto=cardServiceImpl.getMyCardList(/*userAuthentication.getId()*/userId);
+        List<CardMineResponseDTO> dto=cardServiceImpl.getMyCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
         HashMap<String, List<CardMineResponseDTO>> response=new HashMap<>();
         response.put("cardList",dto);
 

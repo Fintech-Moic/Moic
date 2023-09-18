@@ -19,6 +19,9 @@ public class CardDeleteRequestDTO {
 
     private String userId;
 
+    public CardDeleteRequestDTO() {
+    }
+
     @Builder
     public CardDeleteRequestDTO(@NotNull String cardName, String userId) {
         this.cardName = cardName;
