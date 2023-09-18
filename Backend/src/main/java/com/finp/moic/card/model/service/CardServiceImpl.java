@@ -13,6 +13,7 @@ import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.database.config.RedisConfig;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
+import com.finp.moic.util.exception.list.AlreadyExistException;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,22 +46,26 @@ public class CardServiceImpl implements CardService {
     @Override
     public void registCard(CardRegistRequestDTO cardRegistRequestDTO, String userId) {
 
-        /*** Validation ***/
-        
         /**
-         * TO DO :: 중복된 카드에 대해 저장되지 않도록 처리 (삭제에서 예외 발생)
+         * TO DO :: SOFT DELETE 확인해, 존재 시 회복하기
          * */
-        
+
+        /*** Validation ***/
         Card card=cardRepository.findByName(cardRegistRequestDTO.getCardName())
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
-        /**
-         * TO DO :: SOFT DELETE 확인해, 존재 시 회복하기
-         * */
+        /* 혜지 : 한 사용자에 대해 중복된 카드 등록 불가 */
+        List<Card> cardList=userCardRepository.findAllByUserId(userId);
+        for(Card userCard:cardList){
+            if(card.getName().equals(userCard.getName())){
+                throw new AlreadyExistException(ExceptionEnum.CARD_REGIST_DUPLICATE);
+            }
+        }
 
         /*** RDB Access ***/
+        /* 혜지 : userCardSeq 등의 기본 데이터셋 저장 */
         UserCard userCard=userCardRepository.save(UserCard.builder()
                 .build());
 
@@ -72,6 +77,7 @@ public class CardServiceImpl implements CardService {
                 .build();
 
         /*** RDB Access ***/
+        /* 혜지 : userCard FK 저장 */
         userCardRepository.save(userCard);
 
     }
@@ -79,24 +85,20 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardResponseDTO> getCardList(String userId) {
 
-        /*** Validation ***/
-
-        /*** Entity Builder ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
         /*** RDB Access ***/
-        List<Card> cardList=cardRepository.findAll();
-        List<Card> cardNameList=cardRepository.findAllCardNameByUserId(userId);
+        List<Card> allCardList=cardRepository.findAll();
+        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardResponseDTO> dtoList=new ArrayList<>();
-        for(Card card:cardList){
+        for(Card card:allCardList){
             boolean mine=false;
-            for(Card userCard:cardNameList){
-                if(userCard.getName().equals(card.getName())){
+            for(Card userCard:myCardList){
+                if(card.getName().equals(userCard.getName())){
                     mine=true;
                     dtoList.add(
                             CardResponseDTO.builder()
@@ -129,31 +131,22 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardMineResponseDTO> getMyCardList(String userId) {
 
-        /*** Validation ***/
-
-        /*** Entity Builder ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
         /*** RDB Access ***/
-
-        /**
-         * TO DO :: 내 카드 목록 조회로 변경
-         * */
-
         List<Card> cardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardMineResponseDTO> dtoList=new ArrayList<>();
-        for(int i=0;i<cardList.size();i++){
+        for(Card card:cardList){
                 dtoList.add(
                         CardMineResponseDTO.builder()
-                                .company(cardList.get(i).getCompany())
-                                .type(cardList.get(i).getType())
-                                .name(cardList.get(i).getName())
-                                .cardImage(cardList.get(i).getCardImage())
+                                .company(card.getCompany())
+                                .type(card.getType())
+                                .name(card.getName())
+                                .cardImage(card.getCardImage())
                                 .build()
                 );
         }
@@ -167,7 +160,6 @@ public class CardServiceImpl implements CardService {
         /*** Validation ***/
         UserCard userCard=userCardRepository.findByCardName(cardDeleteRequestDTO.getCardName())
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_USER_NOT_FOUND));
-
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 

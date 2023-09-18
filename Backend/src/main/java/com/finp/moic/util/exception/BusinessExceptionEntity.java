@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @Builder
 public class BusinessExceptionEntity {
 
-    private HttpStatus status;
     private String errorCode;
     private String errorMessage;
 

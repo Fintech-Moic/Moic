@@ -23,6 +23,7 @@ public enum ExceptionEnum {
     CARD_REGIST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"C002","카드 등록에 실패했습니다."),
     CARD_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"C003","사용자 카드 조회에 실패했습니다."),
     CARD_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"C004","카드 삭제에 실패했습니다."),
+    CARD_REGIST_DUPLICATE(HttpStatus.BAD_REQUEST,"C005","이미 등록된 카드입니다."),
 
     // 4. GIFT CARD (G)
 

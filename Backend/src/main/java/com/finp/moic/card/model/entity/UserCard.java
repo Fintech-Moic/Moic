@@ -1,16 +1,12 @@
 package com.finp.moic.card.model.entity;
 
-import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.time.LocalDateTime;
 
 @Entity(name="user_card")
 @Table(indexes = {
@@ -19,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @SQLDelete(sql = "UPDATE user_card SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE user_card_seq = ?")
+@Where(clause = "is_delete = false")
 public class UserCard extends Base {
 
     @Id
