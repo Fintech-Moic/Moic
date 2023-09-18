@@ -88,15 +88,15 @@ public class CardServiceImpl implements CardService {
          * */
 
         /*** RDB Access ***/
-        List<Card> cardList=cardRepository.findAll();
-        List<Card> cardNameList=cardRepository.findAllCardNameByUserId(userId);
+        List<Card> allCardList=cardRepository.findAll();
+        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardResponseDTO> dtoList=new ArrayList<>();
-        for(Card card:cardList){
+        for(Card card:allCardList){
             boolean mine=false;
-            for(Card userCard:cardNameList){
-                if(userCard.getName().equals(card.getName())){
+            for(Card userCard:myCardList){
+                if(card.getName().equals(userCard.getName())){
                     mine=true;
                     dtoList.add(
                             CardResponseDTO.builder()
