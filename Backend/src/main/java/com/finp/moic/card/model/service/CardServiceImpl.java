@@ -125,31 +125,22 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardMineResponseDTO> getMyCardList(String userId) {
 
-        /*** Validation ***/
-
-        /*** Entity Builder ***/
-
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
         /*** RDB Access ***/
-
-        /**
-         * TO DO :: 내 카드 목록 조회로 변경
-         * */
-
         List<Card> cardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardMineResponseDTO> dtoList=new ArrayList<>();
-        for(int i=0;i<cardList.size();i++){
+        for(Card card:cardList){
                 dtoList.add(
                         CardMineResponseDTO.builder()
-                                .company(cardList.get(i).getCompany())
-                                .type(cardList.get(i).getType())
-                                .name(cardList.get(i).getName())
-                                .cardImage(cardList.get(i).getCardImage())
+                                .company(card.getCompany())
+                                .type(card.getType())
+                                .name(card.getName())
+                                .cardImage(card.getCardImage())
                                 .build()
                 );
         }
