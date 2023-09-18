@@ -1,13 +1,11 @@
 package com.finp.moic.user.model.entity;
 
-import com.finp.moic.giftcard.model.entity.Giftcard;
+import com.finp.moic.giftCard.model.entity.Giftcard;
 import com.finp.moic.userBookmark.model.entity.UserBookmark;
 import com.finp.moic.card.model.entity.UserCard;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
