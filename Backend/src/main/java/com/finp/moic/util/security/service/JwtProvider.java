@@ -28,7 +28,7 @@ public class JwtProvider {
         this.secretKey=secretKey;
     }
 
-    public String createToken(String userSpecification){
+    public String createAccessToken(String userSpecification){
         Date now = new Date();
         Date validity = new Date(now.getTime() + expirationHours * MILLI_SECOND);
 

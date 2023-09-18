@@ -6,5 +6,4 @@ public interface AuthService {
 
     public AuthRefreshResponseDTO refresh(String refreshToken);
 
-    public void saveRefreshToken(String refreshToken, String id);
 }
