@@ -30,7 +30,7 @@ public class UserCard extends Base {
 
     /* 혜지 : FK 확인 필요 (단방향) */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="card_name", referencedColumnName = "name", unique = true)
+    @JoinColumn(name="card_name", referencedColumnName = "name")
     private Card card;
 
     public UserCard() {

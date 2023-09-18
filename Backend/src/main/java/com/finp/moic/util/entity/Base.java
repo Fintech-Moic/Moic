@@ -25,7 +25,7 @@ public abstract class Base {
 
     @Column(name="is_delete")
     @ColumnDefault("0")
-    private Boolean isDelete;
+    private Boolean isDelete=false;
 
     public Base() {
     }
