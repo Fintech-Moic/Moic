@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 @Builder
 @Getter
 @SQLDelete(sql = "UPDATE user SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE user_seq = ?")
+@Where(clause = "is_delete = false")
 public class User extends Base {
 
     @Id

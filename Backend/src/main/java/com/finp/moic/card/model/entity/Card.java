@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Getter
 @Builder
 @SQLDelete(sql = "UPDATE card SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE card_seq = ?")
+@Where(clause = "is_delete = false")
 public class Card extends Base {
 
     @Id

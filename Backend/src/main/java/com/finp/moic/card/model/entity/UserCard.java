@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @SQLDelete(sql = "UPDATE user_card SET is_delete = true, deleted_at = CURRENT_TIMESTAMP WHERE user_card_seq = ?")
+@Where(clause = "is_delete = false")
 public class UserCard extends Base {
 
     @Id
