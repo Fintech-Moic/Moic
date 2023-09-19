@@ -1,15 +1,21 @@
 package com.finp.moic.util.security.service;
 
+import com.finp.moic.util.exception.ExceptionEnum;
+import com.finp.moic.util.exception.list.ExpiredTokenException;
+import com.finp.moic.util.exception.list.InvalidTokenException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 
-@Component
-public class JwtProvider {
+@Service
+public class JwtService {
     private static final long MILLI_SECOND = 1000L;
     private final String secretKey;
 
@@ -20,7 +26,7 @@ public class JwtProvider {
     //30일
     private final long refreshTokenExpire = 60 * 60 * 24 * 30;
 
-    public JwtProvider(
+    public JwtService(
             @Value("${issuer}") String issuer,
             @Value("${secret-key}") String secretKey
     ) {
@@ -59,6 +65,18 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+    public void validateToken(String token){
+        try{
+            Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                    .build()
+                    .parseClaimsJws(token);
+        }catch(ExpiredJwtException e){
+            throw new ExpiredTokenException(ExceptionEnum.EXPIRED_TOKEN_ERROR);
+        }catch(JwtException | IllegalArgumentException e){
+            throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
+        }
     }
 
 }

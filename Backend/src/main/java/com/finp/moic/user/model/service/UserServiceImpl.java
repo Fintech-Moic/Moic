@@ -12,29 +12,25 @@ import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.IdOrPasswordNotMatchedException;
 import com.finp.moic.util.exception.list.UserNotFoundException;
 import com.finp.moic.util.exception.list.ValidationException;
-import com.finp.moic.util.security.service.JwtProvider;
+import com.finp.moic.util.security.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
     private final RedisService redisService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService
                             ,RedisService redisService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtProvider = jwtProvider;
+        this.jwtService = jwtService;
         this.redisService = redisService;
     }
 
@@ -50,15 +46,15 @@ public class UserServiceImpl implements UserService{
         }
 
         //로그인 하고 토큰에 id 저장
-        String token = jwtProvider.createAccessToken(user.getId());
-        String refreshToken = jwtProvider.createRefreshToken();
+        String accessToken = jwtService.createAccessToken(user.getId());
+        String refreshToken = jwtService.createRefreshToken();
 
         //Redis에 저장
         redisService.setRefreshToken(refreshToken, user.getId());
 
         return UserLoginResponseDTO.builder()
                 .name(user.getName())
-                .token(token)
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }

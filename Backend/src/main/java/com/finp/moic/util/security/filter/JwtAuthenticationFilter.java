@@ -1,13 +1,11 @@
 package com.finp.moic.util.security.filter;
 
-import com.finp.moic.user.model.entity.User;
 import com.finp.moic.util.security.dto.UserAuthentication;
-import com.finp.moic.util.security.service.JwtProvider;
+import com.finp.moic.util.security.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +21,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
 
-    public JwtAuthenticationFilter(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
+    public JwtAuthenticationFilter(JwtService jwtService) {
+        this.jwtService = jwtService;
     }
 
     private static final String BEARER_TYPE = "Bearer";
@@ -59,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String id = Optional.ofNullable(token)
                 .filter(subject -> subject.length() >= 1)
-                .map(jwtProvider::getSubject)
+                .map(jwtService::getSubject)
                 .orElse("null");
         return new UserAuthentication(id);
 //        List.of(new SimpleGrantedAuthority(split[1]))
