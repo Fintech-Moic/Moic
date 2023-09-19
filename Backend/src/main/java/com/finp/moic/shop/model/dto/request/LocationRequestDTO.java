@@ -11,6 +11,9 @@ public class LocationRequestDTO {
     private double latitude;
     private double longitude;
 
+    public LocationRequestDTO() {
+    }
+
     @Builder
     public LocationRequestDTO(double latitude, double longitude) {
         this.latitude = latitude;

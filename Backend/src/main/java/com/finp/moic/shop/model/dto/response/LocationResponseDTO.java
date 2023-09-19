@@ -4,26 +4,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @ToString
 public class LocationResponseDTO {
 
-    private String shopName;
-    private String address;
-    private double latitude;
-    private double longitude;
-    private double distance;
+    private List<ShopResponseDTO> shop;
     private double time;
 
+    public LocationResponseDTO() {
+    }
+
     @Builder
-    public LocationResponseDTO(String shopName, String address,
-                               double latitude, double longitude,
-                               double distance, double time) {
-        this.shopName = shopName;
-        this.address = address;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.distance = distance;
+    public LocationResponseDTO(List<ShopResponseDTO> shop, double time) {
+        this.shop = shop;
         this.time = time;
     }
 }
