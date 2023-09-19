@@ -13,14 +13,17 @@ public class LocationResponseDTO {
     private double latitude;
     private double longitude;
     private double distance;
+    private double time;
 
     @Builder
     public LocationResponseDTO(String shopName, String address,
-                               double latitude, double longitude, double distance) {
+                               double latitude, double longitude,
+                               double distance, double time) {
         this.shopName = shopName;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.distance = distance;
+        this.time = time;
     }
 }
