@@ -1,16 +1,12 @@
 package com.finp.moic.shop.service;
 
-import com.finp.moic.shop.model.repository.ShopRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.finp.moic.shop.model.dto.request.LocationRequestDTO;
+import com.finp.moic.shop.model.dto.response.LocationResponseDTO;
 
-@Service
-public class ShopService {
+public interface ShopService {
+    LocationResponseDTO testJavaLocation(LocationRequestDTO locationRequestDTO);
 
-    private ShopRepository shopRepository;
+    LocationResponseDTO testRDBLocation(LocationRequestDTO locationRequestDTO);
 
-    @Autowired
-    public ShopService(ShopRepository shopRepository) {
-        this.shopRepository = shopRepository;
-    }
+    LocationResponseDTO testRedisLocation(LocationRequestDTO locationRequestDTO);
 }
