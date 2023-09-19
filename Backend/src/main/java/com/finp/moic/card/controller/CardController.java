@@ -1,8 +1,10 @@
 package com.finp.moic.card.controller;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
+import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.TempDTO;
+import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
 import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.service.CardServiceImpl;
@@ -85,6 +87,18 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                         .message("카드 삭제가 완료되었습니다.")
                         .build());
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<ResponseDTO> detailCard(@RequestBody @Valid CardDetailRequestDTO cardDetailRequestDTO
+            /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+
+        CardDetailResponseDTO response=cardServiceImpl.detailCard(cardDetailRequestDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("내 카드 상세 조회")
+                .data(response)
+                .build());
     }
 
 }

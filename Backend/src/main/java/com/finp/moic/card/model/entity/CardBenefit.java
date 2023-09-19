@@ -1,4 +1,4 @@
-package com.finp.moic.cardBenefit.model.entity;
+package com.finp.moic.card.model.entity;
 
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.util.entity.Base;
