@@ -36,7 +36,8 @@ public enum ExceptionEnum {
 
     // 8. SECURITY ERROR(SE)
     EXPIRED_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SE001", "토큰이 만료되었습니다."),
-    INVALID_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SE002", "토큰이 유효하지 않습니다.");
+    INVALID_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SE002", "토큰이 유효하지 않습니다."),
+    RE_LOGIN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SE003", "다시 로그인 해주세요.");
 
     private final HttpStatus status;
     private final String errorCode;

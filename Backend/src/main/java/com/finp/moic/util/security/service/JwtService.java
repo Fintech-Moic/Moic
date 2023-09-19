@@ -20,11 +20,13 @@ public class JwtService {
     private final String secretKey;
 
     //30분
-    private final long expirationHours = 60 * 30;
+//    private final long expirationHours = 60 * 30;
+    private final long expirationHours = 30;
     private final String issuer;
 
     //30일
-    private final long refreshTokenExpire = 60 * 60 * 24 * 30;
+//    private final long refreshTokenExpire = 60 * 60 * 24 * 30;
+    private final long refreshTokenExpire = 60;
 
     public JwtService(
             @Value("${issuer}") String issuer,
@@ -40,7 +42,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .signWith((new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName()))) //HS512 알고리즘 이용, secretKey 이용
-                .setSubject(userSpecification) //토큰 이름
+                .setSubject(userSpecification) //토큰에 담을 정보
                 .setIssuer(issuer) //발급자
                 .setIssuedAt(now) //발급시간
                 .setExpiration(validity) //만료시간
@@ -52,6 +54,7 @@ public class JwtService {
         Date validity = new Date(now.getTime() + refreshTokenExpire * MILLI_SECOND);
 
         return Jwts.builder()
+                .signWith((new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName()))) //HS512 알고리즘 이용, secretKey 이용
                 .setIssuer(issuer)
                 .setIssuedAt(now)
                 .setExpiration(validity)

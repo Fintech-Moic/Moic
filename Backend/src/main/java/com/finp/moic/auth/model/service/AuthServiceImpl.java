@@ -4,8 +4,16 @@ import com.finp.moic.auth.model.dto.response.AuthRefreshResponseDTO;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.ExpiredTokenException;
+import com.finp.moic.util.exception.list.InvalidTokenException;
+import com.finp.moic.util.exception.list.ReLoginException;
 import com.finp.moic.util.security.service.JwtService;
+import io.jsonwebtoken.JwtException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 @Service
 public class AuthServiceImpl implements AuthService{
@@ -21,8 +29,6 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public AuthRefreshResponseDTO refresh(String accessToken, String refreshToken) {
 
-
-
         /**
          * 여기 로직 작성해야 함
          * 1. 진짜 만료된 access Token인지 확인
@@ -34,18 +40,54 @@ public class AuthServiceImpl implements AuthService{
          * 위 과정이 모두 완료 되면 access 발급
          * */
 
-        String dbRefreshToken = redisService.getRefreshToken(refreshToken);
+        String newAccessToken = null;
+        String userId = getUserId(accessToken);
 
-        // 만약 Redis에서 토큰이 조회되지 않는다면
-        if(dbRefreshToken==null){
-            throw new ExpiredTokenException(ExceptionEnum.EXPIRED_TOKEN_ERROR);
+        System.out.println("현재 사용자 ID : " + userId);
+
+        try{
+            //만약 AccessToken이 만료되었다면
+            jwtService.validateToken(accessToken);
+        }catch (ExpiredTokenException e){
+            try{
+                jwtService.validateToken(refreshToken);
+            }catch (ExpiredTokenException e2){
+                //재로그인 요청
+                throw new ReLoginException(ExceptionEnum.RE_LOGIN_ERROR);
+            }
+            //redis 검증
+            String dbRefreshToken = redisService.getRefreshToken(refreshToken);
+
+            if(dbRefreshToken==null){
+                throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
+            }
+            //access 재발급
+
+            // 여기 해야함!!!!!!!!!!!!!!!!!!!!!!!!
+            newAccessToken = jwtService.createAccessToken("userId");
+
         }
 
 
-        String newAccessToken = jwtService.createAccessToken(dbRefreshToken);
+
 
         return AuthRefreshResponseDTO.builder()
                 .token(newAccessToken)
                 .build();
+    }
+
+    public String getUserId(String expiredAccessToken) {
+        JSONParser jsonParser = new JSONParser();
+        String[] split = expiredAccessToken.split("\\.");
+        byte[] payLoad = split[1].getBytes();
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] userId = decoder.decode(payLoad);
+        JSONObject jsonObject = null;
+        try{
+            jsonObject = (JSONObject) jsonParser.parse(new String(userId));
+        }catch (ParseException e){
+            throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
+        }
+        return (String) jsonObject.get("sub");
     }
 }
