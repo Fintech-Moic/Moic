@@ -72,7 +72,7 @@ public class RedisService {
     /***** [User GiftCards] *****/
 
     /***** [Refresh Token] *****/
-    public void setRefreshToken(String userId, String refreshToken){
+    public void setRefreshToken(String refreshToken, String userId){
         securityRedis.opsForValue().set(refreshToken,userId);
         //일단 60초
         securityRedis.expire(refreshToken,60L, TimeUnit.SECONDS);

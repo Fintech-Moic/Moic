@@ -23,9 +23,11 @@ public class AuthController {
             @RequestBody AuthRefreshRequestDTO dto,
             @CookieValue(name = "refreshToken") String refreshToken
     ){
+
         AuthRefreshResponseDTO response = authService.refresh(dto.getAccessToken(), refreshToken);
+
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("Refresh 성공")
+                .message("Refresh")
                 .data(response)
                 .build());
     }

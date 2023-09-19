@@ -30,7 +30,6 @@ public class AuthServiceImpl implements AuthService{
     public AuthRefreshResponseDTO refresh(String accessToken, String refreshToken) {
 
         /**
-         * 여기 로직 작성해야 함
          * 1. 진짜 만료된 access Token인지 확인
          *      => 아니면 refresh 요청을 무한정으로 보낼 수 있기 때문
          * 2. refresh도 만료된건지 확인
@@ -43,11 +42,15 @@ public class AuthServiceImpl implements AuthService{
         String newAccessToken = null;
         String userId = getUserId(accessToken);
 
-        System.out.println("현재 사용자 ID : " + userId);
 
         try{
             //만약 AccessToken이 만료되었다면
             jwtService.validateToken(accessToken);
+
+            //아직 만료되지 않은 Access가 왔다면 그대로 반환
+            return AuthRefreshResponseDTO.builder()
+                    .token(accessToken)
+                    .build();
         }catch (ExpiredTokenException e){
             try{
                 jwtService.validateToken(refreshToken);
@@ -62,9 +65,7 @@ public class AuthServiceImpl implements AuthService{
                 throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
             }
             //access 재발급
-
-            // 여기 해야함!!!!!!!!!!!!!!!!!!!!!!!!
-            newAccessToken = jwtService.createAccessToken("userId");
+            newAccessToken = jwtService.createAccessToken(userId);
 
         }
 
