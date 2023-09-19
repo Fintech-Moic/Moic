@@ -1,16 +1,20 @@
 package com.finp.moic.card.model.service;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
+import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
+import com.finp.moic.card.model.dto.response.CardBenefitResponseDTO;
+import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
 import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
+import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.UserCard;
+import com.finp.moic.card.model.repository.CardBenefitRepository;
 import com.finp.moic.card.model.repository.CardRepository;
 import com.finp.moic.card.model.repository.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
-import com.finp.moic.util.database.config.RedisConfig;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.AlreadyExistException;
@@ -20,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * CONFIRM :: Transaction
@@ -29,15 +32,17 @@ import java.util.Optional;
 public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
+    private final CardBenefitRepository cardBenefitRepository;
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
     private final RedisService redisService;
 
-
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository, UserRepository userRepository,
-                           UserCardRepository userCardRepository, RedisService redisService) {
+    public CardServiceImpl(CardRepository cardRepository, CardBenefitRepository cardBenefitRepository,
+                           UserRepository userRepository, UserCardRepository userCardRepository,
+                           RedisService redisService) {
         this.cardRepository = cardRepository;
+        this.cardBenefitRepository = cardBenefitRepository;
         this.userRepository = userRepository;
         this.userCardRepository = userCardRepository;
         this.redisService = redisService;
@@ -166,5 +171,40 @@ public class CardServiceImpl implements CardService {
         /*** RDB Access ***/
         userCardRepository.delete(userCard);
 
+    }
+
+    @Override
+    public CardDetailResponseDTO detailCard(CardDetailRequestDTO cardDetailRequestDTO) {
+
+        /*** Validation ***/
+        Card card=cardRepository.findByName(cardDetailRequestDTO.getCardName())
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
+
+        /*** RDB Access ***/
+        List<CardBenefit> cardBenefitList=cardBenefitRepository.findByCardName(cardDetailRequestDTO.getCardName());
+
+        /*** DTO Builder ***/
+        List<CardBenefitResponseDTO> cardBenefitDTOList=new ArrayList<>();
+        for(CardBenefit cardBenefit: cardBenefitList){
+            cardBenefitDTOList.add(
+                    CardBenefitResponseDTO.builder()
+                            .category(cardBenefit.getCategory())
+                            .shopName(cardBenefit.getShopName())
+                            .content(cardBenefit.getContent())
+                            .discount(cardBenefit.getDiscount())
+                            .point(cardBenefit.getPoint())
+                            .cashBack(cardBenefit.getCashback())
+                            .build());
+        }
+
+        CardDetailResponseDTO dto=CardDetailResponseDTO.builder()
+                .company(card.getCompany())
+                .type(card.getType())
+                .name(card.getName())
+                .cardImage(card.getCardImage())
+                .cardBenefit(cardBenefitDTOList)
+                .build();
+
+        return dto;
     }
 }

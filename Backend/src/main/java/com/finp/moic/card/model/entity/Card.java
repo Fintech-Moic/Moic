@@ -1,6 +1,5 @@
 package com.finp.moic.card.model.entity;
 
-import com.finp.moic.cardBenefit.model.entity.CardBenefit;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
