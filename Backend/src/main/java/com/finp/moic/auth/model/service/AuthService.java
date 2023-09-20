@@ -4,6 +4,6 @@ import com.finp.moic.auth.model.dto.response.AuthRefreshResponseDTO;
 
 public interface AuthService {
 
-    public AuthRefreshResponseDTO refresh(String refreshToken);
+    public AuthRefreshResponseDTO refresh(String accessToken, String refreshToken);
 
 }

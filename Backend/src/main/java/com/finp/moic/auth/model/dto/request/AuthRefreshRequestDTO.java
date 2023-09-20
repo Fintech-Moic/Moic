@@ -9,14 +9,14 @@ public class AuthRefreshRequestDTO {
 
     @NotNull
     @NotBlank
-    private String refreshToken;
+    private String accessToken;
 
     public AuthRefreshRequestDTO(){
 
     }
 
-    public AuthRefreshRequestDTO(String refreshToken){
-        this.refreshToken = refreshToken;
+    public AuthRefreshRequestDTO(String accessToken){
+        this.accessToken = accessToken;
     }
 
 }

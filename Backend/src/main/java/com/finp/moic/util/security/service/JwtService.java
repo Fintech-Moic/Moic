@@ -1,26 +1,34 @@
 package com.finp.moic.util.security.service;
 
+import com.finp.moic.util.exception.ExceptionEnum;
+import com.finp.moic.util.exception.list.ExpiredTokenException;
+import com.finp.moic.util.exception.list.InvalidTokenException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 
-@Component
-public class JwtProvider {
+@Service
+public class JwtService {
     private static final long MILLI_SECOND = 1000L;
     private final String secretKey;
 
     //30분
-    private final long expirationHours = 60 * 30;
+//    private final long expirationHours = 60 * 30;
+    private final long expirationHours = 30;
     private final String issuer;
 
     //30일
-    private final long refreshTokenExpire = 60 * 60 * 24 * 30;
+//    private final long refreshTokenExpire = 60 * 60 * 24 * 30;
+    private final long refreshTokenExpire = 60;
 
-    public JwtProvider(
+    public JwtService(
             @Value("${issuer}") String issuer,
             @Value("${secret-key}") String secretKey
     ) {
@@ -34,7 +42,7 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .signWith((new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName()))) //HS512 알고리즘 이용, secretKey 이용
-                .setSubject(userSpecification) //토큰 이름
+                .setSubject(userSpecification) //토큰에 담을 정보
                 .setIssuer(issuer) //발급자
                 .setIssuedAt(now) //발급시간
                 .setExpiration(validity) //만료시간
@@ -46,6 +54,7 @@ public class JwtProvider {
         Date validity = new Date(now.getTime() + refreshTokenExpire * MILLI_SECOND);
 
         return Jwts.builder()
+                .signWith((new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName()))) //HS512 알고리즘 이용, secretKey 이용
                 .setIssuer(issuer)
                 .setIssuedAt(now)
                 .setExpiration(validity)
@@ -59,6 +68,18 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+    public void validateToken(String token){
+        try{
+            Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                    .build()
+                    .parseClaimsJws(token);
+        }catch(ExpiredJwtException e){
+            throw new ExpiredTokenException(ExceptionEnum.EXPIRED_TOKEN_ERROR);
+        }catch(JwtException | IllegalArgumentException e){
+            throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
+        }
     }
 
 }

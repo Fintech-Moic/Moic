@@ -8,7 +8,7 @@ public class UserLoginResponseDTO {
 
     private String name;
 
-    private String token;
+    private String accessToken;
 
     private String refreshToken;
 
@@ -16,9 +16,9 @@ public class UserLoginResponseDTO {
     }
 
     @Builder
-    public UserLoginResponseDTO(String name, String token, String refreshToken) {
+    public UserLoginResponseDTO(String name, String accessToken, String refreshToken) {
         this.name = name;
-        this.token = token;
+        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 }
