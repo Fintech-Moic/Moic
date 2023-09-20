@@ -42,9 +42,9 @@ public class CardController {
      * TO DO :: userId 삭제 및 주석 해제
      * **/
     @GetMapping("/all")
-    public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody TempDTO tempDTO){
+    public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/@RequestParam("userId") String userId){
 
-        CardAllReponseDTO response=cardServiceImpl.getCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
+        CardAllReponseDTO response=cardServiceImpl.getCardList(/*userAuthentication.getId()*/userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("전체 카드 목록 조회")
@@ -56,9 +56,9 @@ public class CardController {
      * TO DO :: userId 삭제 및 주석 해제
      * **/
     @GetMapping("/mycards")
-    public ResponseEntity<ResponseDTO> getMyCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody TempDTO tempDTO) {
+    public ResponseEntity<ResponseDTO> getMyCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/@RequestParam("userId") String userId) {
 
-        List<CardMineResponseDTO> dto=cardServiceImpl.getMyCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
+        List<CardMineResponseDTO> dto=cardServiceImpl.getMyCardList(/*userAuthentication.getId()*/userId);
         HashMap<String, List<CardMineResponseDTO>> response=new HashMap<>();
         response.put("cardList",dto);
 
@@ -83,9 +83,10 @@ public class CardController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<ResponseDTO> detailCard(@RequestBody @Valid CardDetailRequestDTO cardDetailRequestDTO){
+    public ResponseEntity<ResponseDTO> detailCard(/*@RequestBody @Valid CardDetailRequestDTO cardDetailRequestDTO*/
+                            @RequestParam("cardName") String cardName){
 
-        CardDetailResponseDTO response=cardServiceImpl.detailCard(cardDetailRequestDTO);
+        CardDetailResponseDTO response=cardServiceImpl.detailCard(cardName);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("내 카드 상세 조회")
@@ -96,7 +97,10 @@ public class CardController {
     /**
      * TO DO :: userId 삭제 및 주석 해제
      * **/
-    @GetMapping("/search")
+    /**
+     * TO DO :: GetMapping 변경
+     * **/
+    @PostMapping("/search")
     public ResponseEntity<ResponseDTO> searchCard(@RequestBody @Valid CardSearchRequestDTO cardSearchRequestDTO
             /*@AuthenticationPrincipal UserAuthentication userAuthentication*/ ){
 

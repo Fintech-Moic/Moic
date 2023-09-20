@@ -1,7 +1,6 @@
 package com.finp.moic.card.model.service;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
-import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
 import com.finp.moic.card.model.dto.response.*;
@@ -185,15 +184,14 @@ public class CardServiceImpl implements CardService {
 
     }
 
-    @Override
-    public CardDetailResponseDTO detailCard(CardDetailRequestDTO cardDetailRequestDTO) {
+    public CardDetailResponseDTO detailCard(String cardName) {
 
         /*** Validation ***/
-        Card card=cardRepository.findByName(cardDetailRequestDTO.getCardName())
+        Card card=cardRepository.findByName(cardName)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
 
         /*** RDB Access ***/
-        List<CardBenefit> cardBenefitList=cardBenefitRepository.findByCardName(cardDetailRequestDTO.getCardName());
+        List<CardBenefit> cardBenefitList=cardBenefitRepository.findByCardName(cardName);
 
         /*** DTO Builder ***/
         List<CardBenefitResponseDTO> cardBenefitDTOList=new ArrayList<>();

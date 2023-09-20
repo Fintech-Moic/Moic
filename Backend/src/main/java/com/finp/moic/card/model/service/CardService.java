@@ -18,7 +18,7 @@ public interface CardService {
 
     void deleteCard(CardDeleteRequestDTO cardDeleteRequestDTO, String userId);
 
-    CardDetailResponseDTO detailCard(CardDetailRequestDTO cardDetailRequestDTO);
+    CardDetailResponseDTO detailCard(String cardName);
 
     CardSearchResponseDTO searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId);
 }
