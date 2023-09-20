@@ -3,10 +3,8 @@ package com.finp.moic.card.model.service;
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
-import com.finp.moic.card.model.dto.response.CardAllReponseDTO;
-import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
-import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
-import com.finp.moic.card.model.dto.response.CardResponseDTO;
+import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
+import com.finp.moic.card.model.dto.response.*;
 
 import java.util.List;
 
@@ -22,4 +20,5 @@ public interface CardService {
 
     CardDetailResponseDTO detailCard(CardDetailRequestDTO cardDetailRequestDTO);
 
+    CardSearchResponseDTO searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId);
 }
