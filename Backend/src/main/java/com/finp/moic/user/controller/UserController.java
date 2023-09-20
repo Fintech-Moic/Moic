@@ -60,7 +60,14 @@ public class UserController {
                 .build());
     }
 
-    @GetMapping("/test")
+//    @PostMapping("/logout")
+//    public ResponseEntity<ResponseDTO> logout(
+//            @AuthenticationPrincipal UserAuthentication userAuthentication
+//    ){
+//
+//    }
+
+    @PostMapping("/test")
     public String test(
             @AuthenticationPrincipal UserAuthentication userAuthentication
     ){
