@@ -3,10 +3,7 @@ package com.finp.moic.card.model.service;
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
-import com.finp.moic.card.model.dto.response.CardBenefitResponseDTO;
-import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
-import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
-import com.finp.moic.card.model.dto.response.CardResponseDTO;
+import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.UserCard;
@@ -203,6 +200,22 @@ public class CardServiceImpl implements CardService {
                 .name(card.getName())
                 .cardImage(card.getCardImage())
                 .cardBenefit(cardBenefitDTOList)
+                .build();
+
+        return dto;
+    }
+
+    @Override
+    public CardInitFilterResponseDTO initCardFilter() {
+
+        /*** RDB Access ***/
+        List<String> companyList=cardRepository.findAllCompany();
+        List<String> typeList=cardRepository.findAllType();
+
+        /*** DTO Builder ***/
+        CardInitFilterResponseDTO dto=CardInitFilterResponseDTO.builder()
+                .companyList(companyList)
+                .typeList(typeList)
                 .build();
 
         return dto;

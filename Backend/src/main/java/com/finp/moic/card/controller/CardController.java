@@ -5,6 +5,7 @@ import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.TempDTO;
 import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
+import com.finp.moic.card.model.dto.response.CardInitFilterResponseDTO;
 import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.service.CardServiceImpl;
@@ -97,6 +98,17 @@ public class CardController {
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("내 카드 상세 조회")
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/init")
+    public ResponseEntity<ResponseDTO> initCardFilter(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+
+        CardInitFilterResponseDTO response=cardServiceImpl.initCardFilter();
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("카드 필터 초기화")
                 .data(response)
                 .build());
     }

@@ -4,6 +4,7 @@ import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
+import com.finp.moic.card.model.dto.response.CardInitFilterResponseDTO;
 import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 
@@ -20,4 +21,6 @@ public interface CardService {
     void deleteCard(CardDeleteRequestDTO cardDeleteRequestDTO, String userId);
 
     CardDetailResponseDTO detailCard(CardDetailRequestDTO cardDetailRequestDTO);
+
+    CardInitFilterResponseDTO initCardFilter();
 }
