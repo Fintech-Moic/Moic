@@ -99,16 +99,4 @@ public class CardController {
                 .data(response)
                 .build());
     }
-
-//    @GetMapping("/init")
-//    public ResponseEntity<ResponseDTO> initCardFilter(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
-//
-//        CardInitFilterResponseDTO response=cardServiceImpl.initCardFilter();
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-//                .message("카드 필터 초기화")
-//                .data(response)
-//                .build());
-//    }
-
 }
