@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CardRepository extends JpaRepository<Card,Long> {
+public interface CardRepository extends JpaRepository<Card,Long>,CardRepositoryCustom {
 
     Optional<Card> findByName(String name);
 

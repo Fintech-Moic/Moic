@@ -3,6 +3,7 @@ package com.finp.moic.card.model.service;
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
+import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
 import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.CardBenefit;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -94,6 +97,7 @@ public class CardServiceImpl implements CardService {
         /*** RDB Access ***/
         List<String> companyList=cardRepository.findAllCompany();
         List<String> typeList=cardRepository.findAllType();
+
         List<Card> allCardList=cardRepository.findAll();
         List<Card> myCardList=userCardRepository.findAllByUserId(userId);
 
@@ -128,6 +132,9 @@ public class CardServiceImpl implements CardService {
                 );
             }
         }
+
+        Collections.sort(companyList);
+        Collections.sort(typeList);
 
         CardAllReponseDTO dto=CardAllReponseDTO.builder()
                 .companyList(companyList)
@@ -208,6 +215,71 @@ public class CardServiceImpl implements CardService {
                 .name(card.getName())
                 .cardImage(card.getCardImage())
                 .cardBenefit(cardBenefitDTOList)
+                .build();
+
+        return dto;
+    }
+
+    @Override
+    public CardSearchResponseDTO searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId) {
+
+        String company=cardSearchRequestDTO.getCompany();
+        String type=cardSearchRequestDTO.getType();
+        String cardName=cardSearchRequestDTO.getCardName();
+
+        /*** RDB Access ***/
+        List<Card> cardList=cardRepository.search(company,type,cardName);
+
+        /*** DTO Builder ***/
+        HashSet<String> companySet=new HashSet<>();
+        HashSet<String> typeSet=new HashSet<>();
+
+        List<CardResponseDTO> cardDTOList=new ArrayList<>();
+        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
+
+        for(Card card:cardList){
+            if(!companySet.contains(card.getCompany())) companySet.add(card.getCompany());
+            if(!typeSet.contains(card.getType())) typeSet.add(card.getType());
+
+            boolean mine=false;
+            for(Card userCard:myCardList){
+                if(card.getName().equals(userCard.getName())){
+                    mine=true;
+                    cardDTOList.add(
+                            CardResponseDTO.builder()
+                                    .company(card.getCompany())
+                                    .type(card.getType())
+                                    .name(card.getName())
+                                    .cardImage(card.getCardImage())
+                                    .mine(true)
+                                    .build()
+                    );
+                    break;
+                }
+            }
+            if(!mine) {
+                cardDTOList.add(
+                        CardResponseDTO.builder()
+                                .company(card.getCompany())
+                                .type(card.getType())
+                                .name(card.getName())
+                                .cardImage(card.getCardImage())
+                                .mine(false)
+                                .build()
+                );
+            }
+        }
+
+        ArrayList<String> companyList=new ArrayList<>(companySet);
+        ArrayList<String> typeList=new ArrayList<>(typeSet);
+
+        Collections.sort(companyList);
+        Collections.sort(typeList);
+
+        CardSearchResponseDTO dto=CardSearchResponseDTO.builder()
+                .companyList(companyList)
+                .typeList(typeList)
+                .cardList(cardDTOList)
                 .build();
 
         return dto;
