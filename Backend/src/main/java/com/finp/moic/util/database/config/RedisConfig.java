@@ -21,10 +21,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     /**
-     * RedisTemplate 2개 선언
-     * 서버 2개로 분리하여
-     * 1. 전체 데이터가 저장되있는 RedisTemplate1
-     * 2. Refresh Token만 저장되있는 RedisTemplate2
+     * RedisTemplate 3개 선언
+     * 서버 3개로 분리하여
+     * 1. 전체 데이터가 저장되있는 MainRedis
+     * 2. Refresh Token만 저장되있는 SubRedis
+     * 3. 자동완성 데이터가 저장되있는 AutoRedis
      *
      * 테스트 : redis1, redis2 값 저장 삭제 조회 가능 확인 완료
      */
@@ -47,9 +48,19 @@ public class RedisConfig {
 
     @Value("${spring.redis2.password}")
     private String REDIS2_PW;
+
+    @Value("${spring.redis3.host}")
+    private String REDIS3_HOST;
+
+    @Value("${spring.redis3.port}")
+    private int REDIS3_PORT;
+
+    @Value("${spring.redis3.password}")
+    private String REDIS3_PW;
+
     @Primary
-    @Bean(name = "redisConnectionFactory1")
-    public RedisConnectionFactory redisConnectionFactory1() {
+    @Bean(name = "MainRedisFactory")
+    public RedisConnectionFactory mainRedisFactory() {
         LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory();
         connectionFactory.setHostName(REDIS1_HOST); // 첫 번째 Redis 서버 호스트
         connectionFactory.setPort(REDIS1_PORT); // 첫 번째 Redis 서버 포트
@@ -58,8 +69,8 @@ public class RedisConfig {
         return connectionFactory;
     }
 
-    @Bean(name = "redisConnectionFactory2")
-    public RedisConnectionFactory redisConnectionFactory2() {
+    @Bean(name = "SecurityRedisFactory")
+    public RedisConnectionFactory securityRedisFactory() {
         LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory();
         connectionFactory.setHostName(REDIS2_HOST); // 두 번째 Redis 서버 호스트
         connectionFactory.setPort(REDIS2_PORT); // 두 번째 Redis 서버 포트
@@ -68,21 +79,41 @@ public class RedisConfig {
         return connectionFactory;
     }
 
+    @Bean(name = "AutoRedisFactory")
+    public RedisConnectionFactory autoRedisFactory() {
+        LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory();
+        connectionFactory.setHostName(REDIS3_HOST);
+        connectionFactory.setPort(REDIS3_PORT);
+        connectionFactory.setPassword(REDIS3_PW);
+        connectionFactory.afterPropertiesSet();
+        return connectionFactory;
+    }
+
     @Primary
-    @Bean(name = "redisTemplate1")
-    public RedisTemplate<String, Object> redisTemplate1(@Qualifier("redisConnectionFactory1") RedisConnectionFactory redisConnectionFactory1) {
+    @Bean(name = "MainRedis")
+    public RedisTemplate<String, Object> MainRedis(@Qualifier("MainRedisFactory") RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory1);
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         // 다른 설정을 추가할 수 있습니다.
         return redisTemplate;
     }
 
-    @Bean(name = "redisTemplate2")
-    public RedisTemplate<String, String> redisTemplate2(@Qualifier("redisConnectionFactory2") RedisConnectionFactory redisConnectionFactory2) {
+    @Bean(name = "SecurityRedis")
+    public RedisTemplate<String, String> SubRedis(@Qualifier("SecurityRedisFactory") RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory2);
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        // 다른 설정을 추가할 수 있습니다.
+        return redisTemplate;
+    }
+
+    @Bean(name = "AutoRedis")
+    public RedisTemplate<String, String> AutoRedis(@Qualifier("AutoRedisFactory") RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         // 다른 설정을 추가할 수 있습니다.

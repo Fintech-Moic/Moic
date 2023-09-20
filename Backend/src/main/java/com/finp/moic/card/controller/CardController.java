@@ -1,12 +1,7 @@
 package com.finp.moic.card.controller;
 
-import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
-import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
-import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
-import com.finp.moic.card.model.dto.request.TempDTO;
-import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
-import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
-import com.finp.moic.card.model.dto.response.CardResponseDTO;
+import com.finp.moic.card.model.dto.request.*;
+import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.service.CardServiceImpl;
 import com.finp.moic.util.dto.ResponseDTO;
 import jakarta.validation.Valid;
@@ -49,9 +44,7 @@ public class CardController {
     @GetMapping("/all")
     public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody TempDTO tempDTO){
 
-        List<CardResponseDTO> dto=cardServiceImpl.getCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
-        HashMap<String, List<CardResponseDTO>> response=new HashMap<>();
-        response.put("cardList",dto);
+        CardAllReponseDTO response=cardServiceImpl.getCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("전체 카드 목록 조회")
@@ -90,8 +83,7 @@ public class CardController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<ResponseDTO> detailCard(@RequestBody @Valid CardDetailRequestDTO cardDetailRequestDTO
-            /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+    public ResponseEntity<ResponseDTO> detailCard(@RequestBody @Valid CardDetailRequestDTO cardDetailRequestDTO){
 
         CardDetailResponseDTO response=cardServiceImpl.detailCard(cardDetailRequestDTO);
 
@@ -101,4 +93,18 @@ public class CardController {
                 .build());
     }
 
+    /**
+     * TO DO :: userId 삭제 및 주석 해제
+     * **/
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDTO> searchCard(@RequestBody @Valid CardSearchRequestDTO cardSearchRequestDTO
+            /*@AuthenticationPrincipal UserAuthentication userAuthentication*/ ){
+
+        CardSearchResponseDTO response=cardServiceImpl.searchCard(cardSearchRequestDTO, cardSearchRequestDTO.getUserId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("카드 검색")
+                .data(response)
+                .build());
+    }
 }

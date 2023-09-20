@@ -9,8 +9,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CardRepository extends JpaRepository<Card,Long> {
+public interface CardRepository extends JpaRepository<Card,Long>,CardRepositoryCustom {
 
     Optional<Card> findByName(String name);
+
+    @Query(value = "SELECT DISTINCT company FROM card", nativeQuery = true)
+    List<String> findAllCompany();
+
+    @Query(value = "SELECT DISTINCT type FROM card", nativeQuery = true)
+    List<String> findAllType();
 
 }

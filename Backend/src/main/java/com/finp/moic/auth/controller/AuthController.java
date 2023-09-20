@@ -20,11 +20,14 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<ResponseDTO> refresh(
-            @RequestBody AuthRefreshRequestDTO dto
+            @RequestBody AuthRefreshRequestDTO dto,
+            @CookieValue(name = "refreshToken") String refreshToken
     ){
-        AuthRefreshResponseDTO response = authService.refresh(dto.getRefreshToken());
+
+        AuthRefreshResponseDTO response = authService.refresh(dto.getAccessToken(), refreshToken);
+
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("Refresh 성공")
+                .message("Refresh")
                 .data(response)
                 .build());
     }
