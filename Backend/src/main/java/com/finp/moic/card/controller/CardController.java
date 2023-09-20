@@ -4,8 +4,8 @@ import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.TempDTO;
+import com.finp.moic.card.model.dto.response.CardAllReponseDTO;
 import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
-import com.finp.moic.card.model.dto.response.CardInitFilterResponseDTO;
 import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
 import com.finp.moic.card.model.service.CardServiceImpl;
@@ -50,9 +50,7 @@ public class CardController {
     @GetMapping("/all")
     public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/ @RequestBody TempDTO tempDTO){
 
-        List<CardResponseDTO> dto=cardServiceImpl.getCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
-        HashMap<String, List<CardResponseDTO>> response=new HashMap<>();
-        response.put("cardList",dto);
+        CardAllReponseDTO response=cardServiceImpl.getCardList(/*userAuthentication.getId()*/tempDTO.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("전체 카드 목록 조회")
@@ -102,15 +100,15 @@ public class CardController {
                 .build());
     }
 
-    @GetMapping("/init")
-    public ResponseEntity<ResponseDTO> initCardFilter(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
-
-        CardInitFilterResponseDTO response=cardServiceImpl.initCardFilter();
-
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("카드 필터 초기화")
-                .data(response)
-                .build());
-    }
+//    @GetMapping("/init")
+//    public ResponseEntity<ResponseDTO> initCardFilter(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+//
+//        CardInitFilterResponseDTO response=cardServiceImpl.initCardFilter();
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+//                .message("카드 필터 초기화")
+//                .data(response)
+//                .build());
+//    }
 
 }

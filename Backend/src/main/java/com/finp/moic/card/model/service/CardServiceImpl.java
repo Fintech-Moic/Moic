@@ -85,24 +85,26 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardResponseDTO> getCardList(String userId) {
+    public CardAllReponseDTO getCardList(String userId) {
 
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
         /*** RDB Access ***/
+        List<String> companyList=cardRepository.findAllCompany();
+        List<String> typeList=cardRepository.findAllType();
         List<Card> allCardList=cardRepository.findAll();
         List<Card> myCardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
-        List<CardResponseDTO> dtoList=new ArrayList<>();
+        List<CardResponseDTO> cardDTOList=new ArrayList<>();
         for(Card card:allCardList){
             boolean mine=false;
             for(Card userCard:myCardList){
                 if(card.getName().equals(userCard.getName())){
                     mine=true;
-                    dtoList.add(
+                    cardDTOList.add(
                             CardResponseDTO.builder()
                             .company(card.getCompany())
                             .type(card.getType())
@@ -115,7 +117,7 @@ public class CardServiceImpl implements CardService {
                 }
             }
             if(!mine) {
-                dtoList.add(
+                cardDTOList.add(
                         CardResponseDTO.builder()
                                 .company(card.getCompany())
                                 .type(card.getType())
@@ -127,7 +129,13 @@ public class CardServiceImpl implements CardService {
             }
         }
 
-        return dtoList;
+        CardAllReponseDTO dto=CardAllReponseDTO.builder()
+                .companyList(companyList)
+                .typeList(typeList)
+                .cardList(cardDTOList)
+                .build();
+
+        return dto;
     }
 
     @Override
@@ -200,22 +208,6 @@ public class CardServiceImpl implements CardService {
                 .name(card.getName())
                 .cardImage(card.getCardImage())
                 .cardBenefit(cardBenefitDTOList)
-                .build();
-
-        return dto;
-    }
-
-    @Override
-    public CardInitFilterResponseDTO initCardFilter() {
-
-        /*** RDB Access ***/
-        List<String> companyList=cardRepository.findAllCompany();
-        List<String> typeList=cardRepository.findAllType();
-
-        /*** DTO Builder ***/
-        CardInitFilterResponseDTO dto=CardInitFilterResponseDTO.builder()
-                .companyList(companyList)
-                .typeList(typeList)
                 .build();
 
         return dto;
