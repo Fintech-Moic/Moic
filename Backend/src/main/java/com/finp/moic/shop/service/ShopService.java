@@ -7,6 +7,8 @@ import com.finp.moic.shop.model.dto.response.LocationResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopSearchResponseDTO;
 
+import java.util.List;
+
 public interface ShopService {
     LocationResponseDTO testJavaLocation(LocationRequestDTO locationRequestDTO);
 
@@ -16,5 +18,5 @@ public interface ShopService {
 
     ShopDetailResponseDTO detailShop(ShopDetailRequestDTO shopDetailRequestDTO);
 
-    ShopSearchResponseDTO searchShop(ShopSearchRequestDTO shopSearchRequestDTO);
+    List<ShopSearchResponseDTO> searchShop(ShopSearchRequestDTO shopSearchRequestDTO);
 }

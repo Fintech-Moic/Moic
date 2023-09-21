@@ -4,9 +4,11 @@ import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.QCardBenefit;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;

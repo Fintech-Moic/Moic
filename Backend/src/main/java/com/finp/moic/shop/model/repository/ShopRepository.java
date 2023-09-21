@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ShopRepository extends JpaRepository<Shop,Long> {
+public interface ShopRepository extends JpaRepository<Shop,Long>, ShopRepositoryCustom {
 
-    Shop findByNameAndLocation(@Param("name") String shopName, @Param("location") String shopLocation);
 }

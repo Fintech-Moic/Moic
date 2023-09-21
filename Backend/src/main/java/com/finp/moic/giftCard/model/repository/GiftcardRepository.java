@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface GiftcardRepository extends JpaRepository<Giftcard,Long> {
+public interface GiftcardRepository extends JpaRepository<Giftcard,Long>, GiftcardRepositoryCustom {
 
-    @Query("SELECT * FROM giftcard WHERE shop_name = :shopName")
-    List<Giftcard> findAllByShopName(String shopName);
 }
