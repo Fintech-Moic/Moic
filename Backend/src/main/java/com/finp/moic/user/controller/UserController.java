@@ -1,14 +1,8 @@
 package com.finp.moic.user.controller;
 
 
-import com.finp.moic.user.model.dto.request.UserEmailCheckRequestDTO;
-import com.finp.moic.user.model.dto.request.UserIdCheckRequestDTO;
-import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
-import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
-import com.finp.moic.user.model.dto.response.UserEmailCheckResponseDTO;
-import com.finp.moic.user.model.dto.response.UserIdCheckResponseDTO;
-import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
-import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
+import com.finp.moic.user.model.dto.request.*;
+import com.finp.moic.user.model.dto.response.*;
 import com.finp.moic.user.model.service.UserService;
 import com.finp.moic.util.cookie.CookieService;
 import com.finp.moic.util.dto.ResponseDTO;
@@ -38,8 +32,8 @@ public class UserController {
 
     @PostMapping(value = "/login", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> login(
-            @RequestBody @Valid UserLoginRequestDTO dto
-            , HttpServletResponse httpResponse
+            @RequestBody @Valid UserLoginRequestDTO dto,
+            HttpServletResponse httpResponse
     ){
         UserLoginResponseDTO response = userService.login(dto);
 
@@ -49,6 +43,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("로그인 성공")
                 .data(response)
+                .build());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDTO> logout(
+            @AuthenticationPrincipal UserAuthentication userAuthentication,
+            @CookieValue(name = "refreshToken") String refreshToken,
+            HttpServletResponse httpResponse
+    ){
+        userService.logout(userAuthentication,refreshToken);
+
+        httpResponse.addCookie(cookieService.deleteCookie());
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("로그아웃 성공")
                 .build());
     }
 
@@ -64,16 +72,9 @@ public class UserController {
                 .build());
     }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<ResponseDTO> logout(
-//            @AuthenticationPrincipal UserAuthentication userAuthentication
-//    ){
-//
-//    }
-
     @PostMapping("/check/id")
     public ResponseEntity<ResponseDTO> isIdValidate(
-            @RequestBody UserIdCheckRequestDTO dto
+            @RequestBody @Valid UserIdCheckRequestDTO dto
     ){
         UserIdCheckResponseDTO response = userService.isIdValidate(dto);
         String message = "사용 가능한 ID 입니다.";
@@ -88,7 +89,7 @@ public class UserController {
 
     @PostMapping("/check/email")
     public ResponseEntity<ResponseDTO> isEmailValidate(
-            @RequestBody UserEmailCheckRequestDTO dto
+            @RequestBody @Valid UserEmailCheckRequestDTO dto
     ){
         UserEmailCheckResponseDTO response = userService.isEmailValidate(dto);
 
@@ -101,6 +102,22 @@ public class UserController {
                 .data(response)
                 .build());
     }
+
+    @PostMapping("/check/password")
+    public ResponseEntity<ResponseDTO> isPasswordValidate(
+            @RequestBody @Valid UserPasswordCheckRequestDTO dto
+            ){
+        UserPasswordCheckResponseDTO response = userService.isPasswordValidate(dto);
+        String message = "비밀번호 확인 완료";
+        if(!response.isValid()){
+            message = "비밀번호가 유효하지 않습니다.";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message(message)
+                .data(response)
+                .build());
+    }
+
 
     @PostMapping("/test")
     public String test(

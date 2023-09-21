@@ -20,4 +20,12 @@ public class CookieService {
         return cookie;
     }
 
+    public Cookie deleteCookie(){
+        Cookie cookie = new Cookie("refreshToken",null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        return cookie;
+    }
+
 }

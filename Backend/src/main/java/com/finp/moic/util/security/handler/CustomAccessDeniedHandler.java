@@ -22,7 +22,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-//        System.out.println("denied 들어옴");
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(ExceptionEnum.HANDLE_ACCESS_DENIED.getStatus().value());
         BusinessExceptionEntity error = new BusinessExceptionEntity(ExceptionEnum.HANDLE_ACCESS_DENIED.getErrorCode(),ExceptionEnum.HANDLE_ACCESS_DENIED.getErrorMessage());
