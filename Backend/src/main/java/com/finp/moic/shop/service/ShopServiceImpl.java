@@ -230,7 +230,21 @@ public class ShopServiceImpl implements ShopService{
         Collections.sort(tempDTOList);
 
         List<ShopSearchResponseDTO> dto=new ArrayList<>();
-        for(int i=0;i<10;i++){
+
+
+        for(int i=0;i<3;i++){
+            dto.add(
+                    ShopSearchResponseDTO.builder()
+                            .category(tempDTOList.get(i).getCategory())
+                            .shopName(tempDTOList.get(i).getShopName())
+                            .shopLocation(tempDTOList.get(i).getShopLocation())
+                            .address(tempDTOList.get(i).getAddress())
+                            .benefits(true) //임시 값
+                            .gifts(false) //임시 값
+                            .build()
+            );
+        }
+        for(int i=3;i<6;i++){
             dto.add(
                     ShopSearchResponseDTO.builder()
                             .category(tempDTOList.get(i).getCategory())
@@ -238,7 +252,19 @@ public class ShopServiceImpl implements ShopService{
                             .shopLocation(tempDTOList.get(i).getShopLocation())
                             .address(tempDTOList.get(i).getAddress())
                             .benefits(false) //임시 값
-                            .gifts(false) //임시 값
+                            .gifts(true) //임시 값
+                            .build()
+            );
+        }
+        for(int i=6;i<10;i++){
+            dto.add(
+                    ShopSearchResponseDTO.builder()
+                            .category(tempDTOList.get(i).getCategory())
+                            .shopName(tempDTOList.get(i).getShopName())
+                            .shopLocation(tempDTOList.get(i).getShopLocation())
+                            .address(tempDTOList.get(i).getAddress())
+                            .benefits(true) //임시 값
+                            .gifts(true) //임시 값
                             .build()
             );
         }
