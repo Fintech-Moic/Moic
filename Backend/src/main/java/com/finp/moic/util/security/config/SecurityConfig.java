@@ -7,16 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.management.relation.Role;
-import java.util.stream.Stream;
 
 @EnableWebSecurity
 @Configuration
@@ -63,7 +58,7 @@ public class SecurityConfig {
 //                )
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/user/login","/user/regist","/auth/refresh").permitAll()
+                                .requestMatchers("/user/login","/user/regist","/auth/refresh","/user/check/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(handler ->

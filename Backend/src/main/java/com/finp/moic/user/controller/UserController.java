@@ -1,8 +1,12 @@
 package com.finp.moic.user.controller;
 
 
+import com.finp.moic.user.model.dto.request.UserEmailCheckRequestDTO;
+import com.finp.moic.user.model.dto.request.UserIdCheckRequestDTO;
 import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
 import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
+import com.finp.moic.user.model.dto.response.UserEmailCheckResponseDTO;
+import com.finp.moic.user.model.dto.response.UserIdCheckResponseDTO;
 import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
 import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
 import com.finp.moic.user.model.service.UserService;
@@ -66,6 +70,37 @@ public class UserController {
 //    ){
 //
 //    }
+
+    @PostMapping("/check/id")
+    public ResponseEntity<ResponseDTO> isIdValidate(
+            @RequestBody UserIdCheckRequestDTO dto
+    ){
+        UserIdCheckResponseDTO response = userService.isIdValidate(dto);
+        String message = "사용 가능한 ID 입니다.";
+        if(!response.isValid()){
+            message = "중복된 ID 입니다.";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message(message)
+                .data(response)
+                .build());
+    }
+
+    @PostMapping("/check/email")
+    public ResponseEntity<ResponseDTO> isEmailValidate(
+            @RequestBody UserEmailCheckRequestDTO dto
+    ){
+        UserEmailCheckResponseDTO response = userService.isEmailValidate(dto);
+
+        String message = "사용 가능한 E-mail 입니다.";
+        if(!response.isValid()){
+            message = "중복된 E-mail 입니다.";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message(message)
+                .data(response)
+                .build());
+    }
 
     @PostMapping("/test")
     public String test(
