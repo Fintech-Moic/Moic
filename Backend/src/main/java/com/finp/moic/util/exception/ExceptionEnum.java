@@ -16,6 +16,7 @@ public enum ExceptionEnum {
     USER_REGIST_ERROR(HttpStatus.BAD_REQUEST,"U003","입력 사항을 확인하세요."),
 
     // 2. SHOP (S)
+    SHOP_NOT_FOUND(HttpStatus.NOT_FOUND,"S001","가맹점 조회에 실패했습니다."),
 
     // 3. CARD (C)
     /* 혜지 : 인덱스 테스트용 Exception */

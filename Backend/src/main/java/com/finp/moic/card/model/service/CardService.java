@@ -1,7 +1,6 @@
 package com.finp.moic.card.model.service;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
-import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
 import com.finp.moic.card.model.dto.response.*;

@@ -5,11 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @ToString
-public class CardDetailResponseDTO {
+public class CardDetailResponseDTO implements Serializable {
 
     private String company;
     private String type;

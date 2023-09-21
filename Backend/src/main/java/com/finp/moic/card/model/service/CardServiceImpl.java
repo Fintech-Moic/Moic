@@ -7,9 +7,9 @@ import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.UserCard;
-import com.finp.moic.card.model.repository.CardBenefitRepository;
-import com.finp.moic.card.model.repository.CardRepository;
-import com.finp.moic.card.model.repository.UserCardRepository;
+import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
+import com.finp.moic.card.model.repository.jpa.CardRepository;
+import com.finp.moic.card.model.repository.jpa.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.database.service.RedisService;
@@ -132,6 +132,7 @@ public class CardServiceImpl implements CardService {
             }
         }
 
+        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
         Collections.sort(companyList);
         Collections.sort(typeList);
 
@@ -225,6 +226,10 @@ public class CardServiceImpl implements CardService {
         String type=cardSearchRequestDTO.getType();
         String cardName=cardSearchRequestDTO.getCardName();
 
+        /*** Validation ***/
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
         /*** RDB Access ***/
         List<Card> cardList=cardRepository.search(company,type,cardName);
 
@@ -271,6 +276,7 @@ public class CardServiceImpl implements CardService {
         ArrayList<String> companyList=new ArrayList<>(companySet);
         ArrayList<String> typeList=new ArrayList<>(typeSet);
 
+        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
         Collections.sort(companyList);
         Collections.sort(typeList);
 
