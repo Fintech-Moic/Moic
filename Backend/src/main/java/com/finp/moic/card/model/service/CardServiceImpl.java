@@ -220,7 +220,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardSearchResponseDTO searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId) {
+    public List<CardResponseDTO> searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId) {
 
         String company=cardSearchRequestDTO.getCompany();
         String type=cardSearchRequestDTO.getType();
@@ -234,21 +234,16 @@ public class CardServiceImpl implements CardService {
         List<Card> cardList=cardRepository.search(company,type,cardName);
 
         /*** DTO Builder ***/
-        HashSet<String> companySet=new HashSet<>();
-        HashSet<String> typeSet=new HashSet<>();
 
-        List<CardResponseDTO> cardDTOList=new ArrayList<>();
+        List<CardResponseDTO> dto=new ArrayList<>();
         List<Card> myCardList=userCardRepository.findAllByUserId(userId);
 
         for(Card card:cardList){
-            if(!companySet.contains(card.getCompany())) companySet.add(card.getCompany());
-            if(!typeSet.contains(card.getType())) typeSet.add(card.getType());
-
             boolean mine=false;
             for(Card userCard:myCardList){
                 if(card.getName().equals(userCard.getName())){
                     mine=true;
-                    cardDTOList.add(
+                    dto.add(
                             CardResponseDTO.builder()
                                     .company(card.getCompany())
                                     .type(card.getType())
@@ -261,7 +256,7 @@ public class CardServiceImpl implements CardService {
                 }
             }
             if(!mine) {
-                cardDTOList.add(
+                dto.add(
                         CardResponseDTO.builder()
                                 .company(card.getCompany())
                                 .type(card.getType())
@@ -272,19 +267,6 @@ public class CardServiceImpl implements CardService {
                 );
             }
         }
-
-        ArrayList<String> companyList=new ArrayList<>(companySet);
-        ArrayList<String> typeList=new ArrayList<>(typeSet);
-
-        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
-        Collections.sort(companyList);
-        Collections.sort(typeList);
-
-        CardSearchResponseDTO dto=CardSearchResponseDTO.builder()
-                .companyList(companyList)
-                .typeList(typeList)
-                .cardList(cardDTOList)
-                .build();
 
         return dto;
     }

@@ -106,7 +106,9 @@ public class CardController {
          **/
         CardSearchRequestDTO cardSearchRequestDTO=new CardSearchRequestDTO(company,type,cardName,userId);
 
-        CardSearchResponseDTO response= cardService.searchCard(cardSearchRequestDTO, cardSearchRequestDTO.getUserId());
+        List<CardResponseDTO> dto= cardService.searchCard(cardSearchRequestDTO, cardSearchRequestDTO.getUserId());
+        HashMap<String,Object> response=new HashMap<>();
+        response.put("cardList",dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("카드 검색")

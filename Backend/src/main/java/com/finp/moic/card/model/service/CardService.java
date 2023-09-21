@@ -19,5 +19,5 @@ public interface CardService {
 
     CardDetailResponseDTO detailCard(String cardName);
 
-    CardSearchResponseDTO searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId);
+    List<CardResponseDTO> searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId);
 }
