@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService{
                 jwtService.validateToken(refreshToken);
             }catch (ExpiredTokenException e2){
                 //재로그인 요청
-                throw new ReLoginException(ExceptionEnum.RE_LOGIN_ERROR);
+                throw new ReLoginException(ExceptionEnum.RE_LOGIN);
             }
             //redis 검증
             String dbRefreshToken = redisService.getRefreshToken(refreshToken);

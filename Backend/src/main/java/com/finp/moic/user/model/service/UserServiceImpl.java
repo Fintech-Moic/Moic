@@ -1,8 +1,12 @@
 package com.finp.moic.user.model.service;
 
 
+import com.finp.moic.user.model.dto.request.UserEmailCheckRequestDTO;
+import com.finp.moic.user.model.dto.request.UserIdCheckRequestDTO;
 import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
 import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
+import com.finp.moic.user.model.dto.response.UserEmailCheckResponseDTO;
+import com.finp.moic.user.model.dto.response.UserIdCheckResponseDTO;
 import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
 import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
 import com.finp.moic.user.model.entity.User;
@@ -16,6 +20,8 @@ import com.finp.moic.util.security.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -82,6 +88,32 @@ public class UserServiceImpl implements UserService{
         /*** DTO Builder ***/
         return UserRegistResponseDTO.builder()
                 .id(registUser.getId())
+                .build();
+    }
+
+    @Override
+    public UserIdCheckResponseDTO isIdValidate(UserIdCheckRequestDTO dto){
+        Optional<User> byId = userRepository.findById(dto.getId());
+        if(byId.isPresent()){
+            return UserIdCheckResponseDTO.builder()
+                    .isValid(false)
+                    .build();
+        }
+        return UserIdCheckResponseDTO.builder()
+                .isValid(true)
+                .build();
+    }
+
+    @Override
+    public UserEmailCheckResponseDTO isEmailValidate(UserEmailCheckRequestDTO dto){
+        Optional<User> byEmail = userRepository.findByEmail(dto.getEmail());
+        if(byEmail.isPresent()){
+            return UserEmailCheckResponseDTO.builder()
+                    .isValid(false)
+                    .build();
+        }
+        return UserEmailCheckResponseDTO.builder()
+                .isValid(true)
                 .build();
     }
 

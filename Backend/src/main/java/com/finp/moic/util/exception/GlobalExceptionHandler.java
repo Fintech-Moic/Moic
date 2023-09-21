@@ -45,8 +45,8 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<BusinessExceptionEntity> exceptionHandler(HttpServletRequest request, final AccessDeniedException e){
+    @ExceptionHandler({DeniedException.class})
+    public ResponseEntity<BusinessExceptionEntity> exceptionHandler(HttpServletRequest request, final DeniedException e){
         return ResponseEntity.status(e.getError().getStatus())
                 .body(BusinessExceptionEntity.builder()
                         .errorCode(e.getError().getErrorCode())

@@ -3,6 +3,7 @@ package com.finp.moic.util.security.service;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.ExpiredTokenException;
 import com.finp.moic.util.exception.list.InvalidTokenException;
+import com.finp.moic.util.security.dto.JwtAuthenticationToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -77,7 +78,7 @@ public class JwtService {
                     .parseClaimsJws(token);
         }catch(ExpiredJwtException e){
             throw new ExpiredTokenException(ExceptionEnum.EXPIRED_TOKEN_ERROR);
-        }catch(JwtException | IllegalArgumentException e){
+        }catch(JwtException | IllegalArgumentException | NullPointerException e){
             throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
         }
     }
