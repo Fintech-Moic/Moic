@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * TO DO :: 삭제
+ **/
 @Getter
 @ToString
 public class TempDTO {

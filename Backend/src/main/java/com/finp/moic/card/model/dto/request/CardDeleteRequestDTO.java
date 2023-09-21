@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-/**
- * TO DO :: userId 삭제
- */
 @Getter
 @ToString
 public class CardDeleteRequestDTO {
@@ -17,6 +14,9 @@ public class CardDeleteRequestDTO {
     @NotBlank
     private String cardName;
 
+    /**
+     * TO DO :: userId 삭제
+     */
     private String userId;
 
     public CardDeleteRequestDTO() {

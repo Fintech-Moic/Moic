@@ -1,15 +1,15 @@
 package com.finp.moic.card.model.service;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
-import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
+import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
 import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.UserCard;
-import com.finp.moic.card.model.repository.CardBenefitRepository;
-import com.finp.moic.card.model.repository.CardRepository;
-import com.finp.moic.card.model.repository.UserCardRepository;
+import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
+import com.finp.moic.card.model.repository.jpa.CardRepository;
+import com.finp.moic.card.model.repository.jpa.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.database.service.RedisService;
@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -85,24 +87,27 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardResponseDTO> getCardList(String userId) {
+    public CardAllReponseDTO getCardList(String userId) {
 
         /**
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
         /*** RDB Access ***/
+        List<String> companyList=cardRepository.findAllCompany();
+        List<String> typeList=cardRepository.findAllType();
+
         List<Card> allCardList=cardRepository.findAll();
         List<Card> myCardList=userCardRepository.findAllByUserId(userId);
 
         /*** DTO Builder ***/
-        List<CardResponseDTO> dtoList=new ArrayList<>();
+        List<CardResponseDTO> cardDTOList=new ArrayList<>();
         for(Card card:allCardList){
             boolean mine=false;
             for(Card userCard:myCardList){
                 if(card.getName().equals(userCard.getName())){
                     mine=true;
-                    dtoList.add(
+                    cardDTOList.add(
                             CardResponseDTO.builder()
                             .company(card.getCompany())
                             .type(card.getType())
@@ -115,7 +120,7 @@ public class CardServiceImpl implements CardService {
                 }
             }
             if(!mine) {
-                dtoList.add(
+                cardDTOList.add(
                         CardResponseDTO.builder()
                                 .company(card.getCompany())
                                 .type(card.getType())
@@ -127,7 +132,17 @@ public class CardServiceImpl implements CardService {
             }
         }
 
-        return dtoList;
+        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
+        Collections.sort(companyList);
+        Collections.sort(typeList);
+
+        CardAllReponseDTO dto=CardAllReponseDTO.builder()
+                .companyList(companyList)
+                .typeList(typeList)
+                .cardList(cardDTOList)
+                .build();
+
+        return dto;
     }
 
     @Override
@@ -170,15 +185,14 @@ public class CardServiceImpl implements CardService {
 
     }
 
-    @Override
-    public CardDetailResponseDTO detailCard(CardDetailRequestDTO cardDetailRequestDTO) {
+    public CardDetailResponseDTO detailCard(String cardName) {
 
         /*** Validation ***/
-        Card card=cardRepository.findByName(cardDetailRequestDTO.getCardName())
+        Card card=cardRepository.findByName(cardName)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
 
         /*** RDB Access ***/
-        List<CardBenefit> cardBenefitList=cardBenefitRepository.findByCardName(cardDetailRequestDTO.getCardName());
+        List<CardBenefit> cardBenefitList=cardBenefitRepository.findByCardName(cardName);
 
         /*** DTO Builder ***/
         List<CardBenefitResponseDTO> cardBenefitDTOList=new ArrayList<>();
@@ -206,16 +220,70 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardInitFilterResponseDTO initCardFilter() {
+    public CardSearchResponseDTO searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId) {
+
+        String company=cardSearchRequestDTO.getCompany();
+        String type=cardSearchRequestDTO.getType();
+        String cardName=cardSearchRequestDTO.getCardName();
+
+        /*** Validation ***/
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         /*** RDB Access ***/
-        List<String> companyList=cardRepository.findAllCompany();
-        List<String> typeList=cardRepository.findAllType();
+        List<Card> cardList=cardRepository.search(company,type,cardName);
 
         /*** DTO Builder ***/
-        CardInitFilterResponseDTO dto=CardInitFilterResponseDTO.builder()
+        HashSet<String> companySet=new HashSet<>();
+        HashSet<String> typeSet=new HashSet<>();
+
+        List<CardResponseDTO> cardDTOList=new ArrayList<>();
+        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
+
+        for(Card card:cardList){
+            if(!companySet.contains(card.getCompany())) companySet.add(card.getCompany());
+            if(!typeSet.contains(card.getType())) typeSet.add(card.getType());
+
+            boolean mine=false;
+            for(Card userCard:myCardList){
+                if(card.getName().equals(userCard.getName())){
+                    mine=true;
+                    cardDTOList.add(
+                            CardResponseDTO.builder()
+                                    .company(card.getCompany())
+                                    .type(card.getType())
+                                    .name(card.getName())
+                                    .cardImage(card.getCardImage())
+                                    .mine(true)
+                                    .build()
+                    );
+                    break;
+                }
+            }
+            if(!mine) {
+                cardDTOList.add(
+                        CardResponseDTO.builder()
+                                .company(card.getCompany())
+                                .type(card.getType())
+                                .name(card.getName())
+                                .cardImage(card.getCardImage())
+                                .mine(false)
+                                .build()
+                );
+            }
+        }
+
+        ArrayList<String> companyList=new ArrayList<>(companySet);
+        ArrayList<String> typeList=new ArrayList<>(typeSet);
+
+        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
+        Collections.sort(companyList);
+        Collections.sort(typeList);
+
+        CardSearchResponseDTO dto=CardSearchResponseDTO.builder()
                 .companyList(companyList)
                 .typeList(typeList)
+                .cardList(cardDTOList)
                 .build();
 
         return dto;
