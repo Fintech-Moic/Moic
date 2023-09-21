@@ -37,16 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = parseBearerToken(request);
         if(token!=null){
-            System.out.println("token : " + token);
             jwtService.validateToken(token);
             UserAuthentication userAuthentication = parseUserSpecification(token);
             List<String> roles = Arrays.asList("USER");
             List<SimpleGrantedAuthority> authorities = roles.stream()
                     .map(role -> new SimpleGrantedAuthority(role))
                     .collect(Collectors.toList());
-    //        AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(userAuthentication,token,null);
             Authentication authentication = new JwtAuthenticationToken(userAuthentication,"", authorities);
-    //        authenticated.setDetails(new WebAuthenticationDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
@@ -71,7 +68,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .filter(subject -> subject.length() >= 1)
                 .map(jwtService::getSubject)
                 .orElse("null");
-        System.out.println("id : " + id);
         return new UserAuthentication(id);
     }
 

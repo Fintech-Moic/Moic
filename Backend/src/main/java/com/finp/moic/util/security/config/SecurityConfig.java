@@ -58,7 +58,9 @@ public class SecurityConfig {
 //                )
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/user/login","/user/regist","/auth/refresh","/user/check/**").permitAll()
+//                                .requestMatchers("/user/login","/user/regist","/auth/refresh","/user/check/**").permitAll()
+                                /** 편리한 개발을 위해 권한이 없어도 접근 허가 => 추후에 꼭 변경 해야 함!! **/
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(handler ->

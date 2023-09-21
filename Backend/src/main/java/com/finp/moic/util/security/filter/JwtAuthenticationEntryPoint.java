@@ -22,7 +22,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        System.out.println("entryPoint 들어옴");
+//        System.out.println("entryPoint 들어옴");
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(ExceptionEnum.UNAUTHENTICATED_MEMBER.getStatus().value());
         BusinessExceptionEntity error = new BusinessExceptionEntity(ExceptionEnum.UNAUTHENTICATED_MEMBER.getErrorCode(),ExceptionEnum.UNAUTHENTICATED_MEMBER.getErrorMessage());
