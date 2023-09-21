@@ -1,14 +1,8 @@
 package com.finp.moic.user.controller;
 
 
-import com.finp.moic.user.model.dto.request.UserEmailCheckRequestDTO;
-import com.finp.moic.user.model.dto.request.UserIdCheckRequestDTO;
-import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
-import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
-import com.finp.moic.user.model.dto.response.UserEmailCheckResponseDTO;
-import com.finp.moic.user.model.dto.response.UserIdCheckResponseDTO;
-import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
-import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
+import com.finp.moic.user.model.dto.request.*;
+import com.finp.moic.user.model.dto.response.*;
 import com.finp.moic.user.model.service.UserService;
 import com.finp.moic.util.cookie.CookieService;
 import com.finp.moic.util.dto.ResponseDTO;
@@ -95,6 +89,21 @@ public class UserController {
         String message = "사용 가능한 E-mail 입니다.";
         if(!response.isValid()){
             message = "중복된 E-mail 입니다.";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message(message)
+                .data(response)
+                .build());
+    }
+
+    @PostMapping("/check/password")
+    public ResponseEntity<ResponseDTO> isPasswordValidate(
+            @RequestBody @Valid UserPasswordCheckRequestDTO dto
+            ){
+        UserPasswordCheckResponseDTO response = userService.isPasswordValidate(dto);
+        String message = "비밀번호 확인 완료";
+        if(!response.isValid()){
+            message = "비밀번호가 유효하지 않습니다.";
         }
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message(message)

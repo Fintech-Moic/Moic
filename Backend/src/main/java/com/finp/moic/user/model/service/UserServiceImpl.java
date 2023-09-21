@@ -1,14 +1,8 @@
 package com.finp.moic.user.model.service;
 
 
-import com.finp.moic.user.model.dto.request.UserEmailCheckRequestDTO;
-import com.finp.moic.user.model.dto.request.UserIdCheckRequestDTO;
-import com.finp.moic.user.model.dto.request.UserLoginRequestDTO;
-import com.finp.moic.user.model.dto.request.UserRegistRequestDTO;
-import com.finp.moic.user.model.dto.response.UserEmailCheckResponseDTO;
-import com.finp.moic.user.model.dto.response.UserIdCheckResponseDTO;
-import com.finp.moic.user.model.dto.response.UserLoginResponseDTO;
-import com.finp.moic.user.model.dto.response.UserRegistResponseDTO;
+import com.finp.moic.user.model.dto.request.*;
+import com.finp.moic.user.model.dto.response.*;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.database.service.RedisService;
@@ -113,6 +107,18 @@ public class UserServiceImpl implements UserService{
                     .build();
         }
         return UserEmailCheckResponseDTO.builder()
+                .isValid(true)
+                .build();
+    }
+
+    @Override
+    public UserPasswordCheckResponseDTO isPasswordValidate(UserPasswordCheckRequestDTO dto){
+        if(!dto.getPassWord().equals(dto.getPassWordCheck())){
+            return UserPasswordCheckResponseDTO.builder()
+                    .isValid(false)
+                    .build();
+        }
+        return UserPasswordCheckResponseDTO.builder()
                 .isValid(true)
                 .build();
     }
