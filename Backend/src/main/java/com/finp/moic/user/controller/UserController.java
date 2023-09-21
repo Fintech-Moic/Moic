@@ -32,8 +32,8 @@ public class UserController {
 
     @PostMapping(value = "/login", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> login(
-            @RequestBody @Valid UserLoginRequestDTO dto
-            , HttpServletResponse httpResponse
+            @RequestBody @Valid UserLoginRequestDTO dto,
+            HttpServletResponse httpResponse
     ){
         UserLoginResponseDTO response = userService.login(dto);
 
@@ -43,6 +43,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("로그인 성공")
                 .data(response)
+                .build());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDTO> logout(
+            @AuthenticationPrincipal UserAuthentication userAuthentication,
+            @CookieValue(name = "refreshToken") String refreshToken,
+            HttpServletResponse httpResponse
+    ){
+        userService.logout(userAuthentication,refreshToken);
+
+        httpResponse.addCookie(cookieService.deleteCookie());
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("로그아웃 성공")
                 .build());
     }
 
@@ -57,13 +71,6 @@ public class UserController {
                 .data(response)
                 .build());
     }
-
-//    @PostMapping("/logout")
-//    public ResponseEntity<ResponseDTO> logout(
-//            @AuthenticationPrincipal UserAuthentication userAuthentication
-//    ){
-//
-//    }
 
     @PostMapping("/check/id")
     public ResponseEntity<ResponseDTO> isIdValidate(

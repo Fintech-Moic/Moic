@@ -73,4 +73,22 @@ public class GlobalExceptionHandler {
                         . errorMessage(e.getError().getErrorMessage())
                         .build());
     }
+
+    @ExceptionHandler({ExpiredTokenException.class})
+    public ResponseEntity<BusinessExceptionEntity> exceptionHandler(HttpServletRequest request, final ExpiredTokenException e){
+        return ResponseEntity.status(e.getError().getStatus())
+                .body(BusinessExceptionEntity.builder()
+                        .errorCode(e.getError().getErrorCode())
+                        . errorMessage(e.getError().getErrorMessage())
+                        .build());
+    }
+
+    @ExceptionHandler({InvalidTokenException.class})
+    public ResponseEntity<BusinessExceptionEntity> exceptionHandler(HttpServletRequest request, final InvalidTokenException e){
+        return ResponseEntity.status(e.getError().getStatus())
+                .body(BusinessExceptionEntity.builder()
+                        .errorCode(e.getError().getErrorCode())
+                        . errorMessage(e.getError().getErrorMessage())
+                        .build());
+    }
 }

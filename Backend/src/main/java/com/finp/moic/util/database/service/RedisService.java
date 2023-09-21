@@ -73,6 +73,7 @@ public class RedisService {
 
     /***** [Refresh Token] *****/
     public void setRefreshToken(String refreshToken, String userId){
+        // key : refresh, value : userId
         securityRedis.opsForValue().set(refreshToken,userId);
         //일단 60초
         securityRedis.expire(refreshToken,60L, TimeUnit.SECONDS);
@@ -80,6 +81,10 @@ public class RedisService {
 
     public String getRefreshToken(String refreshToken){
         return securityRedis.opsForValue().get(refreshToken);
+    }
+
+    public boolean deleteRefreshToken(String refreshToken){
+        return securityRedis.delete(refreshToken);
     }
 
 }

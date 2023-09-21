@@ -10,8 +10,10 @@ import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.IdOrPasswordNotMatchedException;
 import com.finp.moic.util.exception.list.UserNotFoundException;
 import com.finp.moic.util.exception.list.ValidationException;
+import com.finp.moic.util.security.dto.UserAuthentication;
 import com.finp.moic.util.security.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +59,16 @@ public class UserServiceImpl implements UserService{
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Override
+    public void logout(UserAuthentication userAuthentication, String refreshToken){
+
+        // 1. 인증 객체 지우기
+        SecurityContextHolder.clearContext();
+
+        // 2. Redis에서 refresh 지우기
+        redisService.deleteRefreshToken(refreshToken);
     }
 
     @Override

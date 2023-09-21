@@ -3,6 +3,7 @@ package com.finp.moic.user.model.service;
 
 import com.finp.moic.user.model.dto.request.*;
 import com.finp.moic.user.model.dto.response.*;
+import com.finp.moic.util.security.dto.UserAuthentication;
 
 public interface UserService {
 
@@ -11,6 +12,7 @@ public interface UserService {
     UserIdCheckResponseDTO isIdValidate(UserIdCheckRequestDTO dto);
     UserEmailCheckResponseDTO isEmailValidate(UserEmailCheckRequestDTO dto);
     UserPasswordCheckResponseDTO isPasswordValidate(UserPasswordCheckRequestDTO dto);
+    void logout(UserAuthentication userAuthentication,String refreshToken);
 
 
 }

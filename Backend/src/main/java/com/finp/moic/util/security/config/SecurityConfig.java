@@ -1,6 +1,6 @@
 package com.finp.moic.util.security.config;
 
-import com.finp.moic.util.security.filter.JwtAuthenticationEntryPoint;
+import com.finp.moic.util.security.filter.UnAuthenticationEntryPoint;
 import com.finp.moic.util.security.filter.JwtAuthenticationFilter;
 import com.finp.moic.util.security.handler.CustomAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 
 @EnableWebSecurity
@@ -19,29 +24,19 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final UnAuthenticationEntryPoint unAuthenticationEntryPoint;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler customAccessDeniedHandler,
-                          JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+                          UnAuthenticationEntryPoint unAuthenticationEntryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.unAuthenticationEntryPoint = unAuthenticationEntryPoint;
     }
 
     private static final String[] PERMIT_ALL_PATTERNS = new String[] {
             "/user/regist",
             "/user/login"
     };
-
-    // 시큐시큐 기능 안 쓰는 url
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer(){
-//        return (web) -> web.ignoring()
-//                .requestMatchers(Stream
-//                        .of(PERMIT_ALL_PATTERNS)
-//                        .map(AntPathRequestMatcher::antMatcher)
-//                        .toArray(AntPathRequestMatcher[]::new));
-//    }
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -50,12 +45,6 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .formLogin(formLogin -> formLogin.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers(Stream
-//                                .of(PERMIT_ALL_PATTERNS)
-//                                .map(AntPathRequestMatcher::antMatcher)
-//                                .toArray(AntPathRequestMatcher[]::new)).permitAll()
-//                )
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
 //                                .requestMatchers("/user/login","/user/regist","/auth/refresh","/user/check/**").permitAll()
@@ -65,9 +54,10 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(handler ->
                         handler
-                            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                            .authenticationEntryPoint(unAuthenticationEntryPoint)
                             .accessDeniedHandler(customAccessDeniedHandler))
-                .logout((logout) -> logout.permitAll())
+                //로그아웃 했을 때 이동할 페이지
+                .logout((logout) -> logout.logoutSuccessUrl("/"))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 //                .addFilterBefore((Filter) jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -77,5 +67,17 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://moic.site"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
