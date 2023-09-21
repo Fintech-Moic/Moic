@@ -1,4 +1,4 @@
-package com.finp.moic.card.model.repository;
+package com.finp.moic.card.model.repository.queryDSL;
 
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.QCard;
@@ -17,6 +17,9 @@ public class UserCardRepositoryImpl implements UserCardRepositoryCustom{
         this.queryFactory = queryFactory;
     }
 
+    /**
+     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
+     **/
     @Override
     public List<Card> findAllByUserId(String userId) {
 
