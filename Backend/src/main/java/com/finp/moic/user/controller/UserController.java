@@ -73,7 +73,7 @@ public class UserController {
 
     @PostMapping("/check/id")
     public ResponseEntity<ResponseDTO> isIdValidate(
-            @RequestBody UserIdCheckRequestDTO dto
+            @RequestBody @Valid UserIdCheckRequestDTO dto
     ){
         UserIdCheckResponseDTO response = userService.isIdValidate(dto);
         String message = "사용 가능한 ID 입니다.";
@@ -88,7 +88,7 @@ public class UserController {
 
     @PostMapping("/check/email")
     public ResponseEntity<ResponseDTO> isEmailValidate(
-            @RequestBody UserEmailCheckRequestDTO dto
+            @RequestBody @Valid UserEmailCheckRequestDTO dto
     ){
         UserEmailCheckResponseDTO response = userService.isEmailValidate(dto);
 
@@ -101,6 +101,7 @@ public class UserController {
                 .data(response)
                 .build());
     }
+
 
     @PostMapping("/test")
     public String test(
