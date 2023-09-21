@@ -30,4 +30,17 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
                 .where(cardBenefit.card.name.eq(cardName))
                 .fetch();
     }
+
+
+    @Override
+    public List<CardBenefit> findAllByShopName(String shopName) {
+
+        QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
+
+        return queryFactory
+                .select(cardBenefit)
+                .from(cardBenefit)
+                .where(cardBenefit.shopName.eq(shopName))
+                .fetch();
+    }
 }

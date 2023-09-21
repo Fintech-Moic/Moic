@@ -101,7 +101,11 @@ public class CardController {
             @RequestParam("cardName") String cardName, @RequestParam("userId") String userId
             /*@AuthenticationPrincipal UserAuthentication userAuthentication*/ ){
 
+        /**
+         * TO DO :: Get에서 DTO 생성 시 Validation할 방법 찾기
+         **/
         CardSearchRequestDTO cardSearchRequestDTO=new CardSearchRequestDTO(company,type,cardName,userId);
+
         CardSearchResponseDTO response=cardServiceImpl.searchCard(cardSearchRequestDTO, cardSearchRequestDTO.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()

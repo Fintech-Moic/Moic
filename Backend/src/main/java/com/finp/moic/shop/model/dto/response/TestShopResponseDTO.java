@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class ShopResponseDTO implements Comparable<ShopResponseDTO> {
+public class TestShopResponseDTO implements Comparable<TestShopResponseDTO> {
 
     private String shopName;
     private String address;
@@ -14,12 +14,12 @@ public class ShopResponseDTO implements Comparable<ShopResponseDTO> {
     private double longitude;
     private double distance;
 
-    public ShopResponseDTO() {
+    public TestShopResponseDTO() {
     }
 
     @Builder
-    public ShopResponseDTO(String shopName, String address,
-                           double latitude, double longitude, double distance) {
+    public TestShopResponseDTO(String shopName, String address,
+                               double latitude, double longitude, double distance) {
         this.shopName = shopName;
         this.address = address;
         this.latitude = latitude;
@@ -28,7 +28,7 @@ public class ShopResponseDTO implements Comparable<ShopResponseDTO> {
     }
 
     @Override
-    public int compareTo(ShopResponseDTO o) {
+    public int compareTo(TestShopResponseDTO o) {
         return Double.compare(this.distance,o.distance);
     }
 }

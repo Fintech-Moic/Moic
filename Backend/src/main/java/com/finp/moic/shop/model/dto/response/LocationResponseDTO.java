@@ -10,14 +10,14 @@ import java.util.List;
 @ToString
 public class LocationResponseDTO {
 
-    private List<ShopResponseDTO> shop;
+    private List<TestShopResponseDTO> shop;
     private double time;
 
     public LocationResponseDTO() {
     }
 
     @Builder
-    public LocationResponseDTO(List<ShopResponseDTO> shop, double time) {
+    public LocationResponseDTO(List<TestShopResponseDTO> shop, double time) {
         this.shop = shop;
         this.time = time;
     }
