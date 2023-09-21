@@ -1,7 +1,5 @@
 package com.finp.moic.shop.controller;
 
-import com.finp.moic.card.model.dto.request.CardDetailRequestDTO;
-import com.finp.moic.card.model.dto.response.CardDetailResponseDTO;
 import com.finp.moic.shop.model.dto.request.LocationRequestDTO;
 import com.finp.moic.shop.model.dto.response.LocationResponseDTO;
 import com.finp.moic.shop.service.ShopServiceImpl;

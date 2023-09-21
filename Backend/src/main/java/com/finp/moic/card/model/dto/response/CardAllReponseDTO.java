@@ -4,11 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @ToString
-public class CardAllReponseDTO {
+public class CardAllReponseDTO implements Serializable {
 
     private List<String> companyList;
     private List<String> typeList;

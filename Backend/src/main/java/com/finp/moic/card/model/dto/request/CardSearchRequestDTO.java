@@ -18,6 +18,9 @@ public class CardSearchRequestDTO {
     @NotNull
     private String cardName;
 
+    /**
+     * TO DO :: userId 삭제
+     **/
     private String userId;
 
     public CardSearchRequestDTO() {

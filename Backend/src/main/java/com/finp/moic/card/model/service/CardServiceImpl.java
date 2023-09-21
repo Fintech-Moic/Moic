@@ -132,6 +132,7 @@ public class CardServiceImpl implements CardService {
             }
         }
 
+        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
         Collections.sort(companyList);
         Collections.sort(typeList);
 
@@ -225,6 +226,10 @@ public class CardServiceImpl implements CardService {
         String type=cardSearchRequestDTO.getType();
         String cardName=cardSearchRequestDTO.getCardName();
 
+        /*** Validation ***/
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
         /*** RDB Access ***/
         List<Card> cardList=cardRepository.search(company,type,cardName);
 
@@ -271,6 +276,7 @@ public class CardServiceImpl implements CardService {
         ArrayList<String> companyList=new ArrayList<>(companySet);
         ArrayList<String> typeList=new ArrayList<>(typeSet);
 
+        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
         Collections.sort(companyList);
         Collections.sort(typeList);
 

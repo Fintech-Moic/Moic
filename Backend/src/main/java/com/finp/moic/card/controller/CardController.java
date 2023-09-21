@@ -83,8 +83,7 @@ public class CardController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<ResponseDTO> detailCard(/*@RequestBody @Valid CardDetailRequestDTO cardDetailRequestDTO*/
-                            @RequestParam("cardName") String cardName){
+    public ResponseEntity<ResponseDTO> detailCard(@RequestParam("cardName") String cardName){
 
         CardDetailResponseDTO response=cardServiceImpl.detailCard(cardName);
 
@@ -97,13 +96,12 @@ public class CardController {
     /**
      * TO DO :: userId 삭제 및 주석 해제
      * **/
-    /**
-     * TO DO :: GetMapping 변경
-     * **/
-    @PostMapping("/search")
-    public ResponseEntity<ResponseDTO> searchCard(@RequestBody @Valid CardSearchRequestDTO cardSearchRequestDTO
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDTO> searchCard(@RequestParam("company") String company, @RequestParam("type") String type,
+            @RequestParam("cardName") String cardName, @RequestParam("userId") String userId
             /*@AuthenticationPrincipal UserAuthentication userAuthentication*/ ){
 
+        CardSearchRequestDTO cardSearchRequestDTO=new CardSearchRequestDTO(company,type,cardName,userId);
         CardSearchResponseDTO response=cardServiceImpl.searchCard(cardSearchRequestDTO, cardSearchRequestDTO.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()

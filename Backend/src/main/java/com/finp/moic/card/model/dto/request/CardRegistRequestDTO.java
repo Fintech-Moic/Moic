@@ -4,9 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-/**
- * TO DO :: userId 삭제
- */
 @Getter
 @ToString
 public class CardRegistRequestDTO {
@@ -15,6 +12,9 @@ public class CardRegistRequestDTO {
     @NotBlank
     private String cardName;
 
+    /**
+     * TO DO :: userId 삭제
+     */
     private String userId;
 
     public CardRegistRequestDTO() {
