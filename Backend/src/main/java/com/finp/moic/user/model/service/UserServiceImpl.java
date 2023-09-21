@@ -135,5 +135,18 @@ public class UserServiceImpl implements UserService{
                 .build();
     }
 
+    @Override
+    public UserDetailResponseDTO getUserDetail(String id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
+        return UserDetailResponseDTO.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .yearOfBirth(user.getYearOfBirth())
+                .build();
+    }
+
 }
 
