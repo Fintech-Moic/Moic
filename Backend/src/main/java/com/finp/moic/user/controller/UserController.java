@@ -118,6 +118,18 @@ public class UserController {
                 .build());
     }
 
+    @PostMapping("/detail")
+    public ResponseEntity<ResponseDTO> getUserDetail(
+            @AuthenticationPrincipal UserAuthentication userAuthentication
+    ){
+        UserDetailResponseDTO response = userService.getUserDetail(userAuthentication.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("회원 정보 조회")
+                .data(response)
+                .build());
+    }
+
 
     @PostMapping("/test")
     public String test(

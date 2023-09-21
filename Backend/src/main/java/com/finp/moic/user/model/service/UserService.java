@@ -13,6 +13,7 @@ public interface UserService {
     UserEmailCheckResponseDTO isEmailValidate(UserEmailCheckRequestDTO dto);
     UserPasswordCheckResponseDTO isPasswordValidate(UserPasswordCheckRequestDTO dto);
     void logout(UserAuthentication userAuthentication,String refreshToken);
+    UserDetailResponseDTO getUserDetail(String id);
 
 
 }
