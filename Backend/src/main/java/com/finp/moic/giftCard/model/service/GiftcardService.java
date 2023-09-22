@@ -6,5 +6,5 @@ import java.io.IOException;
 
 public interface GiftcardService {
 
-    public void registGift(MultipartFile multipartFile) throws IOException;
+    public String regist(MultipartFile multipartFile) throws IOException;
 }

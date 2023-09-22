@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class S3Service {
@@ -27,11 +28,12 @@ public class S3Service {
 
     public String uploadFile(MultipartFile multipartFile){
 
+
         if (multipartFile == null) throw new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND);
 
-        String imagePath;
         String originalName = multipartFile.getOriginalFilename();
-
+        String fileExtension = originalName.substring(originalName.lastIndexOf("."));
+        String uniqueName = UUID.randomUUID().toString() + fileExtension;
         long size = multipartFile.getSize();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -39,14 +41,14 @@ public class S3Service {
         objectMetadata.setContentLength(size);
 
         try {
-            amazonS3Client.putObject(new PutObjectRequest(bucket, originalName, multipartFile.getInputStream()
+            amazonS3Client.putObject(new PutObjectRequest(bucket, uniqueName, multipartFile.getInputStream()
                     , objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
         } catch(IOException e) {
             throw new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND);
         }
 
-        imagePath = amazonS3Client.getUrl(bucket,originalName).toString();
-        return imagePath;
+       return amazonS3Client.getUrl(bucket,uniqueName).toString();
+
     }
 
 
