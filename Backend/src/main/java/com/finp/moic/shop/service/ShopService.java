@@ -12,8 +12,6 @@ import java.util.List;
 public interface ShopService {
     LocationResponseDTO testJavaLocation(LocationRequestDTO locationRequestDTO);
 
-    LocationResponseDTO testRDBLocation(LocationRequestDTO locationRequestDTO);
-
     LocationResponseDTO testRedisLocation(LocationRequestDTO locationRequestDTO);
 
     ShopDetailResponseDTO detailShop(ShopDetailRequestDTO shopDetailRequestDTO);

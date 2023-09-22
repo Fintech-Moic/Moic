@@ -10,6 +10,7 @@ import java.io.Serializable;
 @ToString
 public class CardMineResponseDTO implements Serializable {
 
+    private String id;
     private String company;
     private String type;
     private String name;
@@ -19,8 +20,9 @@ public class CardMineResponseDTO implements Serializable {
     }
 
     @Builder
-    public CardMineResponseDTO(String company, String type, String name,
-                               String cardImage) {
+    public CardMineResponseDTO(String id, String company, String type,
+                               String name, String cardImage) {
+        this.id = id;
         this.company = company;
         this.type = type;
         this.name = name;
