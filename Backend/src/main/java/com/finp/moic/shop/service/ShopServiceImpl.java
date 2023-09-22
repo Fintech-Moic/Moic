@@ -10,6 +10,8 @@ import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.entity.Shop;
 import com.finp.moic.shop.model.repository.ShopRepository;
+import com.finp.moic.util.database.service.RedisService;
+import com.finp.moic.util.database.service.ShopLocationRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,15 @@ public class ShopServiceImpl implements ShopService{
     private final ShopRepository shopRepository;
     private final CardBenefitRepository cardBenefitRepository;
     private final GiftcardRepository giftcardRepository;
+    private final ShopLocationRedisService shopLocationRedisService;
 
     @Autowired
     public ShopServiceImpl(ShopRepository shopRepository, CardBenefitRepository cardBenefitRepository,
-                           GiftcardRepository giftcardRepository) {
+                           GiftcardRepository giftcardRepository, ShopLocationRedisService shopLocationRedisService) {
         this.shopRepository = shopRepository;
         this.cardBenefitRepository = cardBenefitRepository;
         this.giftcardRepository = giftcardRepository;
+        this.shopLocationRedisService = shopLocationRedisService;
     }
 
     @Override
@@ -82,14 +86,17 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public LocationResponseDTO testRedisLocation(LocationRequestDTO locationRequestDTO) {
+    public LocationResponseDTO testRedisLocation(/*LocationRequestDTO locationRequestDTO*/) {
         long start=System.nanoTime();
 
-
+        List<Shop> shopList=shopRepository.findAll();
+        shopLocationRedisService.setShopLocationList(shopList);
+        shopLocationRedisService.getShopLocationListNearByUser("스타벅스",37.5013068,127.0396597,5);
 
         long end=System.nanoTime();
 
         double time=(end-start)/1000000.0;
+        System.out.println(time);
         return null;
     }
 

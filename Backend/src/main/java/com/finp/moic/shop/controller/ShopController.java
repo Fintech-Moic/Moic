@@ -40,9 +40,9 @@ public class ShopController {
     }
 
     @PostMapping("/test/location/redis")
-    public ResponseEntity<ResponseDTO> testRedisLocation(@RequestBody @Valid LocationRequestDTO locationRequestDTO){
+    public ResponseEntity<ResponseDTO> testRedisLocation(/*@RequestBody @Valid LocationRequestDTO locationRequestDTO*/){
 
-        LocationResponseDTO response= shopService.testRedisLocation(locationRequestDTO);
+        LocationResponseDTO response= shopService.testRedisLocation(/*locationRequestDTO*/);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("Redis 위경도 테스트")
