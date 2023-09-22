@@ -27,6 +27,7 @@ public enum ExceptionEnum {
     CARD_REGIST_DUPLICATE(HttpStatus.BAD_REQUEST,"C005","이미 등록된 카드입니다."),
 
     // 4. GIFT CARD (G)
+    GIFTCARD_NOT_FOUND(HttpStatus.NOT_FOUND, "G001","등록된 기프트콘이 없습니다."),
 
     // 5. CARD BENEFIT (CB)
 
