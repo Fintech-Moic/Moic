@@ -30,7 +30,7 @@ public class UserController {
         this.cookieService = cookieService;
     }
 
-    @PostMapping(value = "/login", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login")
     public ResponseEntity<ResponseDTO> login(
             @RequestBody @Valid UserLoginRequestDTO dto,
             HttpServletResponse httpResponse
@@ -60,7 +60,7 @@ public class UserController {
                 .build());
     }
 
-    @PostMapping(value = "/regist", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/regist")
     public ResponseEntity<ResponseDTO> regist(
             @RequestBody @Valid UserRegistRequestDTO dto
     ){
