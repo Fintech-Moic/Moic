@@ -135,11 +135,22 @@ public class UserController {
             @AuthenticationPrincipal UserAuthentication userAuthentication,
             @RequestBody UserModifyRequestDTO dto
     ){
-        UserModifyResponseDTO response = userService.modifyUser(userAuthentication.getId(), dto);
+        userService.modifyUser(userAuthentication.getId(), dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("회원 정보 수정")
-                .data(response)
+                .build());
+    }
+
+    @PostMapping("/modify/password")
+    public ResponseEntity<ResponseDTO> modifyPassword(
+            @AuthenticationPrincipal UserAuthentication userAuthentication,
+            @RequestBody UserModifyPasswordRequestDTO dto
+    ){
+        userService.modifyPassword(userAuthentication.getId(), dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("비밀번호 수정")
                 .build());
     }
 

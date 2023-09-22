@@ -151,16 +151,21 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public UserModifyResponseDTO modifyUser(String id, UserModifyRequestDTO dto){
+    public void modifyUser(String id, UserModifyRequestDTO dto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         user.setGender(dto.getGender());
         user.setYearOfBirth(dto.getYearOfBirth());
+    }
 
-        return UserModifyResponseDTO.builder()
-                .success(true)
-                .build();
+    @Override
+    @Transactional
+    public void modifyPassword(String id, UserModifyPasswordRequestDTO dto){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
 
 }

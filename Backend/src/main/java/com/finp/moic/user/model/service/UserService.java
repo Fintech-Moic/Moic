@@ -14,7 +14,7 @@ public interface UserService {
     UserPasswordCheckResponseDTO isPasswordValidate(UserPasswordCheckRequestDTO dto);
     void logout(UserAuthentication userAuthentication,String refreshToken);
     UserDetailResponseDTO getUserDetail(String id);
-    UserModifyResponseDTO modifyUser(String id, UserModifyRequestDTO dto);
-
+    void modifyUser(String id, UserModifyRequestDTO dto);
+    void modifyPassword(String id, UserModifyPasswordRequestDTO dto);
 
 }
