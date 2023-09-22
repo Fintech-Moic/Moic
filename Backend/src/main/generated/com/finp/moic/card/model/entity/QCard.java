@@ -26,7 +26,7 @@ public class QCard extends EntityPathBase<Card> {
 
     public final StringPath cardImage = createString("cardImage");
 
-    public final NumberPath<Long> cardSeq = createNumber("cardSeq", Long.class);
+    public final ComparablePath<java.util.UUID> cardSeq = createComparable("cardSeq", java.util.UUID.class);
 
     public final StringPath company = createString("company");
 

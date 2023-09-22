@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface CardRepository extends JpaRepository<Card,Long>, CardRepositoryCustom {
+public interface CardRepository extends JpaRepository<Card, UUID>, CardRepositoryCustom {
 
     /**
      * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정

@@ -4,9 +4,11 @@ import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.Where;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name="card")
 @Table(indexes = {
@@ -20,9 +22,8 @@ import java.util.List;
 public class Card extends Base {
 
     @Id
-    @Column(name="card_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long cardSeq;
+    @Column(name="card_seq", length = 16)
+    private UUID cardSeq;
 
     @Column(name="company", length = 20, nullable = false)
     private String company;
@@ -42,7 +43,8 @@ public class Card extends Base {
     public Card() {
     }
 
-    public Card(long cardSeq, String company, String type, String name, String cardImage, List<CardBenefit> cardBenefits) {
+    public Card(UUID cardSeq, String company, String type,
+                String name, String cardImage, List<CardBenefit> cardBenefits) {
         this.cardSeq = cardSeq;
         this.company = company;
         this.type = type;
