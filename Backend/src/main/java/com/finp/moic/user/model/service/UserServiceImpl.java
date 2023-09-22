@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -145,6 +146,20 @@ public class UserServiceImpl implements UserService{
                 .email(user.getEmail())
                 .gender(user.getGender())
                 .yearOfBirth(user.getYearOfBirth())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public UserModifyResponseDTO modifyUser(String id, UserModifyRequestDTO dto){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
+        user.setGender(dto.getGender());
+        user.setYearOfBirth(dto.getYearOfBirth());
+
+        return UserModifyResponseDTO.builder()
+                .success(true)
                 .build();
     }
 

@@ -130,6 +130,19 @@ public class UserController {
                 .build());
     }
 
+    @PostMapping("/modify")
+    public ResponseEntity<ResponseDTO> modifyUser(
+            @AuthenticationPrincipal UserAuthentication userAuthentication,
+            @RequestBody UserModifyRequestDTO dto
+    ){
+        UserModifyResponseDTO response = userService.modifyUser(userAuthentication.getId(), dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("회원 정보 수정")
+                .data(response)
+                .build());
+    }
+
 
     @PostMapping("/test")
     public String test(

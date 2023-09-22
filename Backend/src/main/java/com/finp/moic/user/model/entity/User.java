@@ -79,6 +79,14 @@ public class User extends Base {
         this.userBookMarks = userBookMarks;
     }
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setYearOfBirth(int yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
+    }
+
     @Override
     public String toString() {
         return "User{" +
