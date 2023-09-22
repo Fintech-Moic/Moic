@@ -209,6 +209,7 @@ public class CardServiceImpl implements CardService {
         }
 
         CardDetailResponseDTO dto=CardDetailResponseDTO.builder()
+                .id(card.getCardSeq().toString())
                 .company(card.getCompany())
                 .type(card.getType())
                 .name(card.getName())

@@ -12,6 +12,7 @@ import java.util.List;
 @ToString
 public class CardDetailResponseDTO implements Serializable {
 
+    private String id;
     private String company;
     private String type;
     private String name;
@@ -22,13 +23,13 @@ public class CardDetailResponseDTO implements Serializable {
     }
 
     @Builder
-    public CardDetailResponseDTO(String company, String type, String name,
-                                 String cardImage, List<CardBenefitResponseDTO> cardBenefit) {
+    public CardDetailResponseDTO(String id, String company, String type,
+                                 String name, String cardImage, List<CardBenefitResponseDTO> cardBenefit) {
+        this.id = id;
         this.company = company;
         this.type = type;
         this.name = name;
         this.cardImage = cardImage;
         this.cardBenefit = cardBenefit;
     }
-
 }
