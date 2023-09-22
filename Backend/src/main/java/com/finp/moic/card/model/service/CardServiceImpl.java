@@ -109,6 +109,7 @@ public class CardServiceImpl implements CardService {
                     mine=true;
                     cardDTOList.add(
                             CardResponseDTO.builder()
+                            .id(card.getCardSeq().toString())
                             .company(card.getCompany())
                             .type(card.getType())
                             .name(card.getName())
@@ -122,6 +123,7 @@ public class CardServiceImpl implements CardService {
             if(!mine) {
                 cardDTOList.add(
                         CardResponseDTO.builder()
+                                .id(card.getCardSeq().toString())
                                 .company(card.getCompany())
                                 .type(card.getType())
                                 .name(card.getName())
@@ -132,7 +134,6 @@ public class CardServiceImpl implements CardService {
             }
         }
 
-        /* 혜지 : 변동 가능성 있는 리스트이므로 가나다 순 정렬 */
         Collections.sort(companyList);
         Collections.sort(typeList);
 
@@ -160,6 +161,7 @@ public class CardServiceImpl implements CardService {
         for(Card card:cardList){
                 dtoList.add(
                         CardMineResponseDTO.builder()
+                                .id(card.getCardSeq().toString())
                                 .company(card.getCompany())
                                 .type(card.getType())
                                 .name(card.getName())
@@ -246,6 +248,7 @@ public class CardServiceImpl implements CardService {
                     mine=true;
                     dto.add(
                             CardResponseDTO.builder()
+                                    .id(card.getCardSeq().toString())
                                     .company(card.getCompany())
                                     .type(card.getType())
                                     .name(card.getName())
@@ -259,6 +262,7 @@ public class CardServiceImpl implements CardService {
             if(!mine) {
                 dto.add(
                         CardResponseDTO.builder()
+                                .id(card.getCardSeq().toString())
                                 .company(card.getCompany())
                                 .type(card.getType())
                                 .name(card.getName())

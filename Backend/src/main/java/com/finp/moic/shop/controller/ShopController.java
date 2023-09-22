@@ -39,17 +39,6 @@ public class ShopController {
                 .build());
     }
 
-    @PostMapping("/test/location/rdb")
-    public ResponseEntity<ResponseDTO> testRDBLocation(@RequestBody @Valid LocationRequestDTO locationRequestDTO){
-
-        LocationResponseDTO response= shopService.testRDBLocation(locationRequestDTO);
-
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("RDB 위경도 테스트")
-                .data(response)
-                .build());
-    }
-
     @PostMapping("/test/location/redis")
     public ResponseEntity<ResponseDTO> testRedisLocation(@RequestBody @Valid LocationRequestDTO locationRequestDTO){
 

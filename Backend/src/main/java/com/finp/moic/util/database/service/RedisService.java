@@ -66,10 +66,12 @@ public class RedisService {
     }
 
     /***** [User CardBenefits] *****/
-
-
-
     /***** [User GiftCards] *****/
+
+    /***** [Shop Location] *****/
+    public void setShopLocation(){
+
+    }
 
     /***** [Refresh Token] *****/
     public void setRefreshToken(String refreshToken, String userId){

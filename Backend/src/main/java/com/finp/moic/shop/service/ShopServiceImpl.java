@@ -82,47 +82,10 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public LocationResponseDTO testRDBLocation(LocationRequestDTO locationRequestDTO) {
-
-        long start=System.nanoTime();
-
-        List<Shop> shopList=shopRepository.findAll(); //
-
-        double myLat=locationRequestDTO.getLatitude();
-        double myLng=locationRequestDTO.getLongitude();
-
-        List<TestShopResponseDTO> shopDTO=new ArrayList<>();
-        for(Shop shop:shopList){
-
-            shopDTO.add(
-                    TestShopResponseDTO.builder()
-                            .shopName(shop.getName())
-                            .address(shop.getAddress())
-                            .latitude(shop.getLatitude())
-                            .longitude(shop.getLongitude())
-                            //.distance(null)
-                            .build()
-            );
-        }
-        Collections.sort(shopDTO);
-
-        long end=System.nanoTime();
-
-        double time=(end-start)/1000000.0;
-
-        LocationResponseDTO dto=LocationResponseDTO.builder()
-                .shop(shopDTO)
-                .time(time)
-                .build();
-
-        return dto;
-    }
-
-    @Override
     public LocationResponseDTO testRedisLocation(LocationRequestDTO locationRequestDTO) {
         long start=System.nanoTime();
 
-//
+
 
         long end=System.nanoTime();
 
