@@ -1,19 +1,18 @@
-package com.finp.moic.autoComplete;
+package com.finp.moic.autoComplete.controller;
 
+import com.finp.moic.autoComplete.service.AutoCompleteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-public class AutoController {
+public class AutoCompleteController {
 
     AutoCompleteService autoCompleteService;
     @Autowired
-    public AutoController(AutoCompleteService autoCompleteService) {
+    public AutoCompleteController(AutoCompleteService autoCompleteService) {
         this.autoCompleteService = autoCompleteService;
     }
     @PostMapping("/autocomplete")
