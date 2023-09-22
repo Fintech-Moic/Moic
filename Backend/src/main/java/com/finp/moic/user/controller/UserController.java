@@ -105,16 +105,13 @@ public class UserController {
 
     @PostMapping("/check/password")
     public ResponseEntity<ResponseDTO> isPasswordValidate(
+            @AuthenticationPrincipal UserAuthentication userAuthentication,
             @RequestBody @Valid UserPasswordCheckRequestDTO dto
             ){
-        UserPasswordCheckResponseDTO response = userService.isPasswordValidate(dto);
-        String message = "비밀번호 확인 완료";
-        if(!response.isValid()){
-            message = "비밀번호가 유효하지 않습니다.";
-        }
+        userService.isPasswordValidate(userAuthentication.getId(), dto);
+
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message(message)
-                .data(response)
+                .message("비밀번호 확인 완료")
                 .build());
     }
 
@@ -151,6 +148,17 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("비밀번호 수정")
+                .build());
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<ResponseDTO> deleteUser(
+            @AuthenticationPrincipal UserAuthentication userAuthentication
+    ){
+        userService.deleteUser(userAuthentication.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("회원 탈퇴 완료")
                 .build());
     }
 

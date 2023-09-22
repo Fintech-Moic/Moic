@@ -91,4 +91,13 @@ public class GlobalExceptionHandler {
                         . errorMessage(e.getError().getErrorMessage())
                         .build());
     }
+
+    @ExceptionHandler({PasswordNotMatchedException.class})
+    public ResponseEntity<BusinessExceptionEntity> exceptionHandler(HttpServletRequest request, final PasswordNotMatchedException e){
+        return ResponseEntity.status(e.getError().getStatus())
+                .body(BusinessExceptionEntity.builder()
+                        .errorCode(e.getError().getErrorCode())
+                        . errorMessage(e.getError().getErrorMessage())
+                        .build());
+    }
 }
