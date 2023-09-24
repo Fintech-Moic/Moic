@@ -89,8 +89,6 @@ public class ShopServiceImpl implements ShopService{
     public LocationResponseDTO testRedisLocation(/*LocationRequestDTO locationRequestDTO*/) {
         long start=System.nanoTime();
 
-        List<Shop> shopList=shopRepository.findAll();
-        shopLocationRedisService.setShopLocationList(shopList);
         shopLocationRedisService.getShopLocationListNearByUser("스타벅스",37.5013068,127.0396597,5);
 
         long end=System.nanoTime();

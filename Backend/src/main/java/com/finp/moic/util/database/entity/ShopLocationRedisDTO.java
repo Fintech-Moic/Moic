@@ -1,14 +1,17 @@
 package com.finp.moic.util.database.entity;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.data.geo.Point;
+
+import java.io.Serializable;
 
 @Getter
 @ToString
-public class ShopLocationRedisDTO {
+public class ShopLocationRedisDTO implements Serializable {
 
     private String mainCategory; //사용 여부 미정
     private String category;
@@ -27,5 +30,10 @@ public class ShopLocationRedisDTO {
         this.location = location;
         this.address = address;
         this.guName = guName;
+    }
+
+    public static ShopLocationRedisDTO fromJson(String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(json, ShopLocationRedisDTO.class);
     }
 }
