@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
 @Getter
 @ToString
+@RedisHash
 public class ShopLocationRedisDTO implements Serializable {
 
     private String mainCategory; //사용 여부 미정

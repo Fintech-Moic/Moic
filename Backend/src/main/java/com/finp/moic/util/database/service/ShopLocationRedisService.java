@@ -1,5 +1,7 @@
 package com.finp.moic.util.database.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finp.moic.shop.model.entity.Shop;
 import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +31,28 @@ public class ShopLocationRedisService {
     /**
      * 가맹점별 위치와 정보 저장 (Redis가 날아갔을 경우 대비 -> 되도록 쓰지 말기)
      * **/
-    public void setShopLocationList(List<Shop> shopList){
+
+    /**
+     * TO DO :: 예외 처리
+     */
+    public void setShopLocationList(List<Shop> shopList) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
         for(Shop shop:shopList){
             geoOperations.add(
               shop.getName(), //KEY
               new Point(shop.getLongitude(),shop.getLatitude()),
-              ShopLocationRedisDTO
-                      .builder()
-                      .mainCategory(shop.getMainCategory())
-                      .category(shop.getCategory())
-                      .location(shop.getLocation())
-                      .address(shop.getAddress())
-                      .guName(shop.getGuName())
-                      .build()
+                    objectMapper.writeValueAsString(
+                        ShopLocationRedisDTO
+                              .builder()
+                              .mainCategory(shop.getMainCategory())
+                              .category(shop.getCategory())
+                              .location(shop.getLocation())
+                              .address(shop.getAddress())
+                              .guName(shop.getGuName())
+                              .build()
+                    )
             );
         }
     }
@@ -56,26 +67,21 @@ public class ShopLocationRedisService {
         GeoResults<RedisGeoCommands.GeoLocation<Object>> results= geoOperations.radius(shopName,
                 new Circle(new Point(longitude,latitude),new Distance(radius, RedisGeoCommands.DistanceUnit.KILOMETERS)));
 
-        System.out.println("RESULTS");
-        System.out.println(results);
-
         for (GeoResult<RedisGeoCommands.GeoLocation<Object>> geoResult : results) {
+
             RedisGeoCommands.GeoLocation<Object> location = geoResult.getContent();
+            String json=(String) location.getName();
 
-            System.out.println(location.getName());
-
+            /**
+             * TO DO :: 예외 처리
+             */
             try {
-                ShopLocationRedisDTO shopLocation = ShopLocationRedisDTO.fromJson(String.valueOf(location.getName()));
-                System.out.println("SHOP LOCATION");
-                System.out.println(shopLocation);
+                ShopLocationRedisDTO shopLocation = ShopLocationRedisDTO.fromJson(json);
                 shopLocationList.add(shopLocation);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        System.out.println("SHOPLOCATIONLIST");
-        System.out.println(shopLocationList);
 
         return shopLocationList;
     }
