@@ -9,6 +9,9 @@ public interface CardBenefitRepositoryCustom {
     /**
      * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
      **/
+
+    Boolean exist(String cardName);
+
     List<CardBenefit> findByCardName(String cardName);
 
     List<CardBenefit> findAllByShopName(String shopName);

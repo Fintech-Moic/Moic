@@ -1,5 +1,6 @@
 package com.finp.moic.shop.model.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -16,6 +17,7 @@ public class GiftResponseDTO {
     public GiftResponseDTO() {
     }
 
+    @QueryProjection
     @Builder
     public GiftResponseDTO(String productName, String barcodeImage,
                            long barcodeNumber, String dueDate) {

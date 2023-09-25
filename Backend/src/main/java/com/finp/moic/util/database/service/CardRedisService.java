@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserCardRedisService {
+public class CardRedisService {
 
     private final RedisTemplate<String, Object> mainRedis;
 
     @Autowired
-    public UserCardRedisService(@Qualifier("MainRedis") RedisTemplate<String, Object> mainRedis) {
+    public CardRedisService(@Qualifier("MainRedis") RedisTemplate<String, Object> mainRedis) {
         this.mainRedis = mainRedis;
     }
 
@@ -40,5 +40,6 @@ public class UserCardRedisService {
     public List getUserCardList(String userId){
         return mainRedis.opsForList().range(setUserCardKey(userId),0,-1);
     }
+
 
 }

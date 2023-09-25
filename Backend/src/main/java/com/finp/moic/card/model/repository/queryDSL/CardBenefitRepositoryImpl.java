@@ -1,6 +1,7 @@
 package com.finp.moic.card.model.repository.queryDSL;
 
 import com.finp.moic.card.model.entity.CardBenefit;
+import com.finp.moic.card.model.entity.QCard;
 import com.finp.moic.card.model.entity.QCardBenefit;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,19 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
     /**
      * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
      **/
+
+    public Boolean exist(String cardName){
+        QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
+
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(cardBenefit)
+                .where(cardBenefit.card.name.eq(cardName))
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
+
     @Override
     public List<CardBenefit> findByCardName(String cardName) {
 

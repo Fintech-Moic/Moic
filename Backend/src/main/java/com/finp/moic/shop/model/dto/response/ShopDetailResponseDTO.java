@@ -1,5 +1,6 @@
 package com.finp.moic.shop.model.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -22,6 +23,7 @@ public class ShopDetailResponseDTO {
     public ShopDetailResponseDTO() {
     }
 
+    @QueryProjection
     @Builder
     public ShopDetailResponseDTO(String category, String shopName, String shopLocation,
                                  String address, double latitude, double longitude,

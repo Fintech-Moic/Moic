@@ -1,5 +1,6 @@
 package com.finp.moic.card.model.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -20,6 +21,7 @@ public class CardResponseDTO implements Serializable {
     public CardResponseDTO() {
     }
 
+    @QueryProjection
     @Builder
     public CardResponseDTO(String id, String company, String type,
                            String name, String cardImage, boolean mine) {

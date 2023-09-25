@@ -9,6 +9,10 @@ public interface UserCardRepositoryCustom {
     /**
      * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
      **/
-    List<Card> findAllByUserId(String userId);
 
+    Boolean exist(String userId, String cardName);
+
+    List<String> findAllCardNameByUserId(String userId);
+
+    List<Card> findAllByUserId(String userId);
 }

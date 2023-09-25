@@ -1,5 +1,6 @@
 package com.finp.moic.card.model.service;
 
+
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
@@ -12,7 +13,7 @@ import com.finp.moic.card.model.repository.jpa.CardRepository;
 import com.finp.moic.card.model.repository.jpa.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
-import com.finp.moic.util.database.service.RedisService;
+import com.finp.moic.util.database.service.CardRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.AlreadyExistException;
 import com.finp.moic.util.exception.list.NotFoundException;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -34,17 +34,16 @@ public class CardServiceImpl implements CardService {
     private final CardBenefitRepository cardBenefitRepository;
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
-    private final RedisService redisService;
+    private final CardRedisService cardRedisService;
 
-    @Autowired
     public CardServiceImpl(CardRepository cardRepository, CardBenefitRepository cardBenefitRepository,
                            UserRepository userRepository, UserCardRepository userCardRepository,
-                           RedisService redisService) {
+                           CardRedisService cardRedisService) {
         this.cardRepository = cardRepository;
         this.cardBenefitRepository = cardBenefitRepository;
         this.userRepository = userRepository;
         this.userCardRepository = userCardRepository;
-        this.redisService = redisService;
+        this.cardRedisService = cardRedisService;
     }
 
     @Override
@@ -54,19 +53,16 @@ public class CardServiceImpl implements CardService {
          * TO DO :: SOFT DELETE 확인해, 존재 시 회복하기
          * */
 
-        /*** Validation ***/
+        /*** RDB Access ***/
         Card card=cardRepository.findByName(cardRegistRequestDTO.getCardName())
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
+        /*** Validation ***/
         /* 혜지 : 한 사용자에 대해 중복된 카드 등록 불가 */
-        List<Card> cardList=userCardRepository.findAllByUserId(userId);
-        for(Card userCard:cardList){
-            if(card.getName().equals(userCard.getName())){
-                throw new AlreadyExistException(ExceptionEnum.CARD_REGIST_DUPLICATE);
-            }
-        }
+        if(userCardRepository.exist(user.getId(),card.getName()))
+            throw new AlreadyExistException(ExceptionEnum.CARD_REGIST_DUPLICATE);
 
         /*** RDB Access ***/
         /* 혜지 : userCardSeq 등의 기본 데이터셋 저장 */
@@ -97,19 +93,22 @@ public class CardServiceImpl implements CardService {
         List<String> companyList=cardRepository.findAllCompany();
         List<String> typeList=cardRepository.findAllType();
 
-        List<Card> allCardList=cardRepository.findAll();
-        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
+        List<CardResponseDTO> allCardList=cardRepository.findAllCard();
+        /**
+         * TO DO :: UserCard에 대한 캐싱 데이터 조회 및 백업
+         **/
+        List<String> myCardNameList=userCardRepository.findAllCardNameByUserId(userId);
 
         /*** DTO Builder ***/
         List<CardResponseDTO> cardDTOList=new ArrayList<>();
-        for(Card card:allCardList){
+        for(CardResponseDTO card:allCardList){
             boolean mine=false;
-            for(Card userCard:myCardList){
-                if(card.getName().equals(userCard.getName())){
+            for(String userCard:myCardNameList){
+                if(card.getName().equals(userCard)){
                     mine=true;
                     cardDTOList.add(
                             CardResponseDTO.builder()
-                            .id(card.getCardSeq().toString())
+                            .id(card.getId().toString())
                             .company(card.getCompany())
                             .type(card.getType())
                             .name(card.getName())
@@ -123,7 +122,7 @@ public class CardServiceImpl implements CardService {
             if(!mine) {
                 cardDTOList.add(
                         CardResponseDTO.builder()
-                                .id(card.getCardSeq().toString())
+                                .id(card.getId().toString())
                                 .company(card.getCompany())
                                 .type(card.getType())
                                 .name(card.getName())

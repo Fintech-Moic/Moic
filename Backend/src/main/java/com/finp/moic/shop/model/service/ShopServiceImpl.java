@@ -1,19 +1,16 @@
-package com.finp.moic.shop.service;
+package com.finp.moic.shop.model.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.giftCard.model.entity.Giftcard;
 import com.finp.moic.giftCard.model.repository.GiftcardRepository;
-import com.finp.moic.shop.model.dto.request.LocationRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopDetailRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.entity.Shop;
 import com.finp.moic.shop.model.repository.ShopRepository;
 import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
-import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.database.service.ShopLocationRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;

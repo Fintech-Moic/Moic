@@ -21,17 +21,35 @@ public class UserCardRepositoryImpl implements UserCardRepositoryCustom{
     /**
      * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
      **/
-    @Override
-    public List<Card> findAllByUserId(String userId) {
 
+    public Boolean exist(String userId, String cardName) {
         QUserCard userCard=QUserCard.userCard;
-        QCard card=QCard.card;
+
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(userCard)
+                .where(
+                        userCard.user.id.eq(userId)
+                        .and(userCard.card.name.eq(cardName))
+                )
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
+
+    @Override
+    public List<String> findAllCardNameByUserId(String userId) {
+        QUserCard userCard=QUserCard.userCard;
 
         return queryFactory
-                .select(card)
+                .select(userCard.card.name)
                 .from(userCard)
                 .where(userCard.user.id.eq(userId))
                 .fetch();
     }
 
+    @Override
+    public List<Card> findAllByUserId(String userId) {
+        return null;
+    }
 }

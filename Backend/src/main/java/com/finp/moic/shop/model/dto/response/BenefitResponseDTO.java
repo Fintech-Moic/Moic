@@ -1,5 +1,6 @@
 package com.finp.moic.shop.model.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,6 +18,7 @@ public class BenefitResponseDTO {
     public BenefitResponseDTO() {
     }
 
+    @QueryProjection
     @Builder
     public BenefitResponseDTO(String cardName, String content,
                               String discount, String point, String cashBack) {
