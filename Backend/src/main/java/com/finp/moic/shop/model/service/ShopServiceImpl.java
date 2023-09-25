@@ -37,6 +37,9 @@ public class ShopServiceImpl implements ShopService{
         this.shopLocationRedisService = shopLocationRedisService;
     }
 
+    /**
+     * CONFIRM :: TEST용. 추후 삭제
+     **/
     @Override
     public ShopLocationRedisDTO testRedisLocation(){
 
