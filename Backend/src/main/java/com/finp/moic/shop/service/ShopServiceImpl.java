@@ -1,5 +1,7 @@
 package com.finp.moic.shop.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.giftCard.model.entity.Giftcard;
@@ -10,6 +12,9 @@ import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.entity.Shop;
 import com.finp.moic.shop.model.repository.ShopRepository;
+import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
+import com.finp.moic.util.database.service.RedisService;
+import com.finp.moic.util.database.service.ShopLocationRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,72 +30,23 @@ public class ShopServiceImpl implements ShopService{
     private final ShopRepository shopRepository;
     private final CardBenefitRepository cardBenefitRepository;
     private final GiftcardRepository giftcardRepository;
+    private final ShopLocationRedisService shopLocationRedisService;
 
     @Autowired
     public ShopServiceImpl(ShopRepository shopRepository, CardBenefitRepository cardBenefitRepository,
-                           GiftcardRepository giftcardRepository) {
+                           GiftcardRepository giftcardRepository, ShopLocationRedisService shopLocationRedisService) {
         this.shopRepository = shopRepository;
         this.cardBenefitRepository = cardBenefitRepository;
         this.giftcardRepository = giftcardRepository;
+        this.shopLocationRedisService = shopLocationRedisService;
     }
 
     @Override
-    public LocationResponseDTO testJavaLocation(LocationRequestDTO locationRequestDTO) {
+    public ShopLocationRedisDTO testRedisLocation() throws JsonProcessingException {
 
-        long start=System.nanoTime();
+        List<ShopLocationRedisDTO> dto=shopLocationRedisService.getShopLocationListNearByUser("스타벅스",37.5013068,127.0396597,5);
 
-        List<Shop> shopList=shopRepository.findAll();
-
-        double myLat=locationRequestDTO.getLatitude();
-        double myLng=locationRequestDTO.getLongitude();
-
-        List<TestShopResponseDTO> shopDTO=new ArrayList<>();
-        for(Shop shop:shopList){
-
-            double shopLat=shop.getLatitude();
-            double shopLng=shop.getLongitude();
-
-            double theta = myLng - shopLng;
-            double dist = Math.sin((myLat * Math.PI/180.0))* Math.sin((shopLat * Math.PI/180.0))
-                    + Math.cos((myLat * Math.PI/180.0))*Math.cos((shopLat * Math.PI/180.0))*Math.cos((theta * Math.PI/180.0));
-            dist = Math.acos(dist);
-            dist = (dist * 180 / Math.PI);
-            dist = dist * 60*1.1515*1609.344;
-
-            shopDTO.add(
-                    TestShopResponseDTO.builder()
-                            .shopName(shop.getName())
-                            .address(shop.getAddress())
-                            .latitude(shop.getLatitude())
-                            .longitude(shop.getLongitude())
-                            .distance(dist)
-                            .build()
-            );
-        }
-        Collections.sort(shopDTO);
-
-        long end=System.nanoTime();
-
-        double time=(end-start)/1000000.0;
-
-        LocationResponseDTO dto=LocationResponseDTO.builder()
-                .shop(shopDTO)
-                .time(time)
-                .build();
-
-        return dto;
-    }
-
-    @Override
-    public LocationResponseDTO testRedisLocation(LocationRequestDTO locationRequestDTO) {
-        long start=System.nanoTime();
-
-
-
-        long end=System.nanoTime();
-
-        double time=(end-start)/1000000.0;
-        return null;
+        return dto.get(0);
     }
 
     @Override

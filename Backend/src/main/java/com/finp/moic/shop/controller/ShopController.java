@@ -1,5 +1,6 @@
 package com.finp.moic.shop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.finp.moic.shop.model.dto.request.LocationRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopDetailRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
@@ -7,6 +8,7 @@ import com.finp.moic.shop.model.dto.response.LocationResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopSearchResponseDTO;
 import com.finp.moic.shop.service.ShopService;
+import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
 import com.finp.moic.util.dto.ResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +30,10 @@ public class ShopController {
         this.shopService = shopService;
     }
 
-    @PostMapping("/test/location/java")
-    public ResponseEntity<ResponseDTO> testJavaLocation(@RequestBody @Valid LocationRequestDTO locationRequestDTO){
-
-        LocationResponseDTO response= shopService.testJavaLocation(locationRequestDTO);
-
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("JAVA 위경도 테스트")
-                .data(response)
-                .build());
-    }
-
     @PostMapping("/test/location/redis")
-    public ResponseEntity<ResponseDTO> testRedisLocation(@RequestBody @Valid LocationRequestDTO locationRequestDTO){
+    public ResponseEntity<ResponseDTO> testRedisLocation() throws JsonProcessingException {
 
-        LocationResponseDTO response= shopService.testRedisLocation(locationRequestDTO);
+        ShopLocationRedisDTO response= shopService.testRedisLocation();
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("Redis 위경도 테스트")
