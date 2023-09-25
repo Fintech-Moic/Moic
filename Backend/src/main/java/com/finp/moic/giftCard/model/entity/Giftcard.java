@@ -48,6 +48,7 @@ public class Giftcard extends Base {
     @Column(name="due_date", nullable = false)
     private LocalDateTime dueDate;
 
+
     public Giftcard() {
     }
 

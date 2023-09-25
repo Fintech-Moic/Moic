@@ -7,5 +7,7 @@ import java.util.List;
 public interface ShopRepositoryCustom {
     Shop findShopDetail(String shopName, String shopLocation);
 
-    List<Shop> findByKeyword(String keyword);
+    Shop findByKeyword(String keyword);
+
+    List<Shop> getShopListByCategory(String category);
 }
