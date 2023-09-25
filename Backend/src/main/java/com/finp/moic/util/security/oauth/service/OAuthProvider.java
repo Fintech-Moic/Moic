@@ -26,21 +26,6 @@ public enum OAuthProvider {
                     .email(String.valueOf(attributes.get("email")))
                     .nickname(String.valueOf(attributes.get("name")))
                     .oauthId(String.valueOf(oauth2User.getName()))
-                    .profileImgUrl(String.valueOf(attributes.get("picture")))
-                    .build();
-        }
-    },
-
-    NAVER("naver") {
-        @Override
-        public OAuthUserInfo toUserInfo(OAuth2User oauth2User) {
-            Map<String, Object> attributes = oauth2User.getAttribute("response");
-            return OAuthUserInfo.builder()
-                    .provider(NAVER.name)
-                    .email(String.valueOf(attributes.get("email")))
-                    .nickname(String.valueOf(attributes.get("nickname")))
-                    .oauthId(String.valueOf(attributes.get("id")))
-                    .profileImgUrl(String.valueOf(attributes.get("profile_image")))
                     .build();
         }
     },
@@ -58,7 +43,6 @@ public enum OAuthProvider {
                     .email(String.valueOf(account.get("email")))
                     .nickname(String.valueOf(properties.get("nickname")))
                     .oauthId(String.valueOf(attributes.get("id")))
-                    .profileImgUrl(String.valueOf(properties.get("profile_image")))
                     .build();
         }
     };

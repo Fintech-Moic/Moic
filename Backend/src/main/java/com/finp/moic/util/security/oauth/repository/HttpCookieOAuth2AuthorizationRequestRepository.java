@@ -5,6 +5,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
@@ -16,12 +17,19 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
 
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
-    private static final int cookieExpireSeconds = 180;
+    private static final int cookieExpireSeconds = 60;
+    private final CookieService cookieService;
+
+    @Autowired
+    public HttpCookieOAuth2AuthorizationRequestRepository(CookieService cookieService) {
+        this.cookieService = cookieService;
+    }
+
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
 
-        return CookieService.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
-                .map(cookie -> CookieService.deserialize(cookie, OAuth2AuthorizationRequest.class))
+        return cookieService.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
+                .map(cookie -> cookieService.deserialize(cookie, OAuth2AuthorizationRequest.class))
                 .orElse(null);
     }
     @Override
@@ -31,10 +39,10 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
             removeAuthorizationRequestCookies(request,response);
             return;
         }
-        CookieService.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieService.serialize(authorizationRequest), cookieExpireSeconds);
+        cookieService.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, cookieService.serialize(authorizationRequest), cookieExpireSeconds);
         String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
         if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
-            CookieService.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
+            cookieService.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
         }
     }
 
@@ -44,7 +52,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
         return this.loadAuthorizationRequest(request);
     }
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
-        CookieService.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
-        CookieService.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+        cookieService.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        cookieService.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
     }
 }

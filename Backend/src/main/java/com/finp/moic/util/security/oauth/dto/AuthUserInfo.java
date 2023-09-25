@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Getter
 public class AuthUserInfo {
 
@@ -13,8 +12,13 @@ public class AuthUserInfo {
     private String email;
     private List<String> roles;
 
-    @Override
-    public String toString() {
-        return "[AuthUserInfo = id: " + id + " email: " + email + " role: " + roles + "]";
+    public AuthUserInfo(){
+
+    }
+
+    public AuthUserInfo(String id, String email, List<String> roles) {
+        this.id = id;
+        this.email = email;
+        this.roles = roles;
     }
 }

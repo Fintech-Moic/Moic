@@ -4,17 +4,22 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class OAuthUserInfo {
 
-    String email;
-    String nickname;
-    String provider;
-    String oauthId;
-    String profileImgUrl;
+    private String email;
+    private String nickname;
+    private String provider;
+    private String oauthId;
 
-    @Override
-    public String toString() {
-        return "[AuthUserInfo = email: " + email + "nickname: " + nickname + " provider: " + provider + " oauthId: " + oauthId + " imageUrl: " + profileImgUrl + "]";
+    public OAuthUserInfo(){
+
+    }
+
+    @Builder
+    public OAuthUserInfo(String email, String nickname, String provider, String oauthId) {
+        this.email = email;
+        this.nickname = nickname;
+        this.provider = provider;
+        this.oauthId = oauthId;
     }
 }

@@ -32,10 +32,6 @@ public class SecurityConfig {
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-//    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
-//    private final CustomOAuth2UserService customOAuth2UserService;
-//    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-//    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler customAccessDeniedHandler,
                           UnAuthenticationEntryPoint unAuthenticationEntryPoint, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
@@ -46,10 +42,6 @@ public class SecurityConfig {
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
-//        this.cookieAuthorizationRequestRepository = cookieAuthorizationRequestRepository;
-//        this.customOAuth2UserService = customOAuth2UserService;
-//        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
-//        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
     }
 
     private static final String[] PERMIT_ALL_PATTERNS = new String[] {
@@ -86,21 +78,6 @@ public class SecurityConfig {
                                                 .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler))
-//                .oauth2Login(oauth ->
-//                        oauth
-//                                .authorizationEndpoint(endpoint ->
-//                                        endpoint.baseUri("/oauth2/authorize")
-//                                                .authorizationRequestRepository(cookieAuthorizationRequestRepository))
-//                                .successHandler(oAuth2AuthenticationSuccessHandler)
-//                                .failureHandler(oAuth2AuthenticationFailureHandler)
-//                                .redirectionEndpoint(endpoint ->
-//                                        endpoint
-//                                                .baseUri("/oauth2/callback/*"))
-//                                .userInfoEndpoint(endpoint ->
-//                                        endpoint
-//                                                .userService(customOAuth2UserService))
-//                                )
-
                 //로그아웃 했을 때 이동할 페이지
                 .logout((logout) -> logout.logoutSuccessUrl("/"))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

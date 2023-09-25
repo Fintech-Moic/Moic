@@ -11,6 +11,7 @@ import io.jsonwebtoken.JwtException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -21,6 +22,7 @@ public class AuthServiceImpl implements AuthService{
     private final JwtService jwtService;
     private final RedisService redisService;
 
+    @Autowired
     public AuthServiceImpl(JwtService jwtService, RedisService redisService){
         this.jwtService = jwtService;
         this.redisService = redisService;
