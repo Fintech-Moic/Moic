@@ -1,7 +1,7 @@
 package com.finp.moic.giftCard.controller;
 
 import com.finp.moic.giftCard.model.service.GiftcardServiceImpl;
-import com.finp.moic.util.database.service.S3Service;
+import com.finp.moic.util.database.service.S3ServiceImpl;
 import com.finp.moic.util.dto.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class GiftcardController {
 
     private final GiftcardServiceImpl giftcardService;
-    private final S3Service s3Service;
+    private final S3ServiceImpl s3Service;
 
     @Autowired
-    public GiftcardController(GiftcardServiceImpl giftcardService, S3Service s3Service) {
+    public GiftcardController(GiftcardServiceImpl giftcardService, S3ServiceImpl s3Service) {
         this.giftcardService = giftcardService;
         this.s3Service = s3Service;
     }

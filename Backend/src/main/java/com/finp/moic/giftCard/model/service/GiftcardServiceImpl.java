@@ -1,6 +1,6 @@
 package com.finp.moic.giftCard.model.service;
 
-import com.finp.moic.util.database.service.S3Service;
+import com.finp.moic.util.database.service.S3ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class GiftcardServiceImpl implements GiftcardService{
 
-    private final S3Service s3Service;
+    private final S3ServiceImpl s3Service;
 
     @Autowired
-    public GiftcardServiceImpl(S3Service s3Service) {
+    public GiftcardServiceImpl(S3ServiceImpl s3Service) {
         this.s3Service = s3Service;
     }
 
