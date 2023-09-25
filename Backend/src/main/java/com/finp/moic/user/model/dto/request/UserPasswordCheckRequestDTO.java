@@ -12,20 +12,14 @@ public class UserPasswordCheckRequestDTO {
     @NotNull
     @NotBlank
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,16}$")
-    private String passWord;
-
-    @NotNull
-    @NotBlank
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,16}$")
-    private String passWordCheck;
+    private String password;
 
     public UserPasswordCheckRequestDTO(){
 
     }
 
     @Builder
-    public UserPasswordCheckRequestDTO(@NotNull String passWord, @NotNull String passWordCheck){
-        this.passWord = passWord;
-        this.passWordCheck = passWordCheck;
+    public UserPasswordCheckRequestDTO(@NotNull String password){
+        this.password = password;
     }
 }

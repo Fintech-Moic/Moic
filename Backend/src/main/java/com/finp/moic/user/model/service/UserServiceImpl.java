@@ -7,9 +7,7 @@ import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
-import com.finp.moic.util.exception.list.IdOrPasswordNotMatchedException;
-import com.finp.moic.util.exception.list.UserNotFoundException;
-import com.finp.moic.util.exception.list.ValidationException;
+import com.finp.moic.util.exception.list.*;
 import com.finp.moic.util.security.dto.UserAuthentication;
 import com.finp.moic.util.security.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +73,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserRegistResponseDTO regist(UserRegistRequestDTO dto) {
 
+        Optional<User> byId = userRepository.findById(dto.getId());
+        if(byId.isPresent()){
+            throw new AlreadyExistException(ExceptionEnum.USER_REGIST_DUPLICATE);
+        }
+
         /*** Validation ***/
         if(!dto.getPassword().equals(dto.getPasswordCheck())){
             throw new ValidationException(ExceptionEnum.USER_REGIST_ERROR);
@@ -125,15 +128,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserPasswordCheckResponseDTO isPasswordValidate(UserPasswordCheckRequestDTO dto){
-        if(!dto.getPassWord().equals(dto.getPassWordCheck())){
-            return UserPasswordCheckResponseDTO.builder()
-                    .isValid(false)
-                    .build();
+    public void isPasswordValidate(String id, UserPasswordCheckRequestDTO dto){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+        if(!passwordEncoder.matches(dto.getPassword(),user.getPassword())){
+            throw new PasswordNotMatchedException(ExceptionEnum.USER_INVALID_PASSWORD);
         }
-        return UserPasswordCheckResponseDTO.builder()
-                .isValid(true)
-                .build();
+
     }
 
     @Override
@@ -166,6 +167,15 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(String id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
+        userRepository.delete(user);
     }
 
 }

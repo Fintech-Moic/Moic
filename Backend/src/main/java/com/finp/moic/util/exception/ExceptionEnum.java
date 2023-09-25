@@ -13,7 +13,8 @@ public enum ExceptionEnum {
     USER_REGIST_DUPLICATE(HttpStatus.BAD_REQUEST,"U000","이미 존재하는 회원입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "존재하지 않는 사용자입니다."),
     USER_INVALID(HttpStatus.UNAUTHORIZED,"U002","아이디 혹은 비밀번호가 틀렸습니다."),
-    USER_REGIST_ERROR(HttpStatus.BAD_REQUEST,"U003","입력 사항을 확인하세요."),
+    USER_INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"U003","비밀번호가 틀렸습니다."),
+    USER_REGIST_ERROR(HttpStatus.BAD_REQUEST,"U004","입력 사항을 확인하세요."),
 
     // 2. SHOP (S)
     SHOP_NOT_FOUND(HttpStatus.NOT_FOUND,"S001","가맹점 조회에 실패했습니다."),
@@ -27,6 +28,7 @@ public enum ExceptionEnum {
     CARD_REGIST_DUPLICATE(HttpStatus.BAD_REQUEST,"C005","이미 등록된 카드입니다."),
 
     // 4. GIFT CARD (G)
+    GIFTCARD_NOT_FOUND(HttpStatus.NOT_FOUND, "G001","등록된 기프트콘이 없습니다."),
 
     // 5. CARD BENEFIT (CB)
 

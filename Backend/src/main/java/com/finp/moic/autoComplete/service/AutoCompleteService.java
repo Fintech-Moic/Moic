@@ -1,4 +1,4 @@
-package com.finp.moic.autoComplete;
+package com.finp.moic.autoComplete.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +28,6 @@ public class AutoCompleteService {
         List<String> autoCompleteList = new ArrayList<String>();
 
         Long rank = zSetOperations.rank(key,word);
-        System.out.println(rank);
 
         if (rank != null) {
             Set<String> rangeList = zSetOperations.range(key,rank,rank + 1000);
@@ -37,6 +36,7 @@ public class AutoCompleteService {
                     .limit(8)
                     .toList();
         }
+
         return autoCompleteList;
     }
 }

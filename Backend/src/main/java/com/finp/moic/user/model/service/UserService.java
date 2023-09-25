@@ -11,10 +11,11 @@ public interface UserService {
     UserRegistResponseDTO regist(UserRegistRequestDTO dto);
     UserIdCheckResponseDTO isIdValidate(UserIdCheckRequestDTO dto);
     UserEmailCheckResponseDTO isEmailValidate(UserEmailCheckRequestDTO dto);
-    UserPasswordCheckResponseDTO isPasswordValidate(UserPasswordCheckRequestDTO dto);
+    void isPasswordValidate(String id, UserPasswordCheckRequestDTO dto);
     void logout(UserAuthentication userAuthentication,String refreshToken);
     UserDetailResponseDTO getUserDetail(String id);
     void modifyUser(String id, UserModifyRequestDTO dto);
     void modifyPassword(String id, UserModifyPasswordRequestDTO dto);
+    void deleteUser(String id);
 
 }
