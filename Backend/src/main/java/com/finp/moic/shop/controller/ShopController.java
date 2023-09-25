@@ -1,6 +1,6 @@
 package com.finp.moic.shop.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.finp.moic.shop.model.dto.request.ShopCategoryRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopDetailRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
@@ -27,9 +27,26 @@ public class ShopController {
     }
 
     @PostMapping("/test/location/redis")
-    public ResponseEntity<ResponseDTO> testRedisLocation() throws JsonProcessingException {
+    public ResponseEntity<ResponseDTO> testRedisLocation(){
 
         ShopLocationRedisDTO response= shopService.testRedisLocation();
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("Redis 위경도 테스트")
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/map/category")
+    public ResponseEntity<ResponseDTO> getShopListByCategory(@RequestParam("category") String category,
+                                                             @RequestParam("latitude") double latitude,
+                                                             @RequestParam("longitude") double longitude,
+                                                             @RequestParam("userId") String userId){
+
+        ShopCategoryRequestDTO shopCategoryRequestDTO=new ShopCategoryRequestDTO(category,latitude,longitude);
+        List<ShopSearchResponseDTO> dto= shopService.getShopListByCategory(shopCategoryRequestDTO,userId);
+        HashMap<String,Object> response=new HashMap<>();
+        response.put("shopList",dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("Redis 위경도 테스트")
