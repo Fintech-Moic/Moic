@@ -1,19 +1,17 @@
-package com.finp.moic.shop.service;
+package com.finp.moic.shop.model.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.giftCard.model.entity.Giftcard;
 import com.finp.moic.giftCard.model.repository.GiftcardRepository;
-import com.finp.moic.shop.model.dto.request.LocationRequestDTO;
+import com.finp.moic.shop.model.dto.request.ShopCategoryRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopDetailRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.entity.Shop;
 import com.finp.moic.shop.model.repository.ShopRepository;
 import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
-import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.database.service.ShopLocationRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
@@ -42,7 +40,7 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public ShopLocationRedisDTO testRedisLocation() throws JsonProcessingException {
+    public ShopLocationRedisDTO testRedisLocation(){
 
         List<ShopLocationRedisDTO> dto=shopLocationRedisService.getShopLocationListNearByUser("스타벅스",37.5013068,127.0396597,5);
 
@@ -105,87 +103,115 @@ public class ShopServiceImpl implements ShopService{
 
         /**
          * CONFIRM :: 로직
-         * 현재 로직 : keyword 기반으로 shop 검색
-         * -> 내 위치 기반으로 가까운 순 정렬 및 앞 10개만 선정
-         * -> 각 shop에 대해 cardbenefit과 giftcard 여부 모두 체크해 true/false로 반환. 그러나 임시로 FALSE만 리턴한다.
+         * 현재 로직 : keyword 기반으로 shop에서 검색된 첫번째 결과에 대해
+         * -> 내 위치 기반으로 반경 3km 내 가까운 순 정렬
+         * -> 각 shop에 대해 cardbenefit과 giftcard 여부 모두 체크해 true/false로 반환. 그러나 현재 임의로 리턴한다.
          **/
 
         /**
-         * TO DO :: Redis 캐싱 처리 후 Redis 위경도 정렬해 앞 10개만 선정 -> 내가 가진 카드 혜택과 기프티콘 캐시 탐색 후 true/false로 리턴.
-         **/
-        /**
-         * CONFIRM :: DTO 변환이 너무 많음
+         * TO DO :: 내가 가진 카드 혜택과 기프티콘 캐시 탐색 후 true/false로 리턴.
          **/
 
         /** RDB Access **/
-        List<Shop> shopList=shopRepository.findByKeyword(shopSearchRequestDTO.getKeyword());
-
-        double myLat=shopSearchRequestDTO.getLatitude();
-        double myLng=shopSearchRequestDTO.getLongitude();
-
-        List<ShopTempDTO> tempDTOList=new ArrayList<>();
-        for(Shop shop:shopList){
-
-            double shopLat=shop.getLatitude();
-            double shopLng=shop.getLongitude();
-
-            double theta = myLng - shopLng;
-            double dist = Math.sin((myLat * Math.PI/180.0))* Math.sin((shopLat * Math.PI/180.0))
-                    + Math.cos((myLat * Math.PI/180.0))*Math.cos((shopLat * Math.PI/180.0))*Math.cos((theta * Math.PI/180.0));
-            dist = Math.acos(dist);
-            dist = (dist * 180 / Math.PI);
-            dist = dist * 60*1.1515*1609.344;
-
-            tempDTOList.add(
-                ShopTempDTO.builder()
-                        .category(shop.getCategory())
-                        .shopName(shop.getName())
-                        .shopLocation(shop.getLocation())
-                        .address(shop.getAddress())
-                        .distance(dist)
-                        .build()
-            );
-        }
-        Collections.sort(tempDTOList);
+        Shop shop=shopRepository.findByKeyword(shopSearchRequestDTO.getKeyword());
 
         List<ShopSearchResponseDTO> dto=new ArrayList<>();
 
+        List<ShopLocationRedisDTO> redisDTO=shopLocationRedisService.getShopLocationListNearByUser(shop.getName(),
+                shopSearchRequestDTO.getLatitude(),shopSearchRequestDTO.getLongitude(),3);
+        int size=redisDTO.size();
+        for(int i=0;i<size/3;i++){
+            dto.add(
+                    ShopSearchResponseDTO.builder()
+                            .category(redisDTO.get(i).getCategory())
+                            .shopName(shop.getName())
+                            .shopLocation(redisDTO.get(i).getLocation())
+                            .address(redisDTO.get(i).getAddress())
+                            .benefits(true)
+                            .gifts(true)
+                            .build()
+            );
+        }
+        for(int i=size/3+1;i<size/2;i++){
+            dto.add(
+                    ShopSearchResponseDTO.builder()
+                            .category(redisDTO.get(i).getCategory())
+                            .shopName(shop.getName())
+                            .shopLocation(redisDTO.get(i).getLocation())
+                            .address(redisDTO.get(i).getAddress())
+                            .benefits(false)
+                            .gifts(true)
+                            .build()
+            );
+        }
+        for(int i=size/2+1;i<size;i++){
+            dto.add(
+                    ShopSearchResponseDTO.builder()
+                            .category(redisDTO.get(i).getCategory())
+                            .shopName(shop.getName())
+                            .shopLocation(redisDTO.get(i).getLocation())
+                            .address(redisDTO.get(i).getAddress())
+                            .benefits(true)
+                            .gifts(false)
+                            .build()
+            );
+        }
 
-        for(int i=0;i<3;i++){
-            dto.add(
-                    ShopSearchResponseDTO.builder()
-                            .category(tempDTOList.get(i).getCategory())
-                            .shopName(tempDTOList.get(i).getShopName())
-                            .shopLocation(tempDTOList.get(i).getShopLocation())
-                            .address(tempDTOList.get(i).getAddress())
-                            .benefits(true) //임시 값
-                            .gifts(false) //임시 값
-                            .build()
-            );
-        }
-        for(int i=3;i<6;i++){
-            dto.add(
-                    ShopSearchResponseDTO.builder()
-                            .category(tempDTOList.get(i).getCategory())
-                            .shopName(tempDTOList.get(i).getShopName())
-                            .shopLocation(tempDTOList.get(i).getShopLocation())
-                            .address(tempDTOList.get(i).getAddress())
-                            .benefits(false) //임시 값
-                            .gifts(true) //임시 값
-                            .build()
-            );
-        }
-        for(int i=6;i<10;i++){
-            dto.add(
-                    ShopSearchResponseDTO.builder()
-                            .category(tempDTOList.get(i).getCategory())
-                            .shopName(tempDTOList.get(i).getShopName())
-                            .shopLocation(tempDTOList.get(i).getShopLocation())
-                            .address(tempDTOList.get(i).getAddress())
-                            .benefits(true) //임시 값
-                            .gifts(true) //임시 값
-                            .build()
-            );
+        return dto;
+    }
+
+    @Override
+    public List<ShopSearchResponseDTO> getShopListByCategory(ShopCategoryRequestDTO shopCategoryRequestDTO, String userId) {
+
+        List<Shop> shopList=shopRepository.getShopListByCategory(shopCategoryRequestDTO.getCategory());
+
+        /**
+         * TO DO :: 내가 가진 카드 혜택과 기프티콘 캐시 탐색 후 true/false로 리턴.
+         **/
+
+
+        List<ShopSearchResponseDTO> dto=new ArrayList<>();
+
+        for(Shop shop: shopList) {
+            List<ShopLocationRedisDTO> redisDTO = shopLocationRedisService.getShopLocationListNearByUser(shop.getName(),
+                    shopCategoryRequestDTO.getLatitude(), shopCategoryRequestDTO.getLongitude(), 3);
+            int size = redisDTO.size();
+            for (int i = 0; i < size / 3; i++) {
+                dto.add(
+                        ShopSearchResponseDTO.builder()
+                                .category(redisDTO.get(i).getCategory())
+                                .shopName(shop.getName())
+                                .shopLocation(redisDTO.get(i).getLocation())
+                                .address(redisDTO.get(i).getAddress())
+                                .benefits(true)
+                                .gifts(true)
+                                .build()
+                );
+            }
+            for (int i = size / 3 + 1; i < size / 2; i++) {
+                dto.add(
+                        ShopSearchResponseDTO.builder()
+                                .category(redisDTO.get(i).getCategory())
+                                .shopName(shop.getName())
+                                .shopLocation(redisDTO.get(i).getLocation())
+                                .address(redisDTO.get(i).getAddress())
+                                .benefits(false)
+                                .gifts(true)
+                                .build()
+                );
+            }
+            for (int i = size / 2 + 1; i < size; i++) {
+                dto.add(
+                        ShopSearchResponseDTO.builder()
+                                .category(redisDTO.get(i).getCategory())
+                                .shopName(shop.getName())
+                                .shopLocation(redisDTO.get(i).getLocation())
+                                .address(redisDTO.get(i).getAddress())
+                                .benefits(true)
+                                .gifts(false)
+                                .build()
+                );
+            }
         }
 
         return dto;
