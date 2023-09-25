@@ -13,8 +13,8 @@ public class QCardMineResponseDTO extends ConstructorExpression<CardMineResponse
 
     private static final long serialVersionUID = -2048009942L;
 
-    public QCardMineResponseDTO(com.querydsl.core.types.Expression<String> id, com.querydsl.core.types.Expression<String> company, com.querydsl.core.types.Expression<String> type, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> cardImage) {
-        super(CardMineResponseDTO.class, new Class<?>[]{String.class, String.class, String.class, String.class, String.class}, id, company, type, name, cardImage);
+    public QCardMineResponseDTO(com.querydsl.core.types.Expression<java.util.UUID> id, com.querydsl.core.types.Expression<String> company, com.querydsl.core.types.Expression<String> type, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> cardImage) {
+        super(CardMineResponseDTO.class, new Class<?>[]{java.util.UUID.class, String.class, String.class, String.class, String.class}, id, company, type, name, cardImage);
     }
 
 }

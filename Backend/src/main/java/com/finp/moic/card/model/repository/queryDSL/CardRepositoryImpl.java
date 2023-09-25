@@ -1,6 +1,7 @@
 package com.finp.moic.card.model.repository.queryDSL;
 
 import com.finp.moic.card.model.dto.response.CardResponseDTO;
+import com.finp.moic.card.model.dto.response.QCardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.QCard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -36,12 +37,19 @@ public class CardRepositoryImpl implements CardRepositoryCustom{
     }
 
     @Override
-    public List<Card> search(String company, String type, String cardName) {
-
+    public List<CardResponseDTO> search(String company, String type, String cardName) {
         QCard card=QCard.card;
 
         return queryFactory
-                .select(card)
+                .select(
+                        new QCardResponseDTO(
+                                card.cardSeq.as("id"),
+                                card.company,
+                                card.type,
+                                card.name,
+                                card.cardImage.as("cardImage")
+                        )
+                )
                 .from(card)
                 .where(
                         card.company.contains(company)
@@ -55,6 +63,17 @@ public class CardRepositoryImpl implements CardRepositoryCustom{
     public List<CardResponseDTO> findAllCard() {
         QCard card=QCard.card;
 
-        return null;
+        return queryFactory
+                .select(
+                        new QCardResponseDTO(
+                                card.cardSeq.as("id"),
+                                card.company,
+                                card.type,
+                                card.name,
+                                card.cardImage.as("cardImage")
+                        )
+                )
+                .from(card)
+                .fetch();
     }
 }

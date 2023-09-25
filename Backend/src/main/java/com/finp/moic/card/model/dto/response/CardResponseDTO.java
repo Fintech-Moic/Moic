@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @ToString
@@ -22,14 +23,21 @@ public class CardResponseDTO implements Serializable {
     }
 
     @QueryProjection
-    @Builder
-    public CardResponseDTO(String id, String company, String type,
-                           String name, String cardImage, boolean mine) {
-        this.id = id;
+    public CardResponseDTO(UUID id, String company,
+                           String type, String name, String cardImage) {
+        this.id = id.toString();
         this.company = company;
         this.type = type;
         this.name = name;
         this.cardImage = cardImage;
-        this.mine = mine;
+        this.mine=false;
     }
+
+    /**
+     * CONFIRM :: DTO Builder를 줄이기 위해 setter 생성
+     **/
+    public void setFlag(boolean mine){
+        this.mine=mine;
+    }
+
 }

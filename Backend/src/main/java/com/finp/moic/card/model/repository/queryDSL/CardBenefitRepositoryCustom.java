@@ -1,5 +1,6 @@
 package com.finp.moic.card.model.repository.queryDSL;
 
+import com.finp.moic.card.model.dto.response.CardBenefitResponseDTO;
 import com.finp.moic.card.model.entity.CardBenefit;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface CardBenefitRepositoryCustom {
 
     Boolean exist(String cardName);
 
-    List<CardBenefit> findByCardName(String cardName);
+    List<CardBenefitResponseDTO> findByCardName(String cardName);
 
     List<CardBenefit> findAllByShopName(String shopName);
 }

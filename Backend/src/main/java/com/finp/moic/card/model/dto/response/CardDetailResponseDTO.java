@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @ToString
@@ -23,11 +24,10 @@ public class CardDetailResponseDTO implements Serializable {
     public CardDetailResponseDTO() {
     }
 
-    @QueryProjection
     @Builder
-    public CardDetailResponseDTO(String id, String company, String type,
+    public CardDetailResponseDTO(UUID id, String company, String type,
                                  String name, String cardImage, List<CardBenefitResponseDTO> cardBenefit) {
-        this.id = id;
+        this.id = id.toString();
         this.company = company;
         this.type = type;
         this.name = name;

@@ -1,5 +1,8 @@
 package com.finp.moic.card.model.repository.queryDSL;
 
+import com.finp.moic.card.model.dto.response.CardMineResponseDTO;
+import com.finp.moic.card.model.dto.response.QCardMineResponseDTO;
+import com.finp.moic.card.model.dto.response.QCardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.QCard;
 import com.finp.moic.card.model.entity.QUserCard;
@@ -49,7 +52,21 @@ public class UserCardRepositoryImpl implements UserCardRepositoryCustom{
     }
 
     @Override
-    public List<Card> findAllByUserId(String userId) {
-        return null;
+    public List<CardMineResponseDTO> findAllByUserId(String userId) {
+        QUserCard userCard=QUserCard.userCard;
+
+        return queryFactory
+                .select(
+                        new QCardMineResponseDTO(
+                                userCard.card.cardSeq.as("id"),
+                                userCard.card.company,
+                                userCard.card.type,
+                                userCard.card.name,
+                                userCard.card.cardImage
+                        )
+                )
+                .from(userCard)
+                .where(userCard.user.id.eq(userId))
+                .fetch();
     }
 }

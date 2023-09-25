@@ -1,5 +1,7 @@
 package com.finp.moic.card.model.repository.queryDSL;
 
+import com.finp.moic.card.model.dto.response.CardBenefitResponseDTO;
+import com.finp.moic.card.model.dto.response.QCardBenefitResponseDTO;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.QCard;
 import com.finp.moic.card.model.entity.QCardBenefit;
@@ -36,12 +38,20 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
     }
 
     @Override
-    public List<CardBenefit> findByCardName(String cardName) {
-
+    public List<CardBenefitResponseDTO> findByCardName(String cardName) {
         QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
 
         return queryFactory
-                .select(cardBenefit)
+                .select(
+                        new QCardBenefitResponseDTO(
+                                cardBenefit.category,
+                                cardBenefit.shopName,
+                                cardBenefit.content,
+                                cardBenefit.discount,
+                                cardBenefit.point,
+                                cardBenefit.cashback
+                        )
+                )
                 .from(cardBenefit)
                 .where(cardBenefit.card.name.eq(cardName))
                 .fetch();

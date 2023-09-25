@@ -13,7 +13,7 @@ public interface CardRepositoryCustom {
 
     Boolean exist(String cardName);
 
-    List<Card> search(String company, String type, String cardName);
+    List<CardResponseDTO> search(String company, String type, String cardName);
 
     List<CardResponseDTO> findAllCard();
 }

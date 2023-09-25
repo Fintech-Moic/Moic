@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @ToString
@@ -22,9 +23,9 @@ public class CardMineResponseDTO implements Serializable {
 
     @QueryProjection
     @Builder
-    public CardMineResponseDTO(String id, String company, String type,
+    public CardMineResponseDTO(UUID id, String company, String type,
                                String name, String cardImage) {
-        this.id = id;
+        this.id = id.toString();
         this.company = company;
         this.type = type;
         this.name = name;
