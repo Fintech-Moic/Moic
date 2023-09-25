@@ -28,23 +28,34 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
+        System.out.println("OAuth2AuthenticationSuccessHandler.onAuthenticationSuccess");
         CustomOAuth2User oAuth2User = (CustomOAuth2User)authentication.getPrincipal();
+
+        System.out.println("ID : " + oAuth2User.getUserInfo().getId());
 
         String accessToken = jwtService.createAccessToken(oAuth2User.getUserInfo().getId());
         String refreshToken = jwtService.createRefreshToken();
 
         setRefreshTokenInCookie(response, refreshToken);
 
+        System.out.println("1");
+
         String redirect_uri = CookieService.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(cookie -> cookie.getValue())
                 .map(cookie -> URLDecoder.decode(cookie, UTF_8))
                 .orElse(getDefaultTargetUrl());
 
+        System.out.println("2");
+
         String targetUrl = UriComponentsBuilder.fromUriString(redirect_uri)
                 .queryParam("accessToken", accessToken)
                         .build().toUriString();
 
+        System.out.println("3");
+
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
+        System.out.println("4");
     }
 
     private void setRefreshTokenInCookie(HttpServletResponse response, String refreshToken) {

@@ -26,13 +26,15 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
 
+        System.out.println("OAuth2AuthenticationFailureHandler.onAuthenticationFailure");
+        System.out.println(exception.getMessage());
         String redirect_uri = CookieService.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(cookie -> cookie.getValue())
                 .map(cookie -> URLDecoder.decode(cookie, UTF_8))
                 .orElse("/");
 
         String targetUrl = UriComponentsBuilder.fromUriString(redirect_uri)
-                .queryParam("error", exception.getMessage())
+                .queryParam("error", "error")
                 .build().toUriString();
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
