@@ -37,7 +37,7 @@ public class User extends Base {
     @Column(name="name", length = 20, nullable = false)
     private String name;
 
-    @Column(name="email", length = 20, nullable = false)
+    @Column(name="email", length = 30, nullable = false)
     private String email;
 
     @Column(name="gender", length = 10)

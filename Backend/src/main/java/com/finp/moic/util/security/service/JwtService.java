@@ -83,4 +83,8 @@ public class JwtService {
         }
     }
 
+    public int getRefreshTokenExpire() {
+        return (int) refreshTokenExpire;
+    }
+
 }

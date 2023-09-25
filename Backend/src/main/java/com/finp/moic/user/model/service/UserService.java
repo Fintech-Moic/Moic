@@ -4,6 +4,8 @@ package com.finp.moic.user.model.service;
 import com.finp.moic.user.model.dto.request.*;
 import com.finp.moic.user.model.dto.response.*;
 import com.finp.moic.util.security.dto.UserAuthentication;
+import com.finp.moic.util.security.oauth.dto.AuthUserInfo;
+import com.finp.moic.util.security.oauth.dto.OAuthUserInfo;
 
 public interface UserService {
 
@@ -18,4 +20,5 @@ public interface UserService {
     void modifyPassword(String id, UserModifyPasswordRequestDTO dto);
     void deleteUser(String id);
 
+    AuthUserInfo getOrRegisterUser(OAuthUserInfo oAuthUserInfo);
 }

@@ -171,6 +171,12 @@ public class UserController {
         return "성공";
     }
 
+    @GetMapping("/login/oauth")
+    public String loginTest(){
+        System.out.println("로그인 테스트 들어옴");
+        return "소셜로그인";
+    }
+
 
 
 
