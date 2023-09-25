@@ -9,6 +9,8 @@ import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.*;
 import com.finp.moic.util.security.dto.UserAuthentication;
+import com.finp.moic.util.security.oauth.dto.AuthUserInfo;
+import com.finp.moic.util.security.oauth.dto.OAuthUserInfo;
 import com.finp.moic.util.security.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service
@@ -178,5 +181,30 @@ public class UserServiceImpl implements UserService{
         userRepository.delete(user);
     }
 
+    @Override
+    @Transactional
+    public AuthUserInfo getOrRegisterUser(OAuthUserInfo oauthUserInfo) {
+
+        // 유저가 존재하는지 확인
+        Optional<User> byEmail = userRepository.findByEmail(oauthUserInfo.getEmail());
+
+        if(byEmail.isPresent()){
+            throw new AlreadyExistException(ExceptionEnum.USER_REGIST_DUPLICATE);
+        }else {
+            User user = User.builder()
+                    .id("snsTest123")
+                    .password(passwordEncoder.encode("password12345"))
+                    .name("snsTestName")
+                    .email(oauthUserInfo.getEmail())
+                    .gender(null)
+                    .yearOfBirth(0)
+                    .build();
+
+
+            userRepository.save(user);
+            return new AuthUserInfo(user.getId(), user.getEmail(), Arrays.asList("USER"));
+        }
+
+    }
 }
 

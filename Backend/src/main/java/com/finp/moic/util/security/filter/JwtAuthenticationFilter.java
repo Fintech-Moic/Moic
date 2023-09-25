@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         UserAuthentication userAuthentication = parseUserSpecification(token);
 
         //AuthenticationToken 제작
-            List<String> roles = Arrays.asList("USER");
+        List<String> roles = Arrays.asList("USER");
         List<SimpleGrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role))
                 .collect(Collectors.toList());

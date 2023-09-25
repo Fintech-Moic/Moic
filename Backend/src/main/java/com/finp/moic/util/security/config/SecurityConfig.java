@@ -1,8 +1,12 @@
 package com.finp.moic.util.security.config;
 
+import com.finp.moic.util.cookie.CookieService;
 import com.finp.moic.util.security.filter.UnAuthenticationEntryPoint;
 import com.finp.moic.util.security.filter.JwtAuthenticationFilter;
 import com.finp.moic.util.security.handler.CustomAccessDeniedHandler;
+import com.finp.moic.util.security.oauth.handler.OAuth2AuthenticationFailureHandler;
+import com.finp.moic.util.security.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import com.finp.moic.util.security.oauth.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,12 +29,27 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final UnAuthenticationEntryPoint unAuthenticationEntryPoint;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+//    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+//    private final CustomOAuth2UserService customOAuth2UserService;
+//    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+//    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler customAccessDeniedHandler,
-                          UnAuthenticationEntryPoint unAuthenticationEntryPoint) {
+                          UnAuthenticationEntryPoint unAuthenticationEntryPoint, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
+                          OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
         this.unAuthenticationEntryPoint = unAuthenticationEntryPoint;
+        this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
+//        this.cookieAuthorizationRequestRepository = cookieAuthorizationRequestRepository;
+//        this.customOAuth2UserService = customOAuth2UserService;
+//        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+//        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
     }
 
     private static final String[] PERMIT_ALL_PATTERNS = new String[] {
@@ -59,10 +78,32 @@ public class SecurityConfig {
                         handler
                             .authenticationEntryPoint(unAuthenticationEntryPoint)
                             .accessDeniedHandler(customAccessDeniedHandler))
+                .oauth2Login(oauth ->
+                        oauth
+                                .authorizationEndpoint(endpoint ->
+                                        endpoint
+                                                .baseUri("/oauth2/authorization")
+                                                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler))
+//                .oauth2Login(oauth ->
+//                        oauth
+//                                .authorizationEndpoint(endpoint ->
+//                                        endpoint.baseUri("/oauth2/authorize")
+//                                                .authorizationRequestRepository(cookieAuthorizationRequestRepository))
+//                                .successHandler(oAuth2AuthenticationSuccessHandler)
+//                                .failureHandler(oAuth2AuthenticationFailureHandler)
+//                                .redirectionEndpoint(endpoint ->
+//                                        endpoint
+//                                                .baseUri("/oauth2/callback/*"))
+//                                .userInfoEndpoint(endpoint ->
+//                                        endpoint
+//                                                .userService(customOAuth2UserService))
+//                                )
+
                 //로그아웃 했을 때 이동할 페이지
                 .logout((logout) -> logout.logoutSuccessUrl("/"))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//                .addFilterBefore((Filter) jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

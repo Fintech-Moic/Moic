@@ -51,6 +51,9 @@ dependencies {
 	//Simple Json
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
+	//OAuth
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 }
 tasks.named('test') {
 	useJUnitPlatform()
