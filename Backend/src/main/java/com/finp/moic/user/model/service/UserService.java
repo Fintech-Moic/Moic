@@ -19,6 +19,6 @@ public interface UserService {
     void modifyUser(String id, UserModifyRequestDTO dto);
     void modifyPassword(String id, UserModifyPasswordRequestDTO dto);
     void deleteUser(String id);
-
     AuthUserInfo getOrRegisterUser(OAuthUserInfo oAuthUserInfo);
+    UserFindIdResponseDTO findId(UserFindIdRequestDTO dto);
 }
