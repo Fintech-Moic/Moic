@@ -1,21 +1,23 @@
 package com.finp.moic.shop.controller;
 
-import com.finp.moic.shop.model.dto.request.ShopCategoryRequestDTO;
-import com.finp.moic.shop.model.dto.request.ShopDetailRequestDTO;
-import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopSearchResponseDTO;
 import com.finp.moic.shop.model.service.ShopService;
 import com.finp.moic.util.dto.ResponseDTO;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@Validated
 public class ShopController {
 
     private final ShopService shopService;
@@ -26,15 +28,10 @@ public class ShopController {
     }
 
     @GetMapping("/map/shops/detail")
-    public ResponseEntity<ResponseDTO> detailShop(@RequestParam("shopName") String shopName,
-                                                  @RequestParam("shopLocation") String shopLocation){
+    public ResponseEntity<ResponseDTO> detailShop(@RequestParam("shopName") @NotBlank String shopName,
+                                                  @RequestParam("shopLocation") @NotNull String shopLocation){
 
-        /**
-         * TO DO :: Get에서 DTO 생성 시 Validation할 방법 찾기
-         **/
-        ShopDetailRequestDTO shopDetailRequestDTO=new ShopDetailRequestDTO(shopName,shopLocation);
-
-        ShopDetailResponseDTO response= shopService.detailShop(shopDetailRequestDTO);
+        ShopDetailResponseDTO response= shopService.detailShop(shopName, shopLocation);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("내 카드혜택, 기프티콘 가맹점 상세 조회")
@@ -42,18 +39,16 @@ public class ShopController {
                 .build());
     }
 
+    /**
+     * TO DO :: userId 삭제 및 어노테이션 활용
+     **/
     @GetMapping("/map/shops")
-    public ResponseEntity<ResponseDTO> searchShop(@RequestParam("keyword") String keyword,
-                                                  @RequestParam("latitude") double latitude,
-                                                  @RequestParam("longitude") double longitude,
+    public ResponseEntity<ResponseDTO> searchShop(@RequestParam("keyword") @NotNull String keyword,
+                                                  @RequestParam("latitude") @Positive double latitude,
+                                                  @RequestParam("longitude") @Positive double longitude,
                                                   @RequestParam("userId") String userId){
 
-        /**
-         * TO DO :: Get에서 DTO 생성 시 Validation할 방법 찾기
-         **/
-        ShopSearchRequestDTO shopSearchRequestDTO=new ShopSearchRequestDTO(keyword,latitude,longitude);
-
-        List<ShopSearchResponseDTO> dto= shopService.searchShop(shopSearchRequestDTO, userId);
+        List<ShopSearchResponseDTO> dto= shopService.searchShop(keyword,latitude,longitude, userId);
         HashMap<String, Object> response=new HashMap<>();
         response.put("shopList",dto);
 
@@ -63,14 +58,16 @@ public class ShopController {
                 .build());
     }
 
+    /**
+     * TO DO :: userId 삭제 및 어노테이션 활용
+     **/
     @GetMapping("/map/category")
-    public ResponseEntity<ResponseDTO> getShopListByCategory(@RequestParam("category") String category,
-                                                             @RequestParam("latitude") double latitude,
-                                                             @RequestParam("longitude") double longitude,
+    public ResponseEntity<ResponseDTO> getShopListByCategory(@RequestParam("category") @NotBlank String category,
+                                                             @RequestParam("latitude") @Positive double latitude,
+                                                             @RequestParam("longitude") @Positive double longitude,
                                                              @RequestParam("userId") String userId){
 
-        ShopCategoryRequestDTO shopCategoryRequestDTO=new ShopCategoryRequestDTO(category,latitude,longitude);
-        List<ShopSearchResponseDTO> dto= shopService.getShopListByCategory(shopCategoryRequestDTO,userId);
+        List<ShopSearchResponseDTO> dto= shopService.getShopListByCategory(category,latitude,longitude,userId);
         HashMap<String,Object> response=new HashMap<>();
         response.put("shopList",dto);
 
