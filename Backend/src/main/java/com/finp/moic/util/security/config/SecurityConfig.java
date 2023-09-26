@@ -1,6 +1,5 @@
 package com.finp.moic.util.security.config;
 
-import com.finp.moic.util.cookie.CookieService;
 import com.finp.moic.util.security.filter.UnAuthenticationEntryPoint;
 import com.finp.moic.util.security.filter.JwtAuthenticationFilter;
 import com.finp.moic.util.security.handler.CustomAccessDeniedHandler;

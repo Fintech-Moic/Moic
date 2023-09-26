@@ -2,8 +2,11 @@ package com.finp.moic.util.database.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finp.moic.shop.model.dto.response.ShopSearchResponseDTO;
 import com.finp.moic.shop.model.entity.Shop;
 import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
+import com.finp.moic.util.exception.ExceptionEnum;
+import com.finp.moic.util.exception.list.DeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.geo.*;
@@ -37,13 +40,14 @@ public class ShopLocationRedisService {
      */
     public void setShopLocationList(List<Shop> shopList) throws JsonProcessingException {
 
+        /** Redis Access **/
         ObjectMapper objectMapper = new ObjectMapper();
 
         for(Shop shop:shopList){
             geoOperations.add(
               shop.getName(), //KEY
-              new Point(shop.getLongitude(),shop.getLatitude()),
-                    objectMapper.writeValueAsString(
+              new Point(shop.getLongitude(),shop.getLatitude()), //POINT
+                    objectMapper.writeValueAsString( //MEMBER
                         ShopLocationRedisDTO
                               .builder()
                               .mainCategory(shop.getMainCategory())
@@ -57,33 +61,33 @@ public class ShopLocationRedisService {
         }
     }
 
-    /**
-     * 사용자 주변의 가맹점 정보 리턴
-     * **/
-    public List<ShopLocationRedisDTO> getShopLocationListNearByUser(String shopName, double latitude, double longitude,
-                                                                    double radius){
-        List<ShopLocationRedisDTO> shopLocationList=new ArrayList<>();
+    public List<ShopSearchResponseDTO> searchShopListNearByUser(String shopName, double latitude, double longitude) {
 
+        List<ShopSearchResponseDTO> dto=new ArrayList<>();
+
+        /** Redis Access **/
         GeoResults<RedisGeoCommands.GeoLocation<Object>> results= geoOperations.radius(shopName,
-                new Circle(new Point(longitude,latitude),new Distance(radius, RedisGeoCommands.DistanceUnit.KILOMETERS)));
+                new Circle(new Point(longitude,latitude),new Distance(1, RedisGeoCommands.DistanceUnit.KILOMETERS)));
 
+        /** DTO Builder **/
         for (GeoResult<RedisGeoCommands.GeoLocation<Object>> geoResult : results) {
-
             RedisGeoCommands.GeoLocation<Object> location = geoResult.getContent();
             String json=(String) location.getName();
 
-            /**
-             * TO DO :: 예외 처리
-             */
             try {
-                ShopLocationRedisDTO shopLocation = ShopLocationRedisDTO.fromJson(json);
-                shopLocationList.add(shopLocation);
+                ShopLocationRedisDTO redisDTO = ShopLocationRedisDTO.fromJson(json);
+                ShopSearchResponseDTO searchDTO=ShopSearchResponseDTO.builder()
+                        .category(redisDTO.getCategory())
+                        .shopName(shopName)
+                        .shopLocation(redisDTO.getLocation())
+                        .address(redisDTO.getAddress())
+                        .build();
+                dto.add(searchDTO);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new DeniedException(ExceptionEnum.SHOP_SEARCH_ERROR);
             }
         }
 
-        return shopLocationList;
+        return dto;
     }
-
 }

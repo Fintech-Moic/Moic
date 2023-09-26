@@ -21,7 +21,8 @@ public class CardAllReponseDTO implements Serializable {
 
     @QueryProjection
     @Builder
-    public CardAllReponseDTO(List<String> companyList, List<String> typeList, List<CardResponseDTO> cardList) {
+    public CardAllReponseDTO(List<String> companyList, List<String> typeList,
+                             List<CardResponseDTO> cardList) {
         this.companyList = companyList;
         this.typeList = typeList;
         this.cardList = cardList;

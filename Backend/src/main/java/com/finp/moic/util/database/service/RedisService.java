@@ -49,4 +49,19 @@ public class RedisService {
         return securityRedis.delete(refreshToken);
     }
 
+    public void setCertNumber(String userId, String certNumber){
+        // key : userId, value : certNumber
+        securityRedis.opsForValue().set(userId, certNumber);
+        //3분
+        securityRedis.expire(userId,180L, TimeUnit.SECONDS);
+    }
+
+    public String getCertNumber(String userId){
+        return securityRedis.opsForValue().get(userId);
+    }
+
+    public void setCertTime(String userId){
+        securityRedis.expire(userId,180L, TimeUnit.SECONDS);
+    }
+
 }

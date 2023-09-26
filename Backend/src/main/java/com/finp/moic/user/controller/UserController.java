@@ -173,6 +173,36 @@ public class UserController {
                 .build());
     }
 
+    @PostMapping("/temp/password")
+    public ResponseEntity<ResponseDTO> issueNumber(
+            @RequestBody @Valid UserFindPasswordRequestDTO dto
+    ){
+        userService.issueNumber(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("E-mail이 발송되었습니다.")
+                .build());
+    }
+
+    @PostMapping("/verify/password")
+    public ResponseEntity<ResponseDTO> certUser(
+            @RequestBody @Valid UserCertificationRequestDTO dto
+    ){
+        userService.certUser(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("인증되었습니다.")
+                .build());
+    }
+
+    @PostMapping("/reset/password")
+    public ResponseEntity<ResponseDTO> resetPassword(
+            @RequestBody @Valid UserResetPasswordRequestDTO dto
+    ){
+        userService.resetPassword(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("비밀번호 재설정이 완료되었습니다.")
+                .build());
+    }
+
     @PostMapping("/test")
     public String test(
             @AuthenticationPrincipal UserAuthentication userAuthentication

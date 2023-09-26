@@ -5,6 +5,7 @@ import com.finp.moic.card.model.dto.response.QCardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.QCardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.QCard;
+import com.finp.moic.card.model.entity.QCardBenefit;
 import com.finp.moic.card.model.entity.QUserCard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,6 @@ public class UserCardRepositoryImpl implements UserCardRepositoryCustom{
     public UserCardRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
-
-    /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
-     **/
 
     public Boolean exist(String userId, String cardName) {
         QUserCard userCard=QUserCard.userCard;
