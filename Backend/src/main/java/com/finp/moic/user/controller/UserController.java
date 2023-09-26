@@ -162,6 +162,16 @@ public class UserController {
                 .build());
     }
 
+    @PostMapping("/lookup/id")
+    public ResponseEntity<ResponseDTO> findId(
+            @RequestBody @Valid UserFindIdRequestDTO dto
+    ){
+        UserFindIdResponseDTO response = userService.findId(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("회원님의 아이디를 찾았아요!")
+                .data(response)
+                .build());
+    }
 
     @PostMapping("/test")
     public String test(
@@ -170,6 +180,7 @@ public class UserController {
         System.out.println("아이디 : " + userAuthentication.getId());
         return "성공";
     }
+
 
     @GetMapping("/login/oauth")
     public String loginTest(){
