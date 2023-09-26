@@ -14,11 +14,16 @@ public class UserModifyPasswordRequestDTO {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,16}$")
     private String password;
 
+    @NotNull
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,16}$")
+    private String passwordCheck;
+
     public UserModifyPasswordRequestDTO() {
     }
 
     @Builder
-    public UserModifyPasswordRequestDTO(@NotNull String password) {
+    public UserModifyPasswordRequestDTO(@NotNull String password, @NotNull String passwordCheck) {
         this.password = password;
+        this.passwordCheck = passwordCheck;
     }
 }
