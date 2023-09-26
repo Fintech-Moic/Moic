@@ -5,6 +5,10 @@ import com.finp.moic.card.model.dto.response.QCardBenefitResponseDTO;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.QCard;
 import com.finp.moic.card.model.entity.QCardBenefit;
+import com.finp.moic.card.model.entity.QUserCard;
+import com.finp.moic.shop.model.dto.response.BenefitResponseDTO;
+import com.finp.moic.shop.model.dto.response.QBenefitResponseDTO;
+import com.finp.moic.shop.model.entity.QShop;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,10 +24,6 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
     public CardBenefitRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
-
-    /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
-     **/
 
     public Boolean exist(String cardName){
         QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
@@ -59,14 +59,38 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
 
 
     @Override
-    public List<CardBenefit> findAllByShopName(String shopName) {
-
+    public List<BenefitResponseDTO> findAllByShopName(String shopName) {
         QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
 
         return queryFactory
-                .select(cardBenefit)
+                .select(
+                        new QBenefitResponseDTO(
+                                cardBenefit.card.name.as("cardName"),
+                                cardBenefit.content,
+                                cardBenefit.discount,
+                                cardBenefit.point,
+                                cardBenefit.cashback
+                        )
+                )
                 .from(cardBenefit)
                 .where(cardBenefit.shopName.eq(shopName))
+                .fetch();
+    }
+
+    @Override
+    public List<String> findAllShopNameByUserId(String userId) {
+        QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
+        QUserCard userCard=QUserCard.userCard;
+        QShop shop=QShop.shop;
+
+        return queryFactory
+                .selectDistinct(cardBenefit.shopName.coalesce(shop.name))
+                .from(cardBenefit)
+                .innerJoin(userCard)
+                .on(cardBenefit.card.name.eq(userCard.card.name))
+                .innerJoin(shop)
+                .on(cardBenefit.category.eq(shop.category))
+                .where(userCard.user.id.eq(userId))
                 .fetch();
     }
 }

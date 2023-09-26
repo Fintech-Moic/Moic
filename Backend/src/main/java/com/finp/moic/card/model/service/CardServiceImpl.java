@@ -6,20 +6,18 @@ import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
 import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.entity.Card;
-import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.UserCard;
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.card.model.repository.jpa.CardRepository;
 import com.finp.moic.card.model.repository.jpa.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
-import com.finp.moic.util.database.service.CardRedisService;
+import com.finp.moic.util.database.service.CacheRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.AlreadyExistException;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,16 +31,16 @@ public class CardServiceImpl implements CardService {
     private final CardBenefitRepository cardBenefitRepository;
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
-    private final CardRedisService cardRedisService;
+    private final CacheRedisService cacheRedisService;
 
     public CardServiceImpl(CardRepository cardRepository, CardBenefitRepository cardBenefitRepository,
                            UserRepository userRepository, UserCardRepository userCardRepository,
-                           CardRedisService cardRedisService) {
+                           CacheRedisService cacheRedisService) {
         this.cardRepository = cardRepository;
         this.cardBenefitRepository = cardBenefitRepository;
         this.userRepository = userRepository;
         this.userCardRepository = userCardRepository;
-        this.cardRedisService = cardRedisService;
+        this.cacheRedisService = cacheRedisService;
     }
 
     @Override
@@ -78,6 +76,10 @@ public class CardServiceImpl implements CardService {
         /*** RDB Access ***/
         /* 혜지 : userCard FK 저장 */
         userCardRepository.save(userCard);
+
+        /*** Redis Access ***/
+        /* 혜지 : 값 업데이트가 되었으므로 캐싱 데이터 삭제 */
+        cacheRedisService.removeUserBenefitShop(userId);
 
     }
 
@@ -145,6 +147,10 @@ public class CardServiceImpl implements CardService {
 
         /*** RDB Access ***/
         userCardRepository.delete(userCard);
+
+        /*** Redis Access ***/
+        /* 혜지 : 값 업데이트가 되었으므로 캐싱 데이터 삭제 */
+        cacheRedisService.removeUserBenefitShop(userId);
 
     }
 
