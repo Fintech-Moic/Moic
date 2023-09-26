@@ -51,7 +51,7 @@ public class ShopServiceImpl implements ShopService{
     @Override
     public ShopDetailResponseDTO detailShop(ShopDetailRequestDTO shopDetailRequestDTO) {
 
-        /** Validation, RDB Access **/
+        /** Validation **/
         Shop shop=shopRepository.findShopDetail(shopDetailRequestDTO.getShopName(),shopDetailRequestDTO.getShopLocation());
         if(shop==null) throw new NotFoundException(ExceptionEnum.SHOP_NOT_FOUND);
 

@@ -162,15 +162,13 @@ public class CardServiceImpl implements CardService {
         List<CardBenefitResponseDTO> cardBenefitList=cardBenefitRepository.findByCardName(cardName);
 
         /*** DTO Builder ***/
-        List<CardBenefitResponseDTO> cardBenefitDTOList=new ArrayList<>();
-
         CardDetailResponseDTO dto=CardDetailResponseDTO.builder()
                 .id(card.getCardSeq())
                 .company(card.getCompany())
                 .type(card.getType())
                 .name(card.getName())
                 .cardImage(card.getCardImage())
-                .cardBenefit(cardBenefitDTOList)
+                .cardBenefit(cardBenefitList)
                 .build();
 
         return dto;
