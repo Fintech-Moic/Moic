@@ -205,7 +205,18 @@ public class UserServiceImpl implements UserService{
             userRepository.save(user);
         }
         return new AuthUserInfo(user.getId(), user.getEmail(), Arrays.asList("USER"));
-
     }
+
+    @Override
+    public UserFindIdResponseDTO findId(UserFindIdRequestDTO dto){
+        User user = userRepository.findByNameAndEmail(dto.getName(), dto.getEmail());
+        if(user==null){
+            throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND);
+        }
+        return UserFindIdResponseDTO.builder()
+                .id(user.getId())
+                .build();
+    }
+
 }
 
