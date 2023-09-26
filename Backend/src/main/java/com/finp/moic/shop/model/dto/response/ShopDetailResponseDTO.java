@@ -15,8 +15,6 @@ public class ShopDetailResponseDTO {
     private String shopName;
     private String shopLocation;
     private String address;
-    private double latitude;
-    private double longitude;
     private List<BenefitResponseDTO> benefits;
     private List<GiftResponseDTO> gifts;
 
@@ -26,15 +24,18 @@ public class ShopDetailResponseDTO {
     @QueryProjection
     @Builder
     public ShopDetailResponseDTO(String category, String shopName, String shopLocation,
-                                 String address, double latitude, double longitude,
-                                 List<BenefitResponseDTO> benefits, List<GiftResponseDTO> gifts) {
+                                 String address) {
         this.category = category;
         this.shopName = shopName;
         this.shopLocation = shopLocation;
         this.address = address;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.benefits = benefits;
-        this.gifts = gifts;
+    }
+
+    public void setBenefits(List<BenefitResponseDTO> benefits){
+        this.benefits=benefits;
+    }
+
+    public void setGifts(List<GiftResponseDTO> gifts){
+        this.gifts=gifts;
     }
 }

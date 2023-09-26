@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @ToString
 public class GiftResponseDTO {
@@ -20,10 +22,10 @@ public class GiftResponseDTO {
     @QueryProjection
     @Builder
     public GiftResponseDTO(String productName, String barcodeImage,
-                           long barcodeNumber, String dueDate) {
+                           long barcodeNumber, LocalDateTime dueDate) {
         this.productName = productName;
         this.barcodeImage = barcodeImage;
         this.barcodeNumber = barcodeNumber;
-        this.dueDate = dueDate;
+        this.dueDate = dueDate.toString();
     }
 }

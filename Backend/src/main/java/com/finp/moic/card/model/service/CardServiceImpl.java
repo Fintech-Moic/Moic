@@ -6,7 +6,6 @@ import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
 import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.entity.Card;
-import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.entity.UserCard;
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.card.model.repository.jpa.CardRepository;
@@ -19,7 +18,6 @@ import com.finp.moic.util.exception.list.AlreadyExistException;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

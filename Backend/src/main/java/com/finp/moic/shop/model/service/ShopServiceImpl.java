@@ -42,8 +42,8 @@ public class ShopServiceImpl implements ShopService{
      **/
     @Override
     public ShopLocationRedisDTO testRedisLocation(){
-
-        List<ShopLocationRedisDTO> dto=shopLocationRedisService.getShopLocationListNearByUser("스타벅스",37.5013068,127.0396597,5);
+        List<ShopLocationRedisDTO> dto=shopLocationRedisService
+                .getShopLocationListNearByUser("스타벅스",37.5013068,127.0396597,5);
 
         return dto.get(0);
     }
@@ -51,50 +51,17 @@ public class ShopServiceImpl implements ShopService{
     @Override
     public ShopDetailResponseDTO detailShop(ShopDetailRequestDTO shopDetailRequestDTO) {
 
-        /** Validation **/
-        Shop shop=shopRepository.findShopDetail(shopDetailRequestDTO.getShopName(),shopDetailRequestDTO.getShopLocation());
-        if(shop==null) throw new NotFoundException(ExceptionEnum.SHOP_NOT_FOUND);
+        /** Validation, RDB Access **/
+        ShopDetailResponseDTO dto=shopRepository
+                .findByNameAndLocation(shopDetailRequestDTO.getShopName(),shopDetailRequestDTO.getShopLocation())
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.SHOP_NOT_FOUND));
 
-        /** RDB Access **/
-        List<CardBenefit> cardBenefitList=cardBenefitRepository.findAllByShopName(shopDetailRequestDTO.getShopName());
-        List<Giftcard> giftcardList=giftcardRepository.findAllByShopName(shopDetailRequestDTO.getShopName());
+        List<BenefitResponseDTO> benefitDTOList=cardBenefitRepository.findAllByShopName(shopDetailRequestDTO.getShopName());
+        List<GiftResponseDTO> giftcardDTOList=giftcardRepository.findAllByShopName(shopDetailRequestDTO.getShopName());
 
         /** DTO Builder **/
-        List<BenefitResponseDTO> benefitDTOList=new ArrayList<>();
-        for(CardBenefit cardBenefit:cardBenefitList){
-            benefitDTOList.add(
-                    BenefitResponseDTO.builder()
-                            .cardName(cardBenefit.getCard().getName())
-                            .content(cardBenefit.getContent())
-                            .discount(cardBenefit.getDiscount())
-                            .point(cardBenefit.getPoint())
-                            .cashBack(cardBenefit.getCashback())
-                            .build()
-            );
-        }
-
-        List<GiftResponseDTO> giftDTOList=new ArrayList<>();
-        for(Giftcard giftcard:giftcardList){
-            giftDTOList.add(
-              GiftResponseDTO.builder()
-                      .productName(giftcard.getProductName())
-                      .barcodeImage(giftcard.getBarcodeImage())
-                      .barcodeNumber(giftcard.getBarcodeNumber())
-                      .dueDate(String.valueOf(giftcard.getDueDate())) //날짜 String으로 변경
-                      .build()
-            );
-        }
-
-        ShopDetailResponseDTO dto=ShopDetailResponseDTO.builder()
-                .category(shop.getCategory())
-                .shopName(shop.getName())
-                .shopLocation(shop.getLocation())
-                .address(shop.getAddress())
-                .latitude(shop.getLatitude())
-                .longitude(shop.getLongitude())
-                .benefits(benefitDTOList)
-                .gifts(giftDTOList)
-                .build();
+        dto.setBenefits(benefitDTOList);
+        dto.setGifts(giftcardDTOList);
 
         return dto;
     }

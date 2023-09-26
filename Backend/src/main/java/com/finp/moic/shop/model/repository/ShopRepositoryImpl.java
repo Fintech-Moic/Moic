@@ -1,5 +1,8 @@
 package com.finp.moic.shop.model.repository;
 
+import com.finp.moic.card.model.entity.QCardBenefit;
+import com.finp.moic.shop.model.dto.response.QShopDetailResponseDTO;
+import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
 import com.finp.moic.shop.model.entity.QShop;
 import com.finp.moic.shop.model.entity.Shop;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -7,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ShopRepositoryImpl implements ShopRepositoryCustom{
@@ -21,18 +25,38 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
     /**
      * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
      **/
-    @Override
-    public Shop findShopDetail(String shopName, String shopLocation) {
 
+    public Boolean exist(String shopName){
         QShop shop=QShop.shop;
 
-        return queryFactory
-                .select(shop)
+        Integer fetchOne = queryFactory
+                .selectOne()
                 .from(shop)
-                .where(shop.name.eq(shopName)
-                        .and(shop.location.eq(shopLocation))
+                .where(shop.name.eq(shopName))
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
+
+    @Override
+    public Optional<ShopDetailResponseDTO> findByNameAndLocation(String shopName, String shopLocation) {
+        QShop shop=QShop.shop;
+
+        return Optional.ofNullable(queryFactory
+                .select(
+                        new QShopDetailResponseDTO(
+                                shop.category,
+                                shop.name.as("shopName"),
+                                shop.location.as("shopLocation"),
+                                shop.address
+                        )
                 )
-                .fetchOne();
+                .from(shop)
+                .where(
+                        shop.name.eq(shopName)
+                                .and(shop.location.eq(shopLocation))
+                )
+                .fetchOne());
     }
 
     /**

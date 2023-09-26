@@ -21,10 +21,6 @@ public class UserCardRepositoryImpl implements UserCardRepositoryCustom{
         this.queryFactory = queryFactory;
     }
 
-    /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
-     **/
-
     public Boolean exist(String userId, String cardName) {
         QUserCard userCard=QUserCard.userCard;
 
