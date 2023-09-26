@@ -21,4 +21,7 @@ public interface UserService {
     void deleteUser(String id);
     AuthUserInfo getOrRegisterUser(OAuthUserInfo oAuthUserInfo);
     UserFindIdResponseDTO findId(UserFindIdRequestDTO dto);
+    void issueNumber(UserFindPasswordRequestDTO dto);
+    void certUser(UserCertificationRequestDTO dto);
+    void resetPassword(UserResetPasswordRequestDTO dto);
 }

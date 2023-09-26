@@ -55,6 +55,9 @@ dependencies {
 	//OAuth
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+	// mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 // Querydsl 설정부
 def generated = 'src/main/generated'

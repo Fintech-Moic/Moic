@@ -13,7 +13,11 @@ import com.finp.moic.util.security.oauth.dto.AuthUserInfo;
 import com.finp.moic.util.security.oauth.dto.OAuthUserInfo;
 import com.finp.moic.util.security.oauth.util.HashUtil;
 import com.finp.moic.util.security.service.JwtService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,15 +34,17 @@ public class UserServiceImpl implements UserService{
     private final JwtService jwtService;
     private final RedisService redisService;
     private final HashUtil hashUtil;
+    private final JavaMailSender javaMailSender;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService
-                            ,RedisService redisService, HashUtil hashUtil) {
+                            ,RedisService redisService, HashUtil hashUtil, JavaMailSender javaMailSender) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.redisService = redisService;
         this.hashUtil = hashUtil;
+        this.javaMailSender = javaMailSender;
     }
 
     @Override
@@ -172,6 +178,11 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
+        //비밀번호 두 개가 서로 다를 때
+        if(!dto.getPassword().equals(dto.getPasswordCheck())){
+            throw new ValidationException(ExceptionEnum.FORGERY_DATA);
+        }
+
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
 
@@ -216,6 +227,100 @@ public class UserServiceImpl implements UserService{
         return UserFindIdResponseDTO.builder()
                 .id(user.getId())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void issueNumber(UserFindPasswordRequestDTO dto){
+        User user = userRepository.findByIdAndNameAndEmail(dto.getId(), dto.getName(), dto.getEmail());
+        if(user==null) {
+            throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND);
+        }
+        try{
+            String certNum = hashUtil.makeCertNumber();
+
+            redisService.setCertNumber(dto.getId(), certNum);
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
+            mimeMessageHelper.setTo(dto.getEmail());
+            mimeMessageHelper.setSubject("[Moi'c] 회원 인증 번호");
+            mimeMessageHelper.setFrom("moicsecurity@moic.com");
+            mimeMessageHelper.setText(createMailForm(certNum),true);
+
+            javaMailSender.send(mimeMessage);
+        }catch (MessagingException e) {
+            throw new MailSendException(ExceptionEnum.MAIL_SEND_ERROR);
+        }
+
+    }
+
+    @Override
+    public void certUser(UserCertificationRequestDTO dto){
+        String dbCertNumber = redisService.getCertNumber(dto.getId());
+        //ID가 위조 되었을 때
+        if(dbCertNumber==null) {
+            throw new ValidationException(ExceptionEnum.FORGERY_DATA);
+        }
+
+        //인증번호가 틀렸을 때
+        if(!dto.getCertification().equals(dbCertNumber)){
+            throw new ValidationException(ExceptionEnum.USER_CERT_ERROR);
+        }
+
+        // 맞으면 다시 3분으로 초기화
+        redisService.setCertTime(dto.getId());
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(UserResetPasswordRequestDTO dto){
+        /**
+         * 1. 아이디 검증
+         * 2. 인증번호 검증
+         * 3. 비밀번호 두개 검증
+         * 4. 저장
+         * */
+        User user = userRepository.findById(dto.getId())
+                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+
+        String dbCertNumber = redisService.getCertNumber(dto.getId());
+        //ID가 위조 되었을 때
+        if(dbCertNumber==null) {
+            throw new ValidationException(ExceptionEnum.FORGERY_DATA);
+        }
+
+        //인증번호가 틀렸을 때
+        if(!dto.getCertification().equals(dbCertNumber)){
+            throw new ValidationException(ExceptionEnum.USER_CERT_ERROR);
+        }
+
+        //비밀번호 두 개가 서로 다를 때
+        if(!dto.getPassword().equals(dto.getPasswordCheck())){
+            throw new ValidationException(ExceptionEnum.FORGERY_DATA);
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
+    private String createMailForm(String value) {
+        String msg = "";
+        msg += "<div style='margin:100px;'>";
+        msg += "<h1> 안녕하세요, Moi'c 입니다. </h1>";
+        msg += "<br>";
+        msg += "<p>인증번호 입니다.<p>";
+        msg += "<br>";
+        msg += "<p>감사합니다!<p>";
+        msg += "<br>";
+        msg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msg += "<h3 style='color:blue;'>인증번호</h3>";
+        msg += "<div style='font-size:130%'>";
+        msg += "<strong>";
+        msg += value + "</strong><div><br/> ";
+        msg += "</div>";
+        msg += "</div>";
+        msg += "</div>";
+        return msg;
     }
 
 }
