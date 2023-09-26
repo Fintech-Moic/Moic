@@ -6,9 +6,8 @@ import com.finp.moic.shop.model.dto.request.ShopCategoryRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopDetailRequestDTO;
 import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.*;
-import com.finp.moic.shop.model.entity.Shop;
 import com.finp.moic.shop.model.repository.ShopRepository;
-import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
+import com.finp.moic.util.database.service.CacheRedisService;
 import com.finp.moic.util.database.service.ShopLocationRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ShopServiceImpl implements ShopService{
@@ -25,14 +25,17 @@ public class ShopServiceImpl implements ShopService{
     private final CardBenefitRepository cardBenefitRepository;
     private final GiftcardRepository giftcardRepository;
     private final ShopLocationRedisService shopLocationRedisService;
+    private final CacheRedisService cacheRedisService;
 
     @Autowired
     public ShopServiceImpl(ShopRepository shopRepository, CardBenefitRepository cardBenefitRepository,
-                           GiftcardRepository giftcardRepository, ShopLocationRedisService shopLocationRedisService) {
+                           GiftcardRepository giftcardRepository, ShopLocationRedisService shopLocationRedisService,
+                           CacheRedisService cacheRedisService) {
         this.shopRepository = shopRepository;
         this.cardBenefitRepository = cardBenefitRepository;
         this.giftcardRepository = giftcardRepository;
         this.shopLocationRedisService = shopLocationRedisService;
+        this.cacheRedisService = cacheRedisService;
     }
 
     @Override
@@ -54,14 +57,18 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public List<ShopSearchResponseDTO> searchShop(ShopSearchRequestDTO shopSearchRequestDTO) {
+    public List<ShopSearchResponseDTO> searchShop(ShopSearchRequestDTO shopSearchRequestDTO, String userId) {
 
-        /**
-         * CONFIRM :: 현재 로직
-         * keyword 기반으로 shop에서 검색된 첫번째 결과에 대해
-         * -> 내 위치 기반으로 반경 1km 내 가까운 순 정렬
-         * -> 각 shop에 대해 cardbenefit과 giftcard 여부 모두 체크해 true/false로 반환
-         **/
+        /** Validation, Redis Access **/
+        if(!cacheRedisService.existUserBenefitShopKey(userId)){
+            List<String> benefitShopNameList=cardBenefitRepository.findAllShopNameByUserId(userId);
+            cacheRedisService.setUserBenefitShopList(benefitShopNameList,userId);
+        }
+
+        if(!cacheRedisService.existUserGiftShopKey(userId)){
+            List<String> giftShopNameList=giftcardRepository.findAllShopNameByUserId(userId);
+            cacheRedisService.setUserGiftShopList(giftShopNameList,userId);
+        }
 
         /** RDB Access **/
         String shopName=shopRepository.findShopNameByKeyword(shopSearchRequestDTO.getKeyword());
@@ -70,15 +77,12 @@ public class ShopServiceImpl implements ShopService{
         List<ShopSearchResponseDTO> dto=shopLocationRedisService.searchShopListNearByUser(shopName,
                 shopSearchRequestDTO.getLatitude(),shopSearchRequestDTO.getLongitude());
 
+        /** DTO Builder **/
         for(int idx=0;idx<dto.size();idx++){
-            /**
-             * User Benefit Shop 조회
-             **/
-
-            /**
-             * User Gift Shop 조회
-             **/
-
+            if(cacheRedisService.existUserBenefitShop(dto.get(idx).getShopName(),userId))
+                dto.get(idx).setBenefits(true);
+            if(cacheRedisService.existUserGiftShop(dto.get(idx).getShopName(),userId))
+                dto.get(idx).setGifts(true);
         }
 
         return dto;
@@ -87,12 +91,23 @@ public class ShopServiceImpl implements ShopService{
     @Override
     public List<ShopSearchResponseDTO> getShopListByCategory(ShopCategoryRequestDTO shopCategoryRequestDTO, String userId) {
 
+        /** Validation, Redis Access **/
+        if(!cacheRedisService.existUserBenefitShopKey(userId)){
+            List<String> benefitShopNameList=cardBenefitRepository.findAllShopNameByUserId(userId);
+            cacheRedisService.setUserBenefitShopList(benefitShopNameList,userId);
+        }
+
+        if(!cacheRedisService.existUserGiftShopKey(userId)){
+            List<String> giftShopNameList=giftcardRepository.findAllShopNameByUserId(userId);
+            cacheRedisService.setUserGiftShopList(giftShopNameList,userId);
+        }
+
         /** RDB Access **/
         List<String> shopNameList=shopRepository.findAllShopNameByCategory(shopCategoryRequestDTO.getCategory());
 
+        /** DTO Builder **/
         List<ShopSearchResponseDTO> dto=new ArrayList<>();
         for(String shopName:shopNameList) {
-
             /** Redis Access **/
             dto.addAll(
                     shopLocationRedisService.searchShopListNearByUser(shopName,
@@ -100,15 +115,12 @@ public class ShopServiceImpl implements ShopService{
             );
         }
 
+        /** DTO Builder **/
         for(int idx=0;idx<dto.size();idx++){
-            /**
-             * User Benefit Shop 조회
-             **/
-
-            /**
-             * User Gift Shop 조회
-             **/
-
+            if(cacheRedisService.existUserBenefitShop(dto.get(idx).getShopName(),userId))
+                dto.get(idx).setBenefits(true);
+            if(cacheRedisService.existUserGiftShop(dto.get(idx).getShopName(),userId))
+                dto.get(idx).setGifts(true);
         }
 
         return dto;

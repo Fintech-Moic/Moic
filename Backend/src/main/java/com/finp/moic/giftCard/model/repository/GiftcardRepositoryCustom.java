@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface GiftcardRepositoryCustom {
     List<GiftResponseDTO> findAllByShopName(String shopName);
+
+    List<String> findAllShopNameByUserId(String userId);
 }

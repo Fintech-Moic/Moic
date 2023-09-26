@@ -1,5 +1,7 @@
 package com.finp.moic.giftCard.model.repository;
 
+import com.finp.moic.card.model.entity.QCardBenefit;
+import com.finp.moic.card.model.entity.QUserCard;
 import com.finp.moic.giftCard.model.entity.Giftcard;
 import com.finp.moic.giftCard.model.entity.QGiftcard;
 import com.finp.moic.shop.model.dto.response.GiftResponseDTO;
@@ -38,6 +40,17 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
                 )
                 .from(giftcard)
                 .where(giftcard.shopName.eq(shopName))
+                .fetch();
+    }
+
+    @Override
+    public List<String> findAllShopNameByUserId(String userId) {
+        QGiftcard giftcard=QGiftcard.giftcard;
+
+        return queryFactory
+                .select(giftcard.shopName)
+                .from(giftcard)
+                .where(giftcard.user.id.eq(userId))
                 .fetch();
     }
 }

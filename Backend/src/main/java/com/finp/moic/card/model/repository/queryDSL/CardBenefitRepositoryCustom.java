@@ -13,4 +13,6 @@ public interface CardBenefitRepositoryCustom {
     List<CardBenefitResponseDTO> findByCardName(String cardName);
 
     List<BenefitResponseDTO> findAllByShopName(String shopName);
+
+    List<String> findAllShopNameByUserId(String userId);
 }

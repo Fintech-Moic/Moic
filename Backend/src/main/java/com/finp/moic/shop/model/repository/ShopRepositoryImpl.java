@@ -64,7 +64,6 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
      **/
     @Override
     public String findShopNameByKeyword(String keyword) {
-
         QShop shop=QShop.shop;
 
         return queryFactory
@@ -74,14 +73,12 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
                 .fetchFirst();
     }
 
-    `
-
     @Override
     public List<String> findAllShopNameByCategory(String category) {
         QShop shop=QShop.shop;
 
         return queryFactory
-                .select(shop.name)
+                .selectDistinct(shop.name)
                 .from(shop)
                 .where(
                         shop.mainCategory.contains(category)

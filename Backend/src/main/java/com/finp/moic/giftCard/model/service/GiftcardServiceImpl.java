@@ -1,5 +1,6 @@
 package com.finp.moic.giftCard.model.service;
 
+import com.finp.moic.util.database.service.CacheRedisService;
 import com.finp.moic.util.database.service.NaverOcrService;
 import com.finp.moic.util.database.service.S3ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,14 @@ public class GiftcardServiceImpl implements GiftcardService{
 
     private final S3ServiceImpl s3Service;
     private final NaverOcrService naverOcrService;
+    private final CacheRedisService cacheRedisService;
 
     @Autowired
-    public GiftcardServiceImpl(S3ServiceImpl s3Service, NaverOcrService naverOcrService) {
+    public GiftcardServiceImpl(S3ServiceImpl s3Service, NaverOcrService naverOcrService,
+                               CacheRedisService cacheRedisService) {
         this.s3Service = s3Service;
         this.naverOcrService = naverOcrService;
+        this.cacheRedisService = cacheRedisService;
     }
 
     public String regist (MultipartFile multipartFile){
@@ -33,6 +37,11 @@ public class GiftcardServiceImpl implements GiftcardService{
         // 3. 클로바 api의 결과값을 챗 gpt에게 보내준다.
 
         // 4. 챗 gpt의 결과를
+
+
+        /*** Redis Access ***/
+        /* 혜지 : 값 업데이트가 되었으므로 캐싱 데이터 삭제 */
+        //cacheRedisService.removeUserGiftShop(userId);
 
         return filePath;
     }

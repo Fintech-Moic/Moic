@@ -5,6 +5,7 @@ import com.finp.moic.card.model.dto.response.QCardMineResponseDTO;
 import com.finp.moic.card.model.dto.response.QCardResponseDTO;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.QCard;
+import com.finp.moic.card.model.entity.QCardBenefit;
 import com.finp.moic.card.model.entity.QUserCard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
