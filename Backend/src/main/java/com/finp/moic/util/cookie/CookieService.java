@@ -17,7 +17,7 @@ public class CookieService {
         String cookieValue = refreshToken;
 
         Cookie cookie = new Cookie(cookieName,cookieValue);
-
+        cookie.setDomain(".localhost:3000");
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
@@ -71,6 +71,7 @@ public class CookieService {
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
+        cookie.setDomain(".localhost:3000");
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
