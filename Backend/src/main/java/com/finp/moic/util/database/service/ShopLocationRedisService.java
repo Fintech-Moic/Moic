@@ -38,26 +38,40 @@ public class ShopLocationRedisService {
     /**
      * TO DO :: 예외 처리
      */
-    public void setShopLocationList(List<Shop> shopList) throws JsonProcessingException {
+    public void setDummy(){
+        geoOperations.add(
+                "key",new Point(127.0396597,37.5013068),"dummy"
+        );
+        System.out.println(geoOperations.position("key","dummy"));
+    }
+
+    public void setShopLocationList(List<Shop> shopList) {
 
         /** Redis Access **/
         ObjectMapper objectMapper = new ObjectMapper();
 
-        for(Shop shop:shopList){
-            geoOperations.add(
-              shop.getName(), //KEY
-              new Point(shop.getLongitude(),shop.getLatitude()), //POINT
-                    objectMapper.writeValueAsString( //MEMBER
-                        ShopLocationRedisDTO
-                              .builder()
-                              .mainCategory(shop.getMainCategory())
-                              .category(shop.getCategory())
-                              .location(shop.getLocation())
-                              .address(shop.getAddress())
-                              .guName(shop.getGuName())
-                              .build()
-                    )
-            );
+        try {
+            for (Shop shop : shopList) {
+                geoOperations.add(
+                        shop.getName(), //KEY
+                        new Point(shop.getLongitude(), shop.getLatitude()), //POINT
+                        objectMapper.writeValueAsString( //MEMBER
+                                ShopLocationRedisDTO
+                                        .builder()
+                                        .mainCategory(shop.getMainCategory())
+                                        .category(shop.getCategory())
+                                        .location(shop.getLocation())
+                                        .address(shop.getAddress())
+                                        .guName(shop.getGuName())
+                                        /* 혜지 Redis의 Point는 소수점 아래 여섯자리까지 저장한다. 따라서 우리의 데이터 이용 */
+                                        .latitude(shop.getLatitude())
+                                        .longitude(shop.getLongitude())
+                                        .build()
+                        )
+                );
+            }
+        }catch (Exception e){
+            throw new DeniedException(ExceptionEnum.SHOP_SAVE_ERROR);
         }
     }
 
@@ -81,6 +95,8 @@ public class ShopLocationRedisService {
                         .shopName(shopName)
                         .shopLocation(redisDTO.getLocation())
                         .address(redisDTO.getAddress())
+                        .latitude(redisDTO.getLatitude())
+                        .longitude(redisDTO.getLongitude())
                         .build();
                 dto.add(searchDTO);
             } catch (Exception e) {

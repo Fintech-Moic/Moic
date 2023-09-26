@@ -17,7 +17,6 @@ public class CookieService {
         String cookieValue = refreshToken;
 
         Cookie cookie = new Cookie(cookieName,cookieValue);
-
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");

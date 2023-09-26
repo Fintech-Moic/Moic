@@ -5,9 +5,12 @@ import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.service.CardService;
 import com.finp.moic.util.dto.ResponseDTO;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -15,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/card")
+@Validated
 public class CardController {
 
     private final CardService cardService;
@@ -83,7 +87,7 @@ public class CardController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<ResponseDTO> detailCard(@RequestParam("cardName") String cardName){
+    public ResponseEntity<ResponseDTO> detailCard(@RequestParam("cardName") @NotBlank String cardName){
 
         CardDetailResponseDTO response= cardService.detailCard(cardName);
 
@@ -97,16 +101,11 @@ public class CardController {
      * TO DO :: userId 삭제 및 주석 해제
      * **/
     @GetMapping("/search")
-    public ResponseEntity<ResponseDTO> searchCard(@RequestParam("company") String company, @RequestParam("type") String type,
-            @RequestParam("cardName") String cardName, @RequestParam("userId") String userId
+    public ResponseEntity<ResponseDTO> searchCard(@RequestParam("company") @NotNull String company, @RequestParam("type") @NotNull String type,
+                                                  @RequestParam("cardName") @NotNull String cardName, @RequestParam("userId") String userId
             /*@AuthenticationPrincipal UserAuthentication userAuthentication*/ ){
 
-        /**
-         * TO DO :: Get에서 DTO 생성 시 Validation할 방법 찾기
-         **/
-        CardSearchRequestDTO cardSearchRequestDTO=new CardSearchRequestDTO(company,type,cardName,userId);
-
-        List<CardResponseDTO> dto= cardService.searchCard(cardSearchRequestDTO, cardSearchRequestDTO.getUserId());
+        List<CardResponseDTO> dto= cardService.searchCard(company,type,cardName,userId);
         HashMap<String,Object> response=new HashMap<>();
         response.put("cardList",dto);
 
