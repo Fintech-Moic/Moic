@@ -13,8 +13,8 @@ public class QShopSearchResponseDTO extends ConstructorExpression<ShopSearchResp
 
     private static final long serialVersionUID = 945412265L;
 
-    public QShopSearchResponseDTO(com.querydsl.core.types.Expression<String> category, com.querydsl.core.types.Expression<String> shopName, com.querydsl.core.types.Expression<String> shopLocation, com.querydsl.core.types.Expression<String> address, com.querydsl.core.types.Expression<Boolean> benefits, com.querydsl.core.types.Expression<Boolean> gifts) {
-        super(ShopSearchResponseDTO.class, new Class<?>[]{String.class, String.class, String.class, String.class, boolean.class, boolean.class}, category, shopName, shopLocation, address, benefits, gifts);
+    public QShopSearchResponseDTO(com.querydsl.core.types.Expression<String> category, com.querydsl.core.types.Expression<String> shopName, com.querydsl.core.types.Expression<String> shopLocation, com.querydsl.core.types.Expression<String> address) {
+        super(ShopSearchResponseDTO.class, new Class<?>[]{String.class, String.class, String.class, String.class}, category, shopName, shopLocation, address);
     }
 
 }

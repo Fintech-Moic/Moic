@@ -22,13 +22,21 @@ public class ShopSearchResponseDTO {
 
     @QueryProjection
     @Builder
-    public ShopSearchResponseDTO(String category, String shopName, String shopLocation,
-                                 String address, boolean benefits, boolean gifts) {
+    public ShopSearchResponseDTO(String category, String shopName,
+                                 String shopLocation, String address) {
         this.category = category;
         this.shopName = shopName;
         this.shopLocation = shopLocation;
         this.address = address;
-        this.benefits = benefits;
-        this.gifts = gifts;
+        this.benefits=false;
+        this.gifts=false;
+    }
+
+    public void setBenefits(boolean flag){
+        this.benefits=flag;
+    }
+
+    public void setGifts(boolean flag){
+        this.gifts=flag;
     }
 }

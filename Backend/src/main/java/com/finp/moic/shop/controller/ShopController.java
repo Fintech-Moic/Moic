@@ -26,17 +26,6 @@ public class ShopController {
         this.shopService = shopService;
     }
 
-    @PostMapping("/test/location/redis")
-    public ResponseEntity<ResponseDTO> testRedisLocation(){
-
-        ShopLocationRedisDTO response= shopService.testRedisLocation();
-
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("Redis 위경도 테스트")
-                .data(response)
-                .build());
-    }
-
     @GetMapping("/map/category")
     public ResponseEntity<ResponseDTO> getShopListByCategory(@RequestParam("category") String category,
                                                              @RequestParam("latitude") double latitude,

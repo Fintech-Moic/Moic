@@ -60,30 +60,32 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
     }
 
     /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정, 한 키워드에 대해 가맹점이 다수 개 있다면? 중복된 데이터라면?
+     * CONFIRM :: 한 키워드에 대해 다양한 가맹점이 있다면?
      **/
     @Override
-    public Shop findByKeyword(String keyword) {
+    public String findShopNameByKeyword(String keyword) {
 
         QShop shop=QShop.shop;
 
         return queryFactory
-                .select(shop)
+                .select(shop.name)
                 .from(shop)
                 .where(shop.name.contains(keyword))
                 .fetchFirst();
     }
 
+    `
+
     @Override
-    public List<Shop> getShopListByCategory(String category) {
+    public List<String> findAllShopNameByCategory(String category) {
         QShop shop=QShop.shop;
 
         return queryFactory
-                .select(shop)
+                .select(shop.name)
                 .from(shop)
                 .where(
                         shop.mainCategory.contains(category)
-                                .or(shop.category.contains(category))
+                        .or(shop.category.contains(category))
                 )
                 .fetch();
     }

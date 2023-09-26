@@ -10,9 +10,10 @@ public interface ShopRepositoryCustom {
 
     Boolean exist(String shopName);
 
-    Shop findByKeyword(String keyword);
-
-    List<Shop> getShopListByCategory(String category);
-
     Optional<ShopDetailResponseDTO> findByNameAndLocation(String shopName, String shopLocation);
+
+    String findShopNameByKeyword(String keyword);
+
+    List<String> findAllShopNameByCategory(String category);
+
 }

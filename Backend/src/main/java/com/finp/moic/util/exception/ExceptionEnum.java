@@ -18,6 +18,7 @@ public enum ExceptionEnum {
 
     // 2. SHOP (S)
     SHOP_NOT_FOUND(HttpStatus.NOT_FOUND,"S001","가맹점 조회에 실패했습니다."),
+    SHOP_SEARCH_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"S002","가맹점 검색에 실패했습니다."),
 
     // 3. CARD (C)
     /* 혜지 : 인덱스 테스트용 Exception */

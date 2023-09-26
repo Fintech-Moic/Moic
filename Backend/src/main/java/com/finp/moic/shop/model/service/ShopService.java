@@ -10,7 +10,6 @@ import com.finp.moic.util.database.entity.ShopLocationRedisDTO;
 import java.util.List;
 
 public interface ShopService {
-    ShopLocationRedisDTO testRedisLocation();
 
     ShopDetailResponseDTO detailShop(ShopDetailRequestDTO shopDetailRequestDTO);
 
