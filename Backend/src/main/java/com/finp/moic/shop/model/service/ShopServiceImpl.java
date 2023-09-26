@@ -2,9 +2,6 @@ package com.finp.moic.shop.model.service;
 
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.giftCard.model.repository.GiftcardRepository;
-import com.finp.moic.shop.model.dto.request.ShopCategoryRequestDTO;
-import com.finp.moic.shop.model.dto.request.ShopDetailRequestDTO;
-import com.finp.moic.shop.model.dto.request.ShopSearchRequestDTO;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.repository.ShopRepository;
 import com.finp.moic.util.database.service.CacheRedisService;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ShopServiceImpl implements ShopService{
@@ -39,15 +35,15 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public ShopDetailResponseDTO detailShop(ShopDetailRequestDTO shopDetailRequestDTO) {
+    public ShopDetailResponseDTO detailShop(String shopName, String shopLocation) {
 
         /** Validation, RDB Access **/
         ShopDetailResponseDTO dto=shopRepository
-                .findByNameAndLocation(shopDetailRequestDTO.getShopName(),shopDetailRequestDTO.getShopLocation())
+                .findByNameAndLocation(shopName,shopLocation)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.SHOP_NOT_FOUND));
 
-        List<BenefitResponseDTO> benefitDTOList=cardBenefitRepository.findAllByShopName(shopDetailRequestDTO.getShopName());
-        List<GiftResponseDTO> giftcardDTOList=giftcardRepository.findAllByShopName(shopDetailRequestDTO.getShopName());
+        List<BenefitResponseDTO> benefitDTOList=cardBenefitRepository.findAllByShopName(shopName);
+        List<GiftResponseDTO> giftcardDTOList=giftcardRepository.findAllByShopName(shopName);
 
         /** DTO Builder **/
         dto.setBenefits(benefitDTOList);
@@ -57,7 +53,7 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public List<ShopSearchResponseDTO> searchShop(ShopSearchRequestDTO shopSearchRequestDTO, String userId) {
+    public List<ShopSearchResponseDTO> searchShop(String keyword, double latitude, double longitude, String userId) {
 
         /** Validation, Redis Access **/
         if(!cacheRedisService.existUserBenefitShopKey(userId)){
@@ -71,11 +67,10 @@ public class ShopServiceImpl implements ShopService{
         }
 
         /** RDB Access **/
-        String shopName=shopRepository.findShopNameByKeyword(shopSearchRequestDTO.getKeyword());
+        String shopName=shopRepository.findShopNameByKeyword(keyword);
 
         /** Redis Access **/
-        List<ShopSearchResponseDTO> dto=shopLocationRedisService.searchShopListNearByUser(shopName,
-                shopSearchRequestDTO.getLatitude(),shopSearchRequestDTO.getLongitude());
+        List<ShopSearchResponseDTO> dto=shopLocationRedisService.searchShopListNearByUser(shopName,latitude,longitude);
 
         /** DTO Builder **/
         for(int idx=0;idx<dto.size();idx++){
@@ -89,7 +84,7 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public List<ShopSearchResponseDTO> getShopListByCategory(ShopCategoryRequestDTO shopCategoryRequestDTO, String userId) {
+    public List<ShopSearchResponseDTO> getShopListByCategory(String category, double latitude, double longitude, String userId) {
 
         /** Validation, Redis Access **/
         if(!cacheRedisService.existUserBenefitShopKey(userId)){
@@ -103,16 +98,13 @@ public class ShopServiceImpl implements ShopService{
         }
 
         /** RDB Access **/
-        List<String> shopNameList=shopRepository.findAllShopNameByCategory(shopCategoryRequestDTO.getCategory());
+        List<String> shopNameList=shopRepository.findAllShopNameByCategory(category);
 
         /** DTO Builder **/
         List<ShopSearchResponseDTO> dto=new ArrayList<>();
         for(String shopName:shopNameList) {
             /** Redis Access **/
-            dto.addAll(
-                    shopLocationRedisService.searchShopListNearByUser(shopName,
-                    shopCategoryRequestDTO.getLatitude(), shopCategoryRequestDTO.getLongitude())
-            );
+            dto.addAll(shopLocationRedisService.searchShopListNearByUser(shopName,latitude,longitude));
         }
 
         /** DTO Builder **/

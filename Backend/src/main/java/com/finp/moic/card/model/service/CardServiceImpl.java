@@ -3,7 +3,6 @@ package com.finp.moic.card.model.service;
 
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
-import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
 import com.finp.moic.card.model.dto.response.*;
 import com.finp.moic.card.model.entity.Card;
 import com.finp.moic.card.model.entity.UserCard;
@@ -181,15 +180,14 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardResponseDTO> searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId) {
+    public List<CardResponseDTO> searchCard(String company, String type, String cardName, String userId) {
 
         /*** Validation ***/
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         /*** RDB Access ***/
-        List<CardResponseDTO> dto=cardRepository.search(cardSearchRequestDTO.getCompany(),
-                cardSearchRequestDTO.getType(),cardSearchRequestDTO.getCardName());
+        List<CardResponseDTO> dto=cardRepository.search(company,type,cardName);
 
         List<String> userCardNameList=userCardRepository.findAllCardNameByUserId(userId);
 
