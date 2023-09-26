@@ -20,18 +20,23 @@ public class ShopLocationRedisDTO implements Serializable {
     private String location;
     private String address;
     private String guName; //사용 여부 미정
+    private double latitude;
+    private double longitude;
 
     public ShopLocationRedisDTO() {
     }
 
     @Builder
     public ShopLocationRedisDTO(String mainCategory, String category,
-                                String location, String address, String guName) {
+                                String location, String address, String guName,
+                                double latitude, double longitude) {
         this.mainCategory = mainCategory;
         this.category = category;
         this.location = location;
         this.address = address;
         this.guName = guName;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public static ShopLocationRedisDTO fromJson(String json) throws JsonProcessingException {
