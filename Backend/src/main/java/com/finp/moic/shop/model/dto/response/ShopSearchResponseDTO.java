@@ -1,6 +1,7 @@
 package com.finp.moic.shop.model.dto.response;
 
 import com.finp.moic.shop.model.entity.Shop;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -19,6 +20,7 @@ public class ShopSearchResponseDTO {
     public ShopSearchResponseDTO() {
     }
 
+    @QueryProjection
     @Builder
     public ShopSearchResponseDTO(String category, String shopName, String shopLocation,
                                  String address, boolean benefits, boolean gifts) {

@@ -1,5 +1,6 @@
 package com.finp.moic.card.model.service;
 
+
 import com.finp.moic.card.model.dto.request.CardDeleteRequestDTO;
 import com.finp.moic.card.model.dto.request.CardRegistRequestDTO;
 import com.finp.moic.card.model.dto.request.CardSearchRequestDTO;
@@ -12,16 +13,14 @@ import com.finp.moic.card.model.repository.jpa.CardRepository;
 import com.finp.moic.card.model.repository.jpa.UserCardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
-import com.finp.moic.util.database.service.RedisService;
+import com.finp.moic.util.database.service.CardRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.AlreadyExistException;
 import com.finp.moic.util.exception.list.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -34,17 +33,16 @@ public class CardServiceImpl implements CardService {
     private final CardBenefitRepository cardBenefitRepository;
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
-    private final RedisService redisService;
+    private final CardRedisService cardRedisService;
 
-    @Autowired
     public CardServiceImpl(CardRepository cardRepository, CardBenefitRepository cardBenefitRepository,
                            UserRepository userRepository, UserCardRepository userCardRepository,
-                           RedisService redisService) {
+                           CardRedisService cardRedisService) {
         this.cardRepository = cardRepository;
         this.cardBenefitRepository = cardBenefitRepository;
         this.userRepository = userRepository;
         this.userCardRepository = userCardRepository;
-        this.redisService = redisService;
+        this.cardRedisService = cardRedisService;
     }
 
     @Override
@@ -54,19 +52,16 @@ public class CardServiceImpl implements CardService {
          * TO DO :: SOFT DELETE 확인해, 존재 시 회복하기
          * */
 
-        /*** Validation ***/
+        /*** RDB Access ***/
         Card card=cardRepository.findByName(cardRegistRequestDTO.getCardName())
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
+        /*** Validation ***/
         /* 혜지 : 한 사용자에 대해 중복된 카드 등록 불가 */
-        List<Card> cardList=userCardRepository.findAllByUserId(userId);
-        for(Card userCard:cardList){
-            if(card.getName().equals(userCard.getName())){
-                throw new AlreadyExistException(ExceptionEnum.CARD_REGIST_DUPLICATE);
-            }
-        }
+        if(userCardRepository.exist(user.getId(),card.getName()))
+            throw new AlreadyExistException(ExceptionEnum.CARD_REGIST_DUPLICATE);
 
         /*** RDB Access ***/
         /* 혜지 : userCardSeq 등의 기본 데이터셋 저장 */
@@ -97,40 +92,20 @@ public class CardServiceImpl implements CardService {
         List<String> companyList=cardRepository.findAllCompany();
         List<String> typeList=cardRepository.findAllType();
 
-        List<Card> allCardList=cardRepository.findAll();
-        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
+        List<CardResponseDTO> cardDTOList=cardRepository.findAllCard();
+
+        /**
+         * TO DO :: UserCard에 대한 캐싱 데이터 조회 및 백업
+         **/
+        List<String> userCardNameList=userCardRepository.findAllCardNameByUserId(userId);
 
         /*** DTO Builder ***/
-        List<CardResponseDTO> cardDTOList=new ArrayList<>();
-        for(Card card:allCardList){
-            boolean mine=false;
-            for(Card userCard:myCardList){
-                if(card.getName().equals(userCard.getName())){
-                    mine=true;
-                    cardDTOList.add(
-                            CardResponseDTO.builder()
-                            .id(card.getCardSeq().toString())
-                            .company(card.getCompany())
-                            .type(card.getType())
-                            .name(card.getName())
-                            .cardImage(card.getCardImage())
-                            .mine(true)
-                            .build()
-                    );
+        for(int idx=0;idx<cardDTOList.size();idx++){
+            for(String userCard:userCardNameList){
+                if(cardDTOList.get(idx).getName().equals(userCard)){
+                    cardDTOList.get(idx).setFlag(true);
                     break;
                 }
-            }
-            if(!mine) {
-                cardDTOList.add(
-                        CardResponseDTO.builder()
-                                .id(card.getCardSeq().toString())
-                                .company(card.getCompany())
-                                .type(card.getType())
-                                .name(card.getName())
-                                .cardImage(card.getCardImage())
-                                .mine(false)
-                                .build()
-                );
             }
         }
 
@@ -154,39 +129,26 @@ public class CardServiceImpl implements CardService {
          * */
 
         /*** RDB Access ***/
-        List<Card> cardList=userCardRepository.findAllByUserId(userId);
+        List<CardMineResponseDTO> dto=userCardRepository.findAllByUserId(userId);
 
-        /*** DTO Builder ***/
-        List<CardMineResponseDTO> dtoList=new ArrayList<>();
-        for(Card card:cardList){
-                dtoList.add(
-                        CardMineResponseDTO.builder()
-                                .id(card.getCardSeq().toString())
-                                .company(card.getCompany())
-                                .type(card.getType())
-                                .name(card.getName())
-                                .cardImage(card.getCardImage())
-                                .build()
-                );
-        }
-
-        return dtoList;
+        return dto;
     }
 
     @Override
     public void deleteCard(CardDeleteRequestDTO cardDeleteRequestDTO, String userId) {
 
         /*** Validation ***/
-        UserCard userCard=userCardRepository.findByCardName(cardDeleteRequestDTO.getCardName())
-                .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_USER_NOT_FOUND));
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
+        UserCard userCard=userCardRepository.findByCardName(cardDeleteRequestDTO.getCardName())
+                .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_USER_NOT_FOUND));
 
         /*** RDB Access ***/
         userCardRepository.delete(userCard);
 
     }
 
+    @Override
     public CardDetailResponseDTO detailCard(String cardName) {
 
         /*** Validation ***/
@@ -194,29 +156,19 @@ public class CardServiceImpl implements CardService {
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_NOT_FOUND));
 
         /*** RDB Access ***/
-        List<CardBenefit> cardBenefitList=cardBenefitRepository.findByCardName(cardName);
+        /**
+         * TO DO :: UserCardBenefit에 대한 캐싱 데이터 조회 및 백업
+         **/
+        List<CardBenefitResponseDTO> cardBenefitList=cardBenefitRepository.findByCardName(cardName);
 
         /*** DTO Builder ***/
-        List<CardBenefitResponseDTO> cardBenefitDTOList=new ArrayList<>();
-        for(CardBenefit cardBenefit: cardBenefitList){
-            cardBenefitDTOList.add(
-                    CardBenefitResponseDTO.builder()
-                            .category(cardBenefit.getCategory())
-                            .shopName(cardBenefit.getShopName())
-                            .content(cardBenefit.getContent())
-                            .discount(cardBenefit.getDiscount())
-                            .point(cardBenefit.getPoint())
-                            .cashBack(cardBenefit.getCashback())
-                            .build());
-        }
-
         CardDetailResponseDTO dto=CardDetailResponseDTO.builder()
-                .id(card.getCardSeq().toString())
+                .id(card.getCardSeq())
                 .company(card.getCompany())
                 .type(card.getType())
                 .name(card.getName())
                 .cardImage(card.getCardImage())
-                .cardBenefit(cardBenefitDTOList)
+                .cardBenefit(cardBenefitList)
                 .build();
 
         return dto;
@@ -225,51 +177,23 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardResponseDTO> searchCard(CardSearchRequestDTO cardSearchRequestDTO, String userId) {
 
-        String company=cardSearchRequestDTO.getCompany();
-        String type=cardSearchRequestDTO.getType();
-        String cardName=cardSearchRequestDTO.getCardName();
-
         /*** Validation ***/
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         /*** RDB Access ***/
-        List<Card> cardList=cardRepository.search(company,type,cardName);
+        List<CardResponseDTO> dto=cardRepository.search(cardSearchRequestDTO.getCompany(),
+                cardSearchRequestDTO.getType(),cardSearchRequestDTO.getCardName());
+
+        List<String> userCardNameList=userCardRepository.findAllCardNameByUserId(userId);
 
         /*** DTO Builder ***/
-
-        List<CardResponseDTO> dto=new ArrayList<>();
-        List<Card> myCardList=userCardRepository.findAllByUserId(userId);
-
-        for(Card card:cardList){
-            boolean mine=false;
-            for(Card userCard:myCardList){
-                if(card.getName().equals(userCard.getName())){
-                    mine=true;
-                    dto.add(
-                            CardResponseDTO.builder()
-                                    .id(card.getCardSeq().toString())
-                                    .company(card.getCompany())
-                                    .type(card.getType())
-                                    .name(card.getName())
-                                    .cardImage(card.getCardImage())
-                                    .mine(true)
-                                    .build()
-                    );
+        for(int idx=0;idx<dto.size();idx++){
+            for(String userCard:userCardNameList){
+                if(dto.get(idx).getName().equals(userCard)){
+                    dto.get(idx).setFlag(true);
                     break;
                 }
-            }
-            if(!mine) {
-                dto.add(
-                        CardResponseDTO.builder()
-                                .id(card.getCardSeq().toString())
-                                .company(card.getCompany())
-                                .type(card.getType())
-                                .name(card.getName())
-                                .cardImage(card.getCardImage())
-                                .mine(false)
-                                .build()
-                );
             }
         }
 

@@ -1,6 +1,9 @@
 package com.finp.moic.card.model.repository.queryDSL;
 
+import com.finp.moic.card.model.dto.response.CardBenefitResponseDTO;
+import com.finp.moic.card.model.dto.response.QCardBenefitResponseDTO;
 import com.finp.moic.card.model.entity.CardBenefit;
+import com.finp.moic.card.model.entity.QCard;
 import com.finp.moic.card.model.entity.QCardBenefit;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +24,34 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
     /**
      * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
      **/
-    @Override
-    public List<CardBenefit> findByCardName(String cardName) {
 
+    public Boolean exist(String cardName){
+        QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
+
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(cardBenefit)
+                .where(cardBenefit.card.name.eq(cardName))
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
+
+    @Override
+    public List<CardBenefitResponseDTO> findByCardName(String cardName) {
         QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
 
         return queryFactory
-                .select(cardBenefit)
+                .select(
+                        new QCardBenefitResponseDTO(
+                                cardBenefit.category,
+                                cardBenefit.shopName,
+                                cardBenefit.content,
+                                cardBenefit.discount,
+                                cardBenefit.point,
+                                cardBenefit.cashback
+                        )
+                )
                 .from(cardBenefit)
                 .where(cardBenefit.card.name.eq(cardName))
                 .fetch();

@@ -1,6 +1,5 @@
 package com.finp.moic.shop.model.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.finp.moic.card.model.entity.CardBenefit;
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.giftCard.model.entity.Giftcard;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,6 +37,9 @@ public class ShopServiceImpl implements ShopService{
         this.shopLocationRedisService = shopLocationRedisService;
     }
 
+    /**
+     * CONFIRM :: TEST용. 추후 삭제
+     **/
     @Override
     public ShopLocationRedisDTO testRedisLocation(){
 
@@ -50,7 +51,7 @@ public class ShopServiceImpl implements ShopService{
     @Override
     public ShopDetailResponseDTO detailShop(ShopDetailRequestDTO shopDetailRequestDTO) {
 
-        /** Validation, RDB Access **/
+        /** Validation **/
         Shop shop=shopRepository.findShopDetail(shopDetailRequestDTO.getShopName(),shopDetailRequestDTO.getShopLocation());
         if(shop==null) throw new NotFoundException(ExceptionEnum.SHOP_NOT_FOUND);
 
