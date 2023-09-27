@@ -10,15 +10,13 @@ public class UserLoginResponseDTO {
 
     private String accessToken;
 
-    private String refreshToken;
 
     public UserLoginResponseDTO() {
     }
 
     @Builder
-    public UserLoginResponseDTO(String name, String accessToken, String refreshToken) {
+    public UserLoginResponseDTO(String name, String accessToken) {
         this.name = name;
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
     }
 }

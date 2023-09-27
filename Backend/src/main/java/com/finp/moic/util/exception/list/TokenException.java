@@ -3,9 +3,9 @@ package com.finp.moic.util.exception.list;
 import com.finp.moic.util.exception.BusinessException;
 import com.finp.moic.util.exception.ExceptionEnum;
 
-public class ExpiredTokenException extends BusinessException {
+public class TokenException extends BusinessException {
 
-    public ExpiredTokenException(ExceptionEnum exceptionEnum){
+    public TokenException(ExceptionEnum exceptionEnum){
         super(exceptionEnum);
     }
 }

@@ -14,7 +14,7 @@ public enum ExceptionEnum {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "존재하지 않는 사용자입니다."),
     USER_INVALID(HttpStatus.UNAUTHORIZED,"U002","아이디 혹은 비밀번호가 틀렸습니다."),
     USER_INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"U003","비밀번호가 틀렸습니다."),
-    USER_REGIST_ERROR(HttpStatus.BAD_REQUEST,"U004","입력 사항을 확인하세요."),
+    USER_REGIST_VALID(HttpStatus.BAD_REQUEST,"U004","입력 사항을 확인하세요."),
     USER_CERT_ERROR(HttpStatus.BAD_REQUEST,"U005","인증번호가 틀렸습니다."),
 
     // 2. SHOP (S)
@@ -37,6 +37,9 @@ public enum ExceptionEnum {
     // 5. CARD BENEFIT (CB)
 
     // 6. USER BOOKMARK (UB)
+    BOOKMARK_REGIST_DUPLICATE(HttpStatus.BAD_REQUEST,"UB001","이미 등록된 북마크입니다."),
+    BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST,"UB002","존재하지 않는 북마크입니다."),
+    BOOKMARK_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"UB003","북마크 삭제에 실패했습니다."),
 
     // 7. SERVER ERROR (E)
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "서버 에러가 발생했습니다."),
