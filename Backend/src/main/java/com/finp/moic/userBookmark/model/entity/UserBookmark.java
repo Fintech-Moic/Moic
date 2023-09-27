@@ -19,7 +19,7 @@ import org.hibernate.annotations.Where;
 public class UserBookmark extends Base {
 
     @Id
-    @Column(name="user_bookmark_sep")
+    @Column(name="user_bookmark_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userBookmarkSeq;
 

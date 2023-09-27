@@ -36,6 +36,9 @@ public enum ExceptionEnum {
     // 5. CARD BENEFIT (CB)
 
     // 6. USER BOOKMARK (UB)
+    BOOKMARK_REGIST_DUPLICATE(HttpStatus.BAD_REQUEST,"UB001","이미 등록된 북마크입니다."),
+    BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST,"UB002","존재하지 않는 북마크입니다."),
+    BOOKMARK_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"UB003","북마크 삭제에 실패했습니다."),
 
     // 7. SERVER ERROR (E)
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "서버 에러가 발생했습니다."),
