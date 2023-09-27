@@ -77,9 +77,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String parseBearerToken(HttpServletRequest request) {
         String authorization = request.getHeader(AUTHORIZATION);
-        if(authorization==null){
-            throw new TokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
-        }
+//        if(authorization==null){
+//            throw new TokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
+//        }
         return authorization;
     }
 
