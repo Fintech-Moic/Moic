@@ -1,9 +1,7 @@
 package com.finp.moic.util.security.filter;
 
 import com.finp.moic.util.exception.ExceptionEnum;
-import com.finp.moic.util.exception.list.ExpiredTokenException;
-import com.finp.moic.util.exception.list.InvalidTokenException;
-import com.finp.moic.util.security.dto.JwtAuthenticationToken;
+import com.finp.moic.util.exception.list.TokenException;
 import com.finp.moic.util.security.dto.UserAuthentication;
 import com.finp.moic.util.security.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -14,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -38,8 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public JwtAuthenticationFilter(JwtService jwtService) {
         this.jwtService = jwtService;
     }
-
-    private static final String BEARER_TYPE = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -78,27 +73,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request,response);
 
-//        if(token!=null){
-//            jwtService.validateToken(token);
-//            UserAuthentication userAuthentication = parseUserSpecification(token);
-//
-//            Authentication authentication = new JwtAuthenticationToken(userAuthentication,"", authorities);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//        }
-//
-//        filterChain.doFilter(request,response);
     }
 
     private String parseBearerToken(HttpServletRequest request) {
         String authorization = request.getHeader(AUTHORIZATION);
-        if(authorization!=null && authorization.startsWith(BEARER_TYPE)){
-            return authorization.substring(BEARER_TYPE.length());
+        if(authorization==null){
+            throw new TokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
         }
         return authorization;
-//        return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
-//                .filter(token -> token.substring(0, 7).equalsIgnoreCase("Bearer"))
-//                .map(token -> token.substring(7))
-//                .orElse(null);
     }
 
     private UserAuthentication parseUserSpecification(String token) {

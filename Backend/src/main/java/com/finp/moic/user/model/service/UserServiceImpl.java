@@ -51,11 +51,11 @@ public class UserServiceImpl implements UserService{
     public UserLoginResponseDTO login(UserLoginRequestDTO dto){
         // 만약 아이디가 조회되지 않으면
         User user = userRepository.findById(dto.getId())
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         //아이디는 조회 됐는데 비밀번호가 틀리면
         if(!user.getId().equals(dto.getId()) || !passwordEncoder.matches(dto.getPassword(),user.getPassword())){
-            throw new IdOrPasswordNotMatchedException(ExceptionEnum.USER_INVALID);
+            throw new NotFoundException(ExceptionEnum.USER_INVALID);
         }
 
         //로그인 하고 토큰에 id 저장
@@ -142,9 +142,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public void isPasswordValidate(String id, UserPasswordCheckRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
         if(!passwordEncoder.matches(dto.getPassword(),user.getPassword())){
-            throw new PasswordNotMatchedException(ExceptionEnum.USER_INVALID_PASSWORD);
+            throw new NotFoundException(ExceptionEnum.USER_INVALID_PASSWORD);
         }
 
     }
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDetailResponseDTO getUserDetail(String id){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         return UserDetailResponseDTO.builder()
                 .name(user.getName())
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void modifyUser(String id, UserModifyRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         user.setGender(dto.getGender());
         user.setYearOfBirth(dto.getYearOfBirth());
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void modifyPassword(String id, UserModifyPasswordRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         //비밀번호 두 개가 서로 다를 때
         if(!dto.getPassword().equals(dto.getPasswordCheck())){
@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void deleteUser(String id){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         userRepository.delete(user);
     }
@@ -282,7 +282,7 @@ public class UserServiceImpl implements UserService{
          * 4. 저장
          * */
         User user = userRepository.findById(dto.getId())
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         String dbCertNumber = redisService.getCertNumber(dto.getId());
         //ID가 위조 되었을 때

@@ -4,7 +4,7 @@ import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.MailSendException;
-import com.finp.moic.util.exception.list.UserNotFoundException;
+import com.finp.moic.util.exception.list.NotFoundException;
 import com.finp.moic.voc.model.dto.request.VOCRequestDTO;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -28,7 +28,7 @@ public class VOCServiceImpl implements VOCService{
     @Override
     public void sendVOC(String id, VOCRequestDTO dto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         String adminMail = "moicssafy@gamil.com";
         String subject = "[" + id + "] 님이 전달한 문의사항";
