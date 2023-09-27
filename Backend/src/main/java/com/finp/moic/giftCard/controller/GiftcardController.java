@@ -32,7 +32,7 @@ public class GiftcardController {
                                                   MultipartFile multipartFile) {
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                        .data(giftcardService.regist(multipartFile))
+                        .data(giftcardService.regist("test1111", multipartFile))
                         .message("등록이 완료되었습니다.")
                         .build());
     }

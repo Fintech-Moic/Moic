@@ -32,9 +32,7 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
         return queryFactory
                 .select(
                         new QGiftResponseDTO(
-                                giftcard.productName,
-                                giftcard.barcodeImage,
-                                giftcard.barcodeNumber,
+                                giftcard.imageUrl,
                                 giftcard.dueDate
                         )
                 )

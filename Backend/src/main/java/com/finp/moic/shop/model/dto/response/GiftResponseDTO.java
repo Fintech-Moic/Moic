@@ -5,15 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @ToString
 public class GiftResponseDTO {
 
-    private String productName;
-    private String barcodeImage;
-    private long barcodeNumber;
+    private String imageUrl;
     private String dueDate;
 
     public GiftResponseDTO() {
@@ -21,11 +20,9 @@ public class GiftResponseDTO {
 
     @QueryProjection
     @Builder
-    public GiftResponseDTO(String productName, String barcodeImage,
-                           long barcodeNumber, LocalDateTime dueDate) {
-        this.productName = productName;
-        this.barcodeImage = barcodeImage;
-        this.barcodeNumber = barcodeNumber;
+
+    public GiftResponseDTO(String imageUrl, LocalDate dueDate) {
+        this.imageUrl = imageUrl;
         this.dueDate = dueDate.toString();
     }
 }

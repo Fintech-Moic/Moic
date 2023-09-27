@@ -1,19 +1,18 @@
 package com.finp.moic.util.database.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finp.moic.util.dto.ChatGptMessage;
-import com.finp.moic.util.dto.ChatGptResuestDto;
+import com.finp.moic.util.dto.ChatGptResuest;
+import com.finp.moic.util.exception.BusinessException;
+import com.finp.moic.util.exception.ExceptionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ChatGptService {
@@ -21,52 +20,83 @@ public class ChatGptService {
     @Value("${CHAT_APIURL}")
     private String apiUrl;
 
-    @Value("${CHAT_APIKEY")
+    @Value("${CHAT_APIKEY}")
     private String apiKey;
 
     @Value("${CHAT_MODEL}")
     private String model;
 
+    private final WebClient webClient;
 
-    public Map<String, String> response(List<String> texts) {
 
-        String apiUrl = this.apiUrl;
-        String apiKey = "Bearer " + this.apiKey;
+    @Autowired
+    public ChatGptService(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
-        // WebClient 객체 생성 -> 비동기 선택. 챗 GPT 서비스는 응답에 따라 매우 느리므로 Blocking 방식은 지양한다.
-        WebClient webClient = WebClient.builder()
-                .baseUrl(apiUrl)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.AUTHORIZATION,apiKey)
-                .build();
+    public String response(List<String> texts){
 
-        ChatGptResuestDto chatGptResuestDto = ChatGptResuestDto.builder()
-                .model(model)
-                .stream(false)
-                .message(ChatGptMessage.builder()
-                        .role("user")
-                        .content("안녕?").build())
-                .build();
+        ChatGptResuest chatGptResuest =  makeChatGptRequest(texts);
 
-        Mono<String> responseMono = webClient.post()
+        String response= postChatGptRequest(chatGptResuest);
+
+        String content = getContent(response);
+
+        if (content.equals("정상적인 이미지가 아닙니다.")) throw new BusinessException(ExceptionEnum.GIFTCATD_INVALID);
+
+        return content;
+    }
+
+    public String getContent(String response) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content;
+        try {
+            JsonNode jsonNode = objectMapper.readTree(response);
+            content = jsonNode.get("choices").get(0).get("message").get("content").asText();
+
+        } catch(Exception e) {
+            throw new BusinessException(ExceptionEnum.GIFTCATD_INVALID);
+        }
+
+        return content;
+    }
+
+    public String postChatGptRequest(ChatGptResuest chatGptResuest) {
+       return webClient.post()
                 .uri("")
-                .bodyValue(chatGptResuestDto)
+                .bodyValue(chatGptResuest)
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(String.class)
+                .block();
+    }
 
-        System.out.println(responseMono);
+    public ChatGptResuest makeChatGptRequest(List<String> texts) {
 
-        Map<String,String> answer = new HashMap<String,String>();
+        List<ChatGptMessage> list=new ArrayList<>(); // ChatGpt Request 형식에서 list를 요구하므로 불가피함.
+        list.add(
+                ChatGptMessage.builder()
+                        .role("user")
+                        .content("상호명, 마지막 날짜인 유효기간으로 정제해줘. 예를 들어, '상호명:BBQ', '유효기간:2023-09-27' 처럼 한줄씩 정리해줘. 만약 유추되는 데이터가 없다면, \"정상적인 이미지가 아닙니다\". 를 대답해줘.")
+                        .build()
+        );
 
-        // 1. 질문에 따라 챗 GPT 호출
+        ChatGptResuest chatGptResuest = ChatGptResuest.builder()
+                .model(model)
+                .max_tokens(300)
+                .stream(false)
+                .messages(list)
+                .build();
 
-        // 2. WebClient 객체로 받음
+        StringBuffer sb = new StringBuffer();
+        sb.append(chatGptResuest.getMessages().get(0).getContent().toString()).append("\n");
 
-        // 3. JsonNode로 content만 빼서
+        for (String text : texts) {
+            sb.append(text).append("\n");
+        }
+        chatGptResuest.getMessages().get(0).setContent(sb.toString());
+        sb.setLength(0);
 
-        // 4. Map으로 변환 후 준다.
-
-        return answer;
+        return chatGptResuest;
     }
 
 }
