@@ -3,11 +3,9 @@ package com.finp.moic.auth.model.service;
 import com.finp.moic.auth.model.dto.response.AuthRefreshResponseDTO;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
-import com.finp.moic.util.exception.list.ExpiredTokenException;
-import com.finp.moic.util.exception.list.InvalidTokenException;
-import com.finp.moic.util.exception.list.ReLoginException;
+import com.finp.moic.util.exception.list.DeniedException;
+import com.finp.moic.util.exception.list.TokenException;
 import com.finp.moic.util.security.service.JwtService;
-import io.jsonwebtoken.JwtException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -53,18 +51,18 @@ public class AuthServiceImpl implements AuthService{
             return AuthRefreshResponseDTO.builder()
                     .token(accessToken)
                     .build();
-        }catch (ExpiredTokenException e){
+        }catch (TokenException e){
             try{
                 jwtService.validateToken(refreshToken);
-            }catch (ExpiredTokenException e2){
+            }catch (TokenException e2){
                 //재로그인 요청
-                throw new ReLoginException(ExceptionEnum.RE_LOGIN);
+                throw new DeniedException(ExceptionEnum.RE_LOGIN);
             }
             //redis 검증
             String dbRefreshToken = redisService.getRefreshToken(refreshToken);
 
             if(dbRefreshToken==null){
-                throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
+                throw new TokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
             }
             //access 재발급
             newAccessToken = jwtService.createAccessToken(userId);
@@ -89,7 +87,7 @@ public class AuthServiceImpl implements AuthService{
         try{
             jsonObject = (JSONObject) jsonParser.parse(new String(userId));
         }catch (ParseException e){
-            throw new InvalidTokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
+            throw new TokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
         }
         return (String) jsonObject.get("sub");
     }

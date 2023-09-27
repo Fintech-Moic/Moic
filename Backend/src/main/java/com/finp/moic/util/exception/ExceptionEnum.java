@@ -14,7 +14,7 @@ public enum ExceptionEnum {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "존재하지 않는 사용자입니다."),
     USER_INVALID(HttpStatus.UNAUTHORIZED,"U002","아이디 혹은 비밀번호가 틀렸습니다."),
     USER_INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"U003","비밀번호가 틀렸습니다."),
-    USER_REGIST_ERROR(HttpStatus.BAD_REQUEST,"U004","입력 사항을 확인하세요."),
+    USER_REGIST_VALID(HttpStatus.BAD_REQUEST,"U004","입력 사항을 확인하세요."),
     USER_CERT_ERROR(HttpStatus.BAD_REQUEST,"U005","인증번호가 틀렸습니다."),
 
     // 2. SHOP (S)

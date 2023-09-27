@@ -6,13 +6,14 @@ import com.finp.moic.user.model.dto.response.*;
 import com.finp.moic.util.security.dto.UserAuthentication;
 import com.finp.moic.util.security.oauth.dto.AuthUserInfo;
 import com.finp.moic.util.security.oauth.dto.OAuthUserInfo;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserService {
 
-    UserLoginResponseDTO login(UserLoginRequestDTO dto);
-    UserRegistResponseDTO regist(UserRegistRequestDTO dto);
-    UserIdCheckResponseDTO isIdValidate(UserIdCheckRequestDTO dto);
-    UserEmailCheckResponseDTO isEmailValidate(UserEmailCheckRequestDTO dto);
+    UserLoginResponseDTO login(UserLoginRequestDTO dto, HttpServletResponse httpResponse);
+    void regist(UserRegistRequestDTO dto);
+    void isIdValidate(UserIdCheckRequestDTO dto);
+    void isEmailValidate(UserEmailCheckRequestDTO dto);
     void isPasswordValidate(String id, UserPasswordCheckRequestDTO dto);
     void logout(UserAuthentication userAuthentication,String refreshToken);
     UserDetailResponseDTO getUserDetail(String id);

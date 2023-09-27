@@ -5,6 +5,7 @@ import com.finp.moic.user.model.dto.request.*;
 import com.finp.moic.user.model.dto.response.*;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
+import com.finp.moic.util.cookie.CookieService;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.*;
@@ -15,6 +16,7 @@ import com.finp.moic.util.security.oauth.util.HashUtil;
 import com.finp.moic.util.security.service.JwtService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -35,27 +37,30 @@ public class UserServiceImpl implements UserService{
     private final RedisService redisService;
     private final HashUtil hashUtil;
     private final JavaMailSender javaMailSender;
+    private final CookieService cookieService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService
-                            ,RedisService redisService, HashUtil hashUtil, JavaMailSender javaMailSender) {
+                            ,RedisService redisService, HashUtil hashUtil, JavaMailSender javaMailSender,
+                           CookieService cookieService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.redisService = redisService;
         this.hashUtil = hashUtil;
         this.javaMailSender = javaMailSender;
+        this.cookieService = cookieService;
     }
 
     @Override
-    public UserLoginResponseDTO login(UserLoginRequestDTO dto){
+    public UserLoginResponseDTO login(UserLoginRequestDTO dto, HttpServletResponse httpResponse){
         // 만약 아이디가 조회되지 않으면
         User user = userRepository.findById(dto.getId())
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         //아이디는 조회 됐는데 비밀번호가 틀리면
         if(!user.getId().equals(dto.getId()) || !passwordEncoder.matches(dto.getPassword(),user.getPassword())){
-            throw new IdOrPasswordNotMatchedException(ExceptionEnum.USER_INVALID);
+            throw new NotFoundException(ExceptionEnum.USER_INVALID);
         }
 
         //로그인 하고 토큰에 id 저장
@@ -65,10 +70,12 @@ public class UserServiceImpl implements UserService{
         //Redis에 저장
         redisService.setRefreshToken(refreshToken, user.getId());
 
+        //Cookie에 refresh 저장
+        httpResponse.addCookie(cookieService.createCookie(refreshToken));
+
         return UserLoginResponseDTO.builder()
                 .name(user.getName())
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -83,7 +90,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserRegistResponseDTO regist(UserRegistRequestDTO dto) {
+    public void regist(UserRegistRequestDTO dto) {
 
         Optional<User> byId = userRepository.findById(dto.getId());
         if(byId.isPresent()){
@@ -92,7 +99,7 @@ public class UserServiceImpl implements UserService{
 
         /*** Validation ***/
         if(!dto.getPassword().equals(dto.getPasswordCheck())){
-            throw new ValidationException(ExceptionEnum.USER_REGIST_ERROR);
+            throw new ValidationException(ExceptionEnum.USER_REGIST_VALID);
         }
 
         /*** RDB Access ***/
@@ -105,54 +112,38 @@ public class UserServiceImpl implements UserService{
                 .yearOfBirth(dto.getYearOfBirth())
                 .build();
 
-        User registUser = userRepository.save(user);
-
-        /*** DTO Builder ***/
-        return UserRegistResponseDTO.builder()
-                .id(registUser.getId())
-                .build();
+        userRepository.save(user);
     }
 
     @Override
-    public UserIdCheckResponseDTO isIdValidate(UserIdCheckRequestDTO dto){
+    public void isIdValidate(UserIdCheckRequestDTO dto){
         Optional<User> byId = userRepository.findById(dto.getId());
         if(byId.isPresent()){
-            return UserIdCheckResponseDTO.builder()
-                    .isValid(false)
-                    .build();
+            throw new AlreadyExistException(ExceptionEnum.USER_REGIST_DUPLICATE);
         }
-        return UserIdCheckResponseDTO.builder()
-                .isValid(true)
-                .build();
     }
 
     @Override
-    public UserEmailCheckResponseDTO isEmailValidate(UserEmailCheckRequestDTO dto){
+    public void isEmailValidate(UserEmailCheckRequestDTO dto){
         User user = userRepository.findByEmail(dto.getEmail());
         if(user!=null){
-            return UserEmailCheckResponseDTO.builder()
-                    .isValid(false)
-                    .build();
+            throw new AlreadyExistException(ExceptionEnum.USER_REGIST_DUPLICATE);
         }
-        return UserEmailCheckResponseDTO.builder()
-                .isValid(true)
-                .build();
     }
 
     @Override
     public void isPasswordValidate(String id, UserPasswordCheckRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
         if(!passwordEncoder.matches(dto.getPassword(),user.getPassword())){
-            throw new PasswordNotMatchedException(ExceptionEnum.USER_INVALID_PASSWORD);
+            throw new NotFoundException(ExceptionEnum.USER_INVALID_PASSWORD);
         }
-
     }
 
     @Override
     public UserDetailResponseDTO getUserDetail(String id){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         return UserDetailResponseDTO.builder()
                 .name(user.getName())
@@ -166,7 +157,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void modifyUser(String id, UserModifyRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         user.setGender(dto.getGender());
         user.setYearOfBirth(dto.getYearOfBirth());
@@ -176,7 +167,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void modifyPassword(String id, UserModifyPasswordRequestDTO dto){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         //비밀번호 두 개가 서로 다를 때
         if(!dto.getPassword().equals(dto.getPasswordCheck())){
@@ -190,7 +181,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void deleteUser(String id){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         userRepository.delete(user);
     }
@@ -282,7 +273,7 @@ public class UserServiceImpl implements UserService{
          * 4. 저장
          * */
         User user = userRepository.findById(dto.getId())
-                .orElseThrow(() -> new UserNotFoundException(ExceptionEnum.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         String dbCertNumber = redisService.getCertNumber(dto.getId());
         //ID가 위조 되었을 때
