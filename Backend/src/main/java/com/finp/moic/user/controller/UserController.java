@@ -34,13 +34,10 @@ public class UserController {
             @RequestBody @Valid UserLoginRequestDTO dto,
             HttpServletResponse httpResponse
     ){
-        UserLoginResponseDTO response = userService.login(dto);
-
-        //쿠키에 refreshToken 담기
-        httpResponse.addCookie(cookieService.createCookie(response.getRefreshToken()));
+        UserLoginResponseDTO response = userService.login(dto, httpResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("로그인 성공")
+                .message("로그인에 성공했습니다.")
                 .data(response)
                 .build());
     }
@@ -63,11 +60,10 @@ public class UserController {
     public ResponseEntity<ResponseDTO> regist(
             @RequestBody @Valid UserRegistRequestDTO dto
     ){
-        UserRegistResponseDTO response = userService.regist(dto);
+        userService.regist(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("회원가입 성공")
-                .data(response)
                 .build());
     }
 
@@ -75,14 +71,10 @@ public class UserController {
     public ResponseEntity<ResponseDTO> isIdValidate(
             @RequestBody @Valid UserIdCheckRequestDTO dto
     ){
-        UserIdCheckResponseDTO response = userService.isIdValidate(dto);
-        String message = "사용 가능한 ID 입니다.";
-        if(!response.isValid()){
-            message = "중복된 ID 입니다.";
-        }
+        userService.isIdValidate(dto);
+
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message(message)
-                .data(response)
+                .message("사용가능한 ID입니다.")
                 .build());
     }
 
@@ -90,15 +82,10 @@ public class UserController {
     public ResponseEntity<ResponseDTO> isEmailValidate(
             @RequestBody @Valid UserEmailCheckRequestDTO dto
     ){
-        UserEmailCheckResponseDTO response = userService.isEmailValidate(dto);
+        userService.isEmailValidate(dto);
 
-        String message = "사용 가능한 E-mail 입니다.";
-        if(!response.isValid()){
-            message = "중복된 E-mail 입니다.";
-        }
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message(message)
-                .data(response)
+                .message("사용가능한 email입니다.")
                 .build());
     }
 
@@ -110,7 +97,7 @@ public class UserController {
         userService.isPasswordValidate(userAuthentication.getId(), dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("비밀번호 확인 완료")
+                .message("회원 정보 확인이 완료되었습니다.")
                 .build());
     }
 
@@ -134,7 +121,7 @@ public class UserController {
         userService.modifyUser(userAuthentication.getId(), dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("회원 정보 수정")
+                .message("회원 정보 수정이 완료되었습니다.")
                 .build());
     }
 
@@ -146,7 +133,7 @@ public class UserController {
         userService.modifyPassword(userAuthentication.getId(), dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("비밀번호 수정")
+                .message("비밀번호 변경이 완료되었습니다!")
                 .build());
     }
 
@@ -157,7 +144,7 @@ public class UserController {
         userService.deleteUser(userAuthentication.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("회원 탈퇴 완료")
+                .message("회원 탈퇴가 완료되었습니다.")
                 .build());
     }
 
@@ -178,7 +165,7 @@ public class UserController {
     ){
         userService.issueNumber(dto);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("E-mail이 발송되었습니다.")
+                .message("이메일이 발송되었습니다.")
                 .build());
     }
 
