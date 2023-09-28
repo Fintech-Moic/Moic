@@ -80,4 +80,10 @@ public class GiftcardServiceImpl{
         LocalDate localDate = LocalDate.parse(dataStr,formatter);
         return localDate;
     }
+
+    public void delete(String imageUrl) {
+
+        Giftcard giftcard = giftcardRepository.findByImageUrl(imageUrl).orElseThrow(() -> new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND));
+        giftcardRepository.delete(giftcard);
+    }
 }
