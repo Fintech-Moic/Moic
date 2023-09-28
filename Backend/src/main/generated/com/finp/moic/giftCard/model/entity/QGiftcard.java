@@ -24,10 +24,6 @@ public class QGiftcard extends EntityPathBase<Giftcard> {
 
     public final com.finp.moic.util.entity.QBase _super = new com.finp.moic.util.entity.QBase(this);
 
-    public final StringPath barcodeImage = createString("barcodeImage");
-
-    public final NumberPath<Long> barcodeNumber = createNumber("barcodeNumber", Long.class);
-
     public final StringPath category = createString("category");
 
     //inherited
@@ -36,14 +32,14 @@ public class QGiftcard extends EntityPathBase<Giftcard> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
 
-    public final DateTimePath<java.time.LocalDateTime> dueDate = createDateTime("dueDate", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> dueDate = createDate("dueDate", java.time.LocalDate.class);
 
     public final NumberPath<Long> giftcardSeq = createNumber("giftcardSeq", Long.class);
 
+    public final StringPath imageUrl = createString("imageUrl");
+
     //inherited
     public final BooleanPath isDelete = _super.isDelete;
-
-    public final StringPath productName = createString("productName");
 
     public final StringPath shopName = createString("shopName");
 

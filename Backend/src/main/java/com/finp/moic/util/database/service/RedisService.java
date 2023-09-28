@@ -16,16 +16,8 @@ public class RedisService {
 
     /* 성재 : Redis 서버 3개 분리 */
 
-    /**
-     * 모든 데이터가 저장되어있는 Redis 접근 : MainRedis
-     */
     private final RedisTemplate<String, Object> mainRedis;
-
-    /**
-     * Refresh Token만 저장되어있는 Redis 접근 : SubRedis
-     */
     private final RedisTemplate<String, String> securityRedis;
-
     private final RedisTemplate<String, String> autoRedis;
 
     @Autowired
