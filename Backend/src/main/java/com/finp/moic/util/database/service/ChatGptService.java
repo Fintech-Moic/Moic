@@ -25,9 +25,7 @@ public class ChatGptService {
 
     @Value("${CHAT_MODEL}")
     private String model;
-
     private final WebClient webClient;
-
 
     @Autowired
     public ChatGptService(WebClient webClient) {
@@ -72,7 +70,7 @@ public class ChatGptService {
 
     public ChatGptResuest makeChatGptRequest(List<String> texts) {
 
-        List<ChatGptMessage> list=new ArrayList<>(); // ChatGpt Request 형식에서 list를 요구하므로 불가피함.
+        List<ChatGptMessage> list=new ArrayList<>(); // 성재 : ChatGpt api의 Request 형식에서 list를 요구하므로 불가피함.
         list.add(
                 ChatGptMessage.builder()
                         .role("user")

@@ -26,13 +26,18 @@ public class GiftcardController {
         this.s3Service = s3Service;
     }
 
+    /**
+     * 성재 : Front 코드 작성 완료 시 param에 id 추가해야 함.
+     * @param multipartFile
+     */
     @PostMapping("/regist")
     @Transactional
     public ResponseEntity<ResponseDTO> regist(@RequestParam(value = "file", required = false)
                                                   MultipartFile multipartFile) {
 
+        giftcardService.regist("test1111",multipartFile);
+
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                        .data(giftcardService.regist("test1111", multipartFile))
                         .message("등록이 완료되었습니다.")
                         .build());
     }

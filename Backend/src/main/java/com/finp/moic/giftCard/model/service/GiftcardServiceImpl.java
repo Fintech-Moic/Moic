@@ -38,7 +38,7 @@ public class GiftcardServiceImpl{
         this.giftcardRepository = giftcardRepository;
     }
 
-    public String regist (String id, MultipartFile multipartFile){
+    public void regist (String id, MultipartFile multipartFile){
 
         String filePath = s3Service.uploadFile(multipartFile);
         String originalName = multipartFile.getOriginalFilename();
@@ -56,6 +56,9 @@ public class GiftcardServiceImpl{
         User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
 
+        /**
+         * 성재 : category 데이터 정제 완료시 수정해야 함.
+         */
         Giftcard giftcard = Giftcard.builder()
                 .user(user)
                 .category("임의")
@@ -65,9 +68,7 @@ public class GiftcardServiceImpl{
                 .build();
 
         giftcardRepository.save(giftcard);
-        
 
-        return filePath;
     }
 
     public String parseShopName(String line) {
