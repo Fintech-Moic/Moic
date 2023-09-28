@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name="giftcard")
@@ -36,32 +37,22 @@ public class Giftcard extends Base {
     @Column(name="shop_name", length = 20, nullable = false)
     private String shopName;
 
-    @Column(name="product_name", length = 20, nullable = false)
-    private String productName;
-
-    @Column(name="barcode_image", columnDefinition = "TEXT", nullable = false)
-    private String barcodeImage;
-
-    @Column(name="barcode_number", nullable = false, unique = true)
-    private long barcodeNumber;
+    @Column(name="image_url", columnDefinition = "TEXT", nullable = false)
+    private String imageUrl;
 
     @Column(name="due_date", nullable = false)
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
 
     public Giftcard() {
     }
 
-    public Giftcard(long giftcardSeq, User user, String category,
-                    String shopName, String productName, String barcodeImage,
-                    long barcodeNumber, LocalDateTime dueDate) {
+    public Giftcard(long giftcardSeq, User user, String category, String shopName, String imageUrl, LocalDate dueDate) {
         this.giftcardSeq = giftcardSeq;
         this.user = user;
         this.category = category;
         this.shopName = shopName;
-        this.productName = productName;
-        this.barcodeImage = barcodeImage;
-        this.barcodeNumber = barcodeNumber;
+        this.imageUrl = imageUrl;
         this.dueDate = dueDate;
     }
 
@@ -72,9 +63,7 @@ public class Giftcard extends Base {
                 ", user=" + user.getId() +
                 ", category='" + category + '\'' +
                 ", shopName='" + shopName + '\'' +
-                ", productName='" + productName + '\'' +
-                ", barcodeImage='" + barcodeImage + '\'' +
-                ", barcodeNumber=" + barcodeNumber +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", dueDate=" + dueDate +
                 '}';
     }

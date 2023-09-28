@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-public class S3ServiceImpl implements S3Service {
+public class S3ServiceImpl {
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -26,14 +26,13 @@ public class S3ServiceImpl implements S3Service {
         this.amazonS3Client = amazonS3Client;
     }
 
-    @Override
     public String uploadFile(MultipartFile multipartFile){
 
         if (multipartFile == null) throw new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND);
 
         String originalName = multipartFile.getOriginalFilename();
         String fileExtension = originalName.substring(originalName.lastIndexOf("."));
-        String uniqueName = UUID.randomUUID().toString() + fileExtension;
+        String uniqueName = "Giftcard/" + UUID.randomUUID().toString() + fileExtension;
         long size = multipartFile.getSize();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -47,13 +46,16 @@ public class S3ServiceImpl implements S3Service {
             throw new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND);
         }
 
+
        return amazonS3Client.getUrl(bucket,uniqueName).toString();
 
     }
 
-    @Override
-    public void deleteFile(String filePath) {
+    public void deleteGiftcard(String imageUrl) {
 
+        int lastIndexOfSlash = imageUrl.lastIndexOf('/');
+        String imageName = "Giftcard/" + imageUrl.substring(lastIndexOfSlash + 1);
+        amazonS3Client.deleteObject(bucket,imageName);
     }
 
 
