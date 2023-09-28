@@ -2,6 +2,7 @@ package com.finp.moic.util.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finp.moic.util.exception.BusinessException;
+import com.finp.moic.util.exception.BusinessExceptionEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         } catch (BusinessException e) {
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(e.getError().getStatus().value());
-            response.getWriter().write(mapper.writeValueAsString(e));
+            BusinessExceptionEntity error = new BusinessExceptionEntity(e.getError().getErrorCode(),e.getError().getErrorMessage());
+            response.getWriter().write(mapper.writeValueAsString(error));
         }
     }
 
