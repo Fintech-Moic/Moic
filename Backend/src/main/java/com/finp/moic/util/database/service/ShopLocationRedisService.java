@@ -34,10 +34,6 @@ public class ShopLocationRedisService {
     /**
      * 가맹점별 위치와 정보 저장 (Redis가 날아갔을 경우 대비 -> 되도록 쓰지 말기)
      * **/
-
-    /**
-     * TO DO :: 예외 처리
-     */
     public void setDummy(){
         geoOperations.add(
                 "key",new Point(127.0396597,37.5013068),"dummy"
