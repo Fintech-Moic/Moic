@@ -13,8 +13,8 @@ public class QGiftcardListResponseDTO extends ConstructorExpression<GiftcardList
 
     private static final long serialVersionUID = 1561464063L;
 
-    public QGiftcardListResponseDTO(com.querydsl.core.types.Expression<String> imageUrl, com.querydsl.core.types.Expression<java.time.LocalDate> dueDate) {
-        super(GiftcardListResponseDTO.class, new Class<?>[]{String.class, java.time.LocalDate.class}, imageUrl, dueDate);
+    public QGiftcardListResponseDTO(com.querydsl.core.types.Expression<java.util.UUID> id, com.querydsl.core.types.Expression<String> imageUrl, com.querydsl.core.types.Expression<java.time.LocalDate> dueDate) {
+        super(GiftcardListResponseDTO.class, new Class<?>[]{java.util.UUID.class, String.class, java.time.LocalDate.class}, id, imageUrl, dueDate);
     }
 
 }

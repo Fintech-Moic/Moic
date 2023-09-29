@@ -4,6 +4,7 @@ import com.finp.moic.user.model.entity.User;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -24,8 +25,10 @@ public class Giftcard extends Base {
 
     /* 혜지 : 상세 조회 API 수정을 위해 UUID 변경. 확인 후 주석 삭제 요망! */
     @Id
-    @Column(name="giftcard_seq", length = 16)
+    @Column(name="giftcard_seq")
     /*@GeneratedValue(strategy = GenerationType.IDENTITY)*/
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID giftcardSeq;
 
     /* 혜지 : FK 확인 필요 */
