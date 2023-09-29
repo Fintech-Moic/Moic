@@ -41,6 +41,8 @@ public class QGiftcard extends EntityPathBase<Giftcard> {
     //inherited
     public final BooleanPath isDelete = _super.isDelete;
 
+    public final StringPath mainCategory = createString("mainCategory");
+
     public final StringPath shopName = createString("shopName");
 
     //inherited

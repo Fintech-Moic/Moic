@@ -1,7 +1,7 @@
 package com.finp.moic.shop.model.service;
 
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
-import com.finp.moic.giftCard.model.repository.GiftcardRepository;
+import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.repository.ShopRepository;
 import com.finp.moic.util.database.service.CacheRedisService;
