@@ -31,10 +31,13 @@ public class Giftcard extends Base {
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name="category", length = 20, nullable = false)
+    @Column(name="main_category", length = 50, nullable = false)
+    private String mainCategory;
+
+    @Column(name="category", length = 50, nullable = false)
     private String category;
 
-    @Column(name="shop_name", length = 20, nullable = false)
+    @Column(name="shop_name", length = 50, nullable = false)
     private String shopName;
 
     @Column(name="image_url", columnDefinition = "TEXT", nullable = false)
@@ -47,9 +50,12 @@ public class Giftcard extends Base {
     public Giftcard() {
     }
 
-    public Giftcard(long giftcardSeq, User user, String category, String shopName, String imageUrl, LocalDate dueDate) {
+    public Giftcard(long giftcardSeq, User user, String mainCategory,
+                    String category, String shopName, String imageUrl,
+                    LocalDate dueDate) {
         this.giftcardSeq = giftcardSeq;
         this.user = user;
+        this.mainCategory = mainCategory;
         this.category = category;
         this.shopName = shopName;
         this.imageUrl = imageUrl;
@@ -61,6 +67,7 @@ public class Giftcard extends Base {
         return "Giftcard{" +
                 "giftcardSeq=" + giftcardSeq +
                 ", user=" + user.getId() +
+                ", mainCategory='" + mainCategory + '\'' +
                 ", category='" + category + '\'' +
                 ", shopName='" + shopName + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +

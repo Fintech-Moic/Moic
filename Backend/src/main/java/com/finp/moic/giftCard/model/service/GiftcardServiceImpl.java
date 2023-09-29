@@ -1,7 +1,9 @@
 package com.finp.moic.giftCard.model.service;
 
+import com.finp.moic.giftCard.model.dto.response.GiftcardBrandResponseDTO;
 import com.finp.moic.giftCard.model.entity.Giftcard;
-import com.finp.moic.giftCard.model.repository.GiftcardRepository;
+import com.finp.moic.giftCard.model.repository.jpa.GiftcardBrandRepository;
+import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.database.service.ChatGptService;
@@ -27,15 +29,19 @@ public class GiftcardServiceImpl{
     private final ChatGptService chatGptService;
     private final UserRepository userRepository;
     private final GiftcardRepository giftcardRepository;
+    private final GiftcardBrandRepository giftcardBrandRepository;
 
     @Autowired
-    public GiftcardServiceImpl(S3ServiceImpl s3Service, NaverOcrService naverOcrService, CacheRedisService cacheRedisService, ChatGptService chatGptService, UserRepository userRepository, GiftcardRepository giftcardRepository) {
+    public GiftcardServiceImpl(S3ServiceImpl s3Service, NaverOcrService naverOcrService, CacheRedisService cacheRedisService,
+                               ChatGptService chatGptService, UserRepository userRepository, GiftcardRepository giftcardRepository,
+                               GiftcardBrandRepository giftcardBrandRepository) {
         this.s3Service = s3Service;
         this.naverOcrService = naverOcrService;
         this.cacheRedisService = cacheRedisService;
         this.chatGptService = chatGptService;
         this.userRepository = userRepository;
         this.giftcardRepository = giftcardRepository;
+        this.giftcardBrandRepository = giftcardBrandRepository;
     }
 
     public void regist (String id, MultipartFile multipartFile){
@@ -47,21 +53,28 @@ public class GiftcardServiceImpl{
 
         String content = chatGptService.response(texts);
 
+        /**
+         * TO DO :: 로그 삭제
+         **/
         System.out.println(content);
 
         String[] lines = content.split("\n");
         String shopName= parseShopName(lines[0]);
         LocalDate localDate = parseLocalDate(lines[1]);
 
-        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
 
         /**
-         * 성재 : category 데이터 정제 완료시 수정해야 함.
+         * 성재 : category 데이터 정제 완료시 수정해야 함. -> 혜지 : 완료
          */
+        GiftcardBrandResponseDTO categoryDTO=giftcardBrandRepository.findByName(shopName);
+
         Giftcard giftcard = Giftcard.builder()
                 .user(user)
-                .category("임의")
+                .mainCategory(categoryDTO.getMainCategory())
+                .category(categoryDTO.getCategory())
                 .shopName(shopName)
                 .imageUrl(filePath)
                 .dueDate(localDate)
@@ -83,7 +96,8 @@ public class GiftcardServiceImpl{
 
     public void delete(String imageUrl) {
 
-        Giftcard giftcard = giftcardRepository.findByImageUrl(imageUrl).orElseThrow(() -> new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND));
+        Giftcard giftcard = giftcardRepository.findByImageUrl(imageUrl)
+                .orElseThrow(() -> new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND));
         s3Service.deleteGiftcard(imageUrl);
         giftcardRepository.delete(giftcard);
     }
