@@ -34,7 +34,7 @@ public class QGiftcard extends EntityPathBase<Giftcard> {
 
     public final DatePath<java.time.LocalDate> dueDate = createDate("dueDate", java.time.LocalDate.class);
 
-    public final NumberPath<Long> giftcardSeq = createNumber("giftcardSeq", Long.class);
+    public final ComparablePath<java.util.UUID> giftcardSeq = createComparable("giftcardSeq", java.util.UUID.class);
 
     public final StringPath imageUrl = createString("imageUrl");
 

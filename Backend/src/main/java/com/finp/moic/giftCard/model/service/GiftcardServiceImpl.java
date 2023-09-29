@@ -95,6 +95,7 @@ public class GiftcardServiceImpl{
 
     public void delete(String imageUrl) {
 
+        /* 혜지 : Giftcard Repository 확인 후 주석 삭제 요망! */
         Giftcard giftcard = giftcardRepository.findByImageUrl(imageUrl)
                 .orElseThrow(() -> new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND));
         s3Service.deleteGiftcard(imageUrl);

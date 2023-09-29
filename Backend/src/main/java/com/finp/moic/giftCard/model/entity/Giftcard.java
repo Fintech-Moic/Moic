@@ -4,11 +4,13 @@ import com.finp.moic.user.model.entity.User;
 import com.finp.moic.util.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity(name="giftcard")
 @Table(indexes = {
@@ -21,10 +23,13 @@ import java.time.LocalDateTime;
 @Where(clause = "is_delete = false")
 public class Giftcard extends Base {
 
+    /* 혜지 : 상세 조회 API 수정을 위해 UUID 변경. 확인 후 주석 삭제 요망! */
     @Id
     @Column(name="giftcard_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long giftcardSeq;
+    /*@GeneratedValue(strategy = GenerationType.IDENTITY)*/
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private UUID giftcardSeq;
 
     /* 혜지 : FK 확인 필요 */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,7 +55,7 @@ public class Giftcard extends Base {
     public Giftcard() {
     }
 
-    public Giftcard(long giftcardSeq, User user, String mainCategory,
+    public Giftcard(UUID giftcardSeq, User user, String mainCategory,
                     String category, String shopName, String imageUrl,
                     LocalDate dueDate) {
         this.giftcardSeq = giftcardSeq;

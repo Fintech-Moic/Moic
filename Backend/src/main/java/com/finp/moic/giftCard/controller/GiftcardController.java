@@ -1,5 +1,6 @@
 package com.finp.moic.giftCard.controller;
 
+import com.finp.moic.giftCard.model.dto.request.GiftcardDeleteRequestDTO;
 import com.finp.moic.giftCard.model.dto.response.GiftcardListResponseDTO;
 import com.finp.moic.giftCard.model.service.GiftcardServiceImpl;
 import com.finp.moic.util.database.service.S3Service;
@@ -43,9 +44,9 @@ public class GiftcardController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<ResponseDTO> delete(String imageUrl) {
+    public ResponseEntity<ResponseDTO> delete(@RequestBody GiftcardDeleteRequestDTO giftcardDeleteRequestDTO) {
 
-        giftcardService.delete(imageUrl);
+        giftcardService.delete(giftcardDeleteRequestDTO.getImageUrl());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("삭제가 완료되었습니다.")
@@ -55,11 +56,12 @@ public class GiftcardController {
     /**
      *
      * 성재 : Front 코드 작성 완료 시 param에 id 변경해야 함.
-     * @param id
      */
     @GetMapping("/mygifts")
-    public ResponseEntity<ResponseDTO> mygifts(String id) {
+    public ResponseEntity<ResponseDTO> mygifts(/*String id*/) {
 
+        /* 혜지 : 임시로 id 부여 */
+        String id="test1111";
         List<GiftcardListResponseDTO> list = giftcardService.mygifts(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
