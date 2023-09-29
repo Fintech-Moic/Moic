@@ -1,5 +1,7 @@
 package com.finp.moic.giftCard.model.repository.querydsl;
 
+import com.finp.moic.giftCard.model.dto.response.GiftcardListResponseDTO;
+import com.finp.moic.giftCard.model.dto.response.QGiftcardListResponseDTO;
 import com.finp.moic.giftCard.model.entity.QGiftcard;
 import com.finp.moic.shop.model.dto.response.GiftResponseDTO;
 import com.finp.moic.shop.model.dto.response.QGiftResponseDTO;
@@ -37,7 +39,6 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
                 .where(giftcard.shopName.eq(shopName))
                 .fetch();
     }
-
     @Override
     public List<String> findAllShopNameByUserId(String userId) {
         QGiftcard giftcard=QGiftcard.giftcard;
@@ -48,4 +49,20 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
                 .where(giftcard.user.id.eq(userId))
                 .fetch();
     }
+
+    public List<GiftcardListResponseDTO> findAllByUserId(String userId) {
+        QGiftcard giftcard=QGiftcard.giftcard;
+
+        return queryFactory
+                .select(
+                        new QGiftcardListResponseDTO(
+                                giftcard.imageUrl,
+                                giftcard.dueDate
+                        )
+                )
+                .from(giftcard)
+                .where(giftcard.user.id.eq(userId))
+                .fetch();
+    }
+
 }

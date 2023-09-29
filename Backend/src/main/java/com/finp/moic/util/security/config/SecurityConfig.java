@@ -1,5 +1,6 @@
 package com.finp.moic.util.security.config;
 
+import com.finp.moic.util.security.filter.ExceptionHandlerFilter;
 import com.finp.moic.util.security.filter.UnAuthenticationEntryPoint;
 import com.finp.moic.util.security.filter.JwtAuthenticationFilter;
 import com.finp.moic.util.security.handler.CustomAccessDeniedHandler;
@@ -31,16 +32,19 @@ public class SecurityConfig {
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler customAccessDeniedHandler,
                           UnAuthenticationEntryPoint unAuthenticationEntryPoint, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
-                          OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) {
+                          OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler,
+                          ExceptionHandlerFilter exceptionHandlerFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
         this.unAuthenticationEntryPoint = unAuthenticationEntryPoint;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
+        this.exceptionHandlerFilter = exceptionHandlerFilter;
     }
 
     private static final String[] PERMIT_ALL_PATTERNS = new String[] {
@@ -79,7 +83,8 @@ public class SecurityConfig {
                                 .failureHandler(oAuth2AuthenticationFailureHandler))
                 //로그아웃 했을 때 이동할 페이지
                 .logout((logout) -> logout.logoutSuccessUrl("/"))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter,JwtAuthenticationFilter.class);
 
         return http.build();
     }
