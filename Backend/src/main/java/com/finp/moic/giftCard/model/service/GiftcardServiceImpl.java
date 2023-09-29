@@ -1,15 +1,17 @@
 package com.finp.moic.giftCard.model.service;
 
 import com.finp.moic.giftCard.model.dto.response.GiftcardBrandResponseDTO;
+import com.finp.moic.giftCard.model.dto.response.GiftcardListResponseDTO;
 import com.finp.moic.giftCard.model.entity.Giftcard;
 import com.finp.moic.giftCard.model.repository.jpa.GiftcardBrandRepository;
 import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
+import com.finp.moic.giftCard.model.repository.querydsl.GiftcardRepositoryCustom;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.database.service.ChatGptService;
 import com.finp.moic.util.database.service.CacheRedisService;
 import com.finp.moic.util.database.service.NaverOcrService;
-import com.finp.moic.util.database.service.S3ServiceImpl;
+import com.finp.moic.util.database.service.S3Service;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import java.util.List;
 @Service
 public class GiftcardServiceImpl{
 
-    private final S3ServiceImpl s3Service;
+    private final S3Service s3Service;
     private final NaverOcrService naverOcrService;
     private final CacheRedisService cacheRedisService;
     private final ChatGptService chatGptService;
@@ -32,7 +34,7 @@ public class GiftcardServiceImpl{
     private final GiftcardBrandRepository giftcardBrandRepository;
 
     @Autowired
-    public GiftcardServiceImpl(S3ServiceImpl s3Service, NaverOcrService naverOcrService, CacheRedisService cacheRedisService,
+    public GiftcardServiceImpl(S3Service s3Service, NaverOcrService naverOcrService, CacheRedisService cacheRedisService,
                                ChatGptService chatGptService, UserRepository userRepository, GiftcardRepository giftcardRepository,
                                GiftcardBrandRepository giftcardBrandRepository) {
         this.s3Service = s3Service;
@@ -66,9 +68,6 @@ public class GiftcardServiceImpl{
                 .orElseThrow(()-> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
 
-        /**
-         * 성재 : category 데이터 정제 완료시 수정해야 함. -> 혜지 : 완료
-         */
         GiftcardBrandResponseDTO categoryDTO=giftcardBrandRepository.findByName(shopName);
 
         Giftcard giftcard = Giftcard.builder()
@@ -100,5 +99,14 @@ public class GiftcardServiceImpl{
                 .orElseThrow(() -> new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND));
         s3Service.deleteGiftcard(imageUrl);
         giftcardRepository.delete(giftcard);
+    }
+
+
+    /**
+     * TO DO :: 캐시에 List 존재할 시 바로 return 하도록 추가해야 함.
+     **/
+    public List<GiftcardListResponseDTO> mygifts(String id) {
+
+        return giftcardRepository.findAllByUserId(id);
     }
 }

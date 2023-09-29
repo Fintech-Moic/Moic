@@ -15,14 +15,14 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-public class S3ServiceImpl {
+public class S3Service {
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     @Autowired
-    public S3ServiceImpl(AmazonS3Client amazonS3Client) {
+    public S3Service(AmazonS3Client amazonS3Client) {
         this.amazonS3Client = amazonS3Client;
     }
 
