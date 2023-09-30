@@ -54,13 +54,11 @@ public class GiftcardController {
     }
 
     /**
-     *
      * 성재 : Front 코드 작성 완료 시 param에 id 변경해야 함.
      */
     @GetMapping("/mygifts")
     public ResponseEntity<ResponseDTO> mygifts(/*String id*/) {
 
-        /* 혜지 : 임시로 id 부여 */
         String id="test1111";
         List<GiftcardListResponseDTO> list = giftcardService.mygifts(id);
 

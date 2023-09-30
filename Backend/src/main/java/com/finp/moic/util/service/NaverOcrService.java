@@ -1,4 +1,4 @@
-package com.finp.moic.util.database.service;
+package com.finp.moic.util.service;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

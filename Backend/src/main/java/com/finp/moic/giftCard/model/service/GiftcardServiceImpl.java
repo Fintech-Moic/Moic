@@ -5,12 +5,11 @@ import com.finp.moic.giftCard.model.dto.response.GiftcardListResponseDTO;
 import com.finp.moic.giftCard.model.entity.Giftcard;
 import com.finp.moic.giftCard.model.repository.jpa.GiftcardBrandRepository;
 import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
-import com.finp.moic.giftCard.model.repository.querydsl.GiftcardRepositoryCustom;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
-import com.finp.moic.util.database.service.ChatGptService;
+import com.finp.moic.util.service.ChatGptService;
 import com.finp.moic.util.database.service.CacheRedisService;
-import com.finp.moic.util.database.service.NaverOcrService;
+import com.finp.moic.util.service.NaverOcrService;
 import com.finp.moic.util.database.service.S3Service;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
@@ -57,6 +56,7 @@ public class GiftcardServiceImpl{
 
         /**
          * TO DO :: 로그 삭제
+         * 성재 : 기프티콘 테스트가 다양하게 이루어 질 때 까지 결과값 확인을 위해 로그를 남겨두겠음.
          **/
         System.out.println(content);
 
@@ -95,7 +95,6 @@ public class GiftcardServiceImpl{
 
     public void delete(String imageUrl) {
 
-        /* 혜지 : Giftcard Repository 확인 후 주석 삭제 요망! */
         Giftcard giftcard = giftcardRepository.findByImageUrl(imageUrl)
                 .orElseThrow(() -> new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND));
         s3Service.deleteGiftcard(imageUrl);

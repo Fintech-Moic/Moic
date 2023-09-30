@@ -1,4 +1,4 @@
-package com.finp.moic.util.database.service;
+package com.finp.moic.util.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +40,10 @@ public class ChatGptService {
 
         String content = getContent(response);
 
-        if (content.equals("정상적인 이미지가 아닙니다.")) throw new BusinessException(ExceptionEnum.GIFTCATD_INVALID);
+        if (content.equals("정상적인 이미지가 아닙니다.")) {
+
+            throw new BusinessException(ExceptionEnum.GIFTCATD_INVALID);
+        }
 
         return content;
     }
