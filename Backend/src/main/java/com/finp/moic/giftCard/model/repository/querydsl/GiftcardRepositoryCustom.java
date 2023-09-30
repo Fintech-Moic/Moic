@@ -14,6 +14,4 @@ public interface GiftcardRepositoryCustom {
 
     List<GiftcardListResponseDTO> findAllByUserId(String userId);
 
-    /* 혜지 : 제대로 동작하지 않는 것으로 파악됨. 따라서 임시로 queryDSL로 이동! */
-    Optional<Giftcard> findByImageUrl(String imageUrl);
 }
