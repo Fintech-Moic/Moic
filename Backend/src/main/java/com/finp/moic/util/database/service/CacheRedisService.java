@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,6 +71,9 @@ public class CacheRedisService {
             if(!existUserBenefitShop(shopName,userId)&&shopName!=null)
                 setOperations.add(setUserBenefitShopKey(userId),shopName);
         }
+
+        /* 혜지 : 1시간 후 만료 설정 */
+        mainRedis.expire(setUserBenefitShopKey(userId),3600L,TimeUnit.SECONDS);
     }
 
     public Set<String> getUserBenefitShopList(String userId){
@@ -86,6 +90,9 @@ public class CacheRedisService {
             if(!existUserGiftShop(shopName,userId)&&shopName!=null)
                 setOperations.add(setUserGiftShopKey(userId),shopName);
         }
+
+        /* 혜지 : 1시간 후 만료 설정 */
+        mainRedis.expire(setUserGiftShopKey(userId),3600L,TimeUnit.SECONDS);
     }
 
     public Set<String> getUserGiftShopList(String userId){

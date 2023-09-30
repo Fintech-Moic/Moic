@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ShopLocationRedisService {
@@ -34,13 +35,6 @@ public class ShopLocationRedisService {
     /**
      * 가맹점별 위치와 정보 저장 (Redis가 날아갔을 경우 대비 -> 되도록 쓰지 말기)
      * **/
-    public void setDummy(){
-        geoOperations.add(
-                "key",new Point(127.0396597,37.5013068),"dummy"
-        );
-        System.out.println(geoOperations.position("key","dummy"));
-    }
-
     public void setShopLocationList(List<Shop> shopList) {
 
         /** Redis Access **/
@@ -65,6 +59,8 @@ public class ShopLocationRedisService {
                                         .build()
                         )
                 );
+                /* 혜지 : Shop에 대한 TTL -1 설정 */
+                mainRedis.expire(shop.getName(),-1L, TimeUnit.SECONDS);
             }
         }catch (Exception e){
             throw new DeniedException(ExceptionEnum.SHOP_SAVE_ERROR);
