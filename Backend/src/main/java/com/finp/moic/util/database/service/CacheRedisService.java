@@ -73,7 +73,7 @@ public class CacheRedisService {
         }
 
         /* 혜지 : 1시간 후 만료 설정 */
-        mainRedis.expire(setUserBenefitShopKey(userId),1,TimeUnit.HOURS);
+        mainRedis.expire(setUserBenefitShopKey(userId),3600L,TimeUnit.SECONDS);
     }
 
     public Set<String> getUserBenefitShopList(String userId){
@@ -92,7 +92,7 @@ public class CacheRedisService {
         }
 
         /* 혜지 : 1시간 후 만료 설정 */
-        mainRedis.expire(setUserGiftShopKey(userId),1,TimeUnit.HOURS);
+        mainRedis.expire(setUserGiftShopKey(userId),3600L,TimeUnit.SECONDS);
     }
 
     public Set<String> getUserGiftShopList(String userId){
