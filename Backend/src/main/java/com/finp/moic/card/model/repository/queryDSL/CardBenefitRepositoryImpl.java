@@ -84,7 +84,7 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
         QShop shop=QShop.shop;
 
         return queryFactory
-                .selectDistinct(cardBenefit.shopName.coalesce(shop.name))
+                .selectDistinct(cardBenefit.shopName.coalesce(shop.name)) //coalesce? 가져오는 값이 null일 경우 괄호 안의 값을 가져올 수 있다.
                 .from(cardBenefit)
                 .innerJoin(userCard)
                 .on(cardBenefit.card.name.eq(userCard.card.name))
