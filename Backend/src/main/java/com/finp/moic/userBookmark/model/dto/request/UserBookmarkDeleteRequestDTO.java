@@ -12,14 +12,11 @@ public class UserBookmarkDeleteRequestDTO {
 
     private List<ShopRequestDTO> shopList;
 
-    private String userId;
-
     public UserBookmarkDeleteRequestDTO() {
     }
 
     @Builder
-    public UserBookmarkDeleteRequestDTO(List<ShopRequestDTO> shopList, String userId) {
+    public UserBookmarkDeleteRequestDTO(List<ShopRequestDTO> shopList) {
         this.shopList = shopList;
-        this.userId = userId;
     }
 }

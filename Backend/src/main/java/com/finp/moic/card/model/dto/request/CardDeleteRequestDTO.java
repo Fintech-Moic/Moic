@@ -14,18 +14,12 @@ public class CardDeleteRequestDTO {
     @NotBlank
     private String cardName;
 
-    /**
-     * TO DO :: userId 삭제
-     */
-    private String userId;
-
     public CardDeleteRequestDTO() {
     }
 
     @Builder
-    public CardDeleteRequestDTO(@NotNull String cardName, String userId) {
+    public CardDeleteRequestDTO(@NotNull String cardName) {
         this.cardName = cardName;
-        this.userId=userId;
     }
 
 }

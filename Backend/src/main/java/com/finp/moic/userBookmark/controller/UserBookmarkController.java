@@ -32,7 +32,9 @@ public class UserBookmarkController {
     public ResponseEntity<ResponseDTO> registBookmark(@RequestBody @Valid UserBookmarkRegistRequestDTO userBookmarkRegistRequestDTO/*,
                                                   @AuthenticationPrincipal UserAuthentication userAuthentication*/){
 
-        userBookmarkService.registBookmark(userBookmarkRegistRequestDTO, /*userAuthentication.getId()*/userBookmarkRegistRequestDTO.getUserId());
+        String userId="test1111";
+
+        userBookmarkService.registBookmark(userBookmarkRegistRequestDTO, /*userAuthentication.getId()*/userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("북마크 등록이 완료되었습니다.")
@@ -46,7 +48,9 @@ public class UserBookmarkController {
     public ResponseEntity<ResponseDTO> deleteBookmarkList(@RequestBody @Valid UserBookmarkDeleteRequestDTO userBookmarkDeleteRequestDTO/*,
                                                   @AuthenticationPrincipal UserAuthentication userAuthentication*/){
 
-        userBookmarkService.deleteBookmarkList(userBookmarkDeleteRequestDTO, /*userAuthentication.getId()*/userBookmarkDeleteRequestDTO.getUserId());
+        String userId="test1111";
+
+        userBookmarkService.deleteBookmarkList(userBookmarkDeleteRequestDTO, /*userAuthentication.getId()*/userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("북마크 삭제가 완료되었습니다.")
@@ -56,8 +60,10 @@ public class UserBookmarkController {
     /**
      * TO DO :: userId 삭제 및 주석 해제
      * **/
-    @GetMapping
-    public ResponseEntity<ResponseDTO> getBookmarkList(@RequestParam("userId") String userId){
+    @GetMapping("/lookup")
+    public ResponseEntity<ResponseDTO> getBookmarkList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+
+        String userId="test1111";
 
         List<UserBookmarkLookupResponseDTO> dto=userBookmarkService.getBookmarkList(/*userAuthentication.getId()*/userId);
         HashMap<String,Object> response=new HashMap<>();
