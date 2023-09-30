@@ -81,6 +81,10 @@ public class GiftcardServiceImpl{
 
         giftcardRepository.save(giftcard);
 
+        /*** Redis Access ***/
+        /* 혜지 : 값 업데이트가 되었으므로 캐싱 데이터 삭제 */
+        cacheRedisService.removeUserGiftShop(id);
+
     }
 
     public String parseShopName(String line) {
