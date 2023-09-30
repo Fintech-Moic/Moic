@@ -16,15 +16,12 @@ public class UserBookmarkRegistRequestDTO {
     @NotNull
     private String shopLocation;
 
-    private String userId;
-
     public UserBookmarkRegistRequestDTO() {
     }
 
     @Builder
-    public UserBookmarkRegistRequestDTO(String shopName, String shopLocation, String userId) {
+    public UserBookmarkRegistRequestDTO(String shopName, String shopLocation) {
         this.shopName = shopName;
         this.shopLocation = shopLocation;
-        this.userId = userId;
     }
 }

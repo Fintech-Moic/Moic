@@ -45,8 +45,10 @@ public class ShopController {
     @GetMapping("/map/shops")
     public ResponseEntity<ResponseDTO> searchShop(@RequestParam("keyword") @NotNull String keyword,
                                                   @RequestParam("latitude") @Positive double latitude,
-                                                  @RequestParam("longitude") @Positive double longitude,
-                                                  @RequestParam("userId") String userId){
+                                                  @RequestParam("longitude") @Positive double longitude
+                                    /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+
+        String userId="test1111";
 
         List<ShopSearchResponseDTO> dto= shopService.searchShop(keyword,latitude,longitude, userId);
         HashMap<String, Object> response=new HashMap<>();
@@ -64,8 +66,10 @@ public class ShopController {
     @GetMapping("/map/category")
     public ResponseEntity<ResponseDTO> getShopListByCategory(@RequestParam("category") @NotBlank String category,
                                                              @RequestParam("latitude") @Positive double latitude,
-                                                             @RequestParam("longitude") @Positive double longitude,
-                                                             @RequestParam("userId") String userId){
+                                                             @RequestParam("longitude") @Positive double longitude
+                                                /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+
+        String userId="test1111";
 
         List<ShopSearchResponseDTO> dto= shopService.getShopListByCategory(category,latitude,longitude,userId);
         HashMap<String,Object> response=new HashMap<>();

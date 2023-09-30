@@ -12,17 +12,11 @@ public class CardRegistRequestDTO {
     @NotBlank
     private String cardName;
 
-    /**
-     * TO DO :: userId 삭제
-     */
-    private String userId;
-
     public CardRegistRequestDTO() {
     }
 
     @Builder
-    public CardRegistRequestDTO(@NotNull String cardName, String userId) {
+    public CardRegistRequestDTO(@NotNull String cardName) {
         this.cardName = cardName;
-        this.userId=userId;
     }
 }

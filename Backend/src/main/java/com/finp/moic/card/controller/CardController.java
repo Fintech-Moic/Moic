@@ -35,7 +35,9 @@ public class CardController {
     public ResponseEntity<ResponseDTO> registCard(@RequestBody @Valid CardRegistRequestDTO cardRegistRequestDTO/*,
                                                   @AuthenticationPrincipal UserAuthentication userAuthentication*/){
 
-        cardService.registCard(cardRegistRequestDTO, /*userAuthentication.getId()*/cardRegistRequestDTO.getUserId());
+        String userId="test1111";
+
+        cardService.registCard(cardRegistRequestDTO, /*userAuthentication.getId()*/userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                         .message("카드 등록이 완료되었습니다.")
@@ -46,7 +48,9 @@ public class CardController {
      * TO DO :: userId 삭제 및 주석 해제
      * **/
     @GetMapping("/all")
-    public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/@RequestParam("userId") String userId){
+    public ResponseEntity<ResponseDTO> getCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+
+        String userId="test1111";
 
         CardAllReponseDTO response= cardService.getCardList(/*userAuthentication.getId()*/userId);
 
@@ -60,7 +64,9 @@ public class CardController {
      * TO DO :: userId 삭제 및 주석 해제
      * **/
     @GetMapping("/mycards")
-    public ResponseEntity<ResponseDTO> getMyCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/@RequestParam("userId") String userId) {
+    public ResponseEntity<ResponseDTO> getMyCardList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/) {
+
+        String userId="test1111";
 
         List<CardMineResponseDTO> dto= cardService.getMyCardList(/*userAuthentication.getId()*/userId);
         HashMap<String, List<CardMineResponseDTO>> response=new HashMap<>();
@@ -79,7 +85,9 @@ public class CardController {
     public ResponseEntity<ResponseDTO> deleteCard(@RequestBody @Valid CardDeleteRequestDTO cardDeleteRequestDTO
                                                 /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
 
-        cardService.deleteCard(cardDeleteRequestDTO,/*userAuthentication.getId()*/cardDeleteRequestDTO.getUserId());
+        String userId="test1111";
+
+        cardService.deleteCard(cardDeleteRequestDTO,/*userAuthentication.getId()*/userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                         .message("카드 삭제가 완료되었습니다.")
@@ -102,10 +110,12 @@ public class CardController {
      * **/
     @GetMapping("/search")
     public ResponseEntity<ResponseDTO> searchCard(@RequestParam("company") @NotNull String company, @RequestParam("type") @NotNull String type,
-                                                  @RequestParam("cardName") @NotNull String cardName, @RequestParam("userId") String userId
+                                                  @RequestParam("cardName") @NotNull String cardName
             /*@AuthenticationPrincipal UserAuthentication userAuthentication*/ ){
 
-        List<CardResponseDTO> dto= cardService.searchCard(company,type,cardName,userId);
+        String userId="test1111";
+
+        List<CardResponseDTO> dto= cardService.searchCard(company,type,cardName,/*userAuthentication.getId()*/userId);
         HashMap<String,Object> response=new HashMap<>();
         response.put("cardList",dto);
 
