@@ -58,7 +58,6 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
         return queryFactory
                 .select(
                         new QGiftcardListResponseDTO(
-                                /* 혜지 : UUID 추가. 확인 후 주석 삭제 요망! */
                                 giftcard.giftcardSeq,
                                 giftcard.imageUrl,
                                 giftcard.dueDate
@@ -69,14 +68,4 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
                 .fetch();
     }
 
-    /* 혜지 : 제대로 동작하지 않는 것으로 파악됨. 따라서 임시로 queryDSL로 이동! */
-    @Override
-    public Optional<Giftcard> findByImageUrl(String imageUrl) {
-        QGiftcard giftcard=QGiftcard.giftcard;
-
-        return Optional.ofNullable(queryFactory
-                .selectFrom(giftcard)
-                .where(giftcard.imageUrl.eq(imageUrl))
-                .fetchOne());
-    }
 }

@@ -23,7 +23,6 @@ import java.util.UUID;
 @Where(clause = "is_delete = false")
 public class Giftcard extends Base {
 
-    /* 혜지 : 상세 조회 API 수정을 위해 UUID 변경. 확인 후 주석 삭제 요망! */
     @Id
     @Column(name="giftcard_seq")
     /*@GeneratedValue(strategy = GenerationType.IDENTITY)*/
