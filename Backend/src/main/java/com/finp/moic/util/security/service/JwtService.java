@@ -19,13 +19,13 @@ public class JwtService {
     private final String secretKey;
 
     //30분
-//    private final long expirationHours = 60 * 30;
-    private final long expirationHours = 30;
+    private final long expirationHours = 60 * 30;
+//    private final long expirationHours = 30;
     private final String issuer;
 
     //30일
-//    private final long refreshTokenExpire = 60 * 60 * 24 * 30;
-    private final long refreshTokenExpire = 60;
+    private final long refreshTokenExpire = 60 * 60 * 24 * 30;
+//    private final long refreshTokenExpire = 60;
 
     public JwtService(
             @Value("${issuer}") String issuer,
