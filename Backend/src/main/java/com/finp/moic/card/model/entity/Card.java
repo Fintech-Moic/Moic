@@ -31,7 +31,7 @@ public class Card extends Base {
     @Column(name="type", length = 10, nullable = false)
     private String type;
 
-    @Column(name="name", length = 20, nullable = false)
+    @Column(name="name", length = 50, nullable = false)
     private String name;
 
     @Column(name="card_image", columnDefinition = "TEXT", nullable = false)
