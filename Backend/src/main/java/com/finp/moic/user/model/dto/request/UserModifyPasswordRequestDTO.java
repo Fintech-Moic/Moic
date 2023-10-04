@@ -12,18 +12,18 @@ public class UserModifyPasswordRequestDTO {
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,16}$")
-    private String password;
+    private String newPassword;
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,16}$")
-    private String passwordCheck;
+    private String newPasswordCheck;
 
     public UserModifyPasswordRequestDTO() {
     }
 
     @Builder
-    public UserModifyPasswordRequestDTO(@NotNull String password, @NotNull String passwordCheck) {
-        this.password = password;
-        this.passwordCheck = passwordCheck;
+    public UserModifyPasswordRequestDTO(@NotNull String newPassword, @NotNull String newPasswordCheck) {
+        this.newPassword = newPassword;
+        this.newPasswordCheck = newPasswordCheck;
     }
 }

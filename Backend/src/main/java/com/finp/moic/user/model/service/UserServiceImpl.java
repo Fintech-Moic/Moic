@@ -170,11 +170,11 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         //비밀번호 두 개가 서로 다를 때
-        if(!dto.getPassword().equals(dto.getPasswordCheck())){
+        if(!dto.getNewPassword().equals(dto.getNewPasswordCheck())){
             throw new ValidationException(ExceptionEnum.FORGERY_DATA);
         }
 
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
     }
 
     @Override
