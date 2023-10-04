@@ -13,18 +13,19 @@ import java.util.Set;
 @Service
 public class AutoCompleteService {
 
-    RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final String key;
+    private final ZSetOperations<String,String> zSetOperations;
     @Autowired
     public AutoCompleteService(@Qualifier("AutoRedis") RedisTemplate<String, String> redisTemplate,
                                @Value("${autocomplete-key}")String key) {
         this.redisTemplate = redisTemplate;
         this.key = key;
+        this.zSetOperations = redisTemplate.opsForZSet();
     }
 
     public List<String> getAutoComplete(String word) {
 
-        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
         List<String> autoCompleteList = new ArrayList<String>();
 
         Long rank = zSetOperations.rank(key,word);
