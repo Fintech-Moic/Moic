@@ -34,9 +34,11 @@ public class GiftcardController {
     @PostMapping("/regist")
     @Transactional
     public ResponseEntity<ResponseDTO> regist(@RequestParam(value = "file", required = false)
-                                                  MultipartFile multipartFile) {
+                                                  MultipartFile multipartFile
+            /*@AuthenticationPrincipal UserAuthentication userAuthentication*/) {
 
-        giftcardService.regist("test1111",multipartFile);
+        String id="test1111";
+        giftcardService.regist(/*userAuthentication.getId()*/id,multipartFile);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("등록이 완료되었습니다.")
@@ -57,10 +59,10 @@ public class GiftcardController {
      * 성재 : Front 코드 작성 완료 시 param에 id 변경해야 함.
      */
     @GetMapping("/mygifts")
-    public ResponseEntity<ResponseDTO> mygifts(/*String id*/) {
+    public ResponseEntity<ResponseDTO> mygifts(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/) {
 
         String id="test1111";
-        List<GiftcardListResponseDTO> list = giftcardService.mygifts(id);
+        List<GiftcardListResponseDTO> list = giftcardService.mygifts(/*userAuthentication.getId()*/id);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("내 기프티콘 목록 조회")
