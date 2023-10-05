@@ -156,9 +156,6 @@ public class ShopLocationRedisService {
                 throw new DeniedException(ExceptionEnum.SHOP_SEARCH_ERROR);
             }
         }
-        /**
-         * CONFIRM :: 과연 반경 25km 내에 존재하지 않는 가맹점이 존재할까?
-         */
         return null;
     }
 }
