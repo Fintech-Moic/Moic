@@ -5,7 +5,10 @@ import com.finp.moic.giftCard.model.dto.response.GiftcardListResponseDTO;
 import com.finp.moic.giftCard.model.service.GiftcardServiceImpl;
 import com.finp.moic.util.database.service.S3Service;
 import com.finp.moic.util.dto.ResponseDTO;
+import com.finp.moic.util.exception.BusinessException;
+import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.security.dto.UserAuthentication;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -34,8 +37,10 @@ public class GiftcardController {
     @Transactional
     public ResponseEntity<ResponseDTO> regist(@RequestParam(value = "file", required = false)
                                                   MultipartFile multipartFile,
-                                                @AuthenticationPrincipal UserAuthentication userAuthentication) {
+                                                @AuthenticationPrincipal UserAuthentication userAuthentication
+    ,HttpServletRequest httpServletRequest) {
 
+        System.out.println(httpServletRequest.getContentType());
         giftcardService.regist(userAuthentication.getId(),multipartFile);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
