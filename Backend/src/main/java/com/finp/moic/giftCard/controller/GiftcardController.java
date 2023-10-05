@@ -40,6 +40,7 @@ public class GiftcardController {
                                                 @AuthenticationPrincipal UserAuthentication userAuthentication
     ,HttpServletRequest httpServletRequest) {
 
+        System.out.println("============================");
         System.out.println(httpServletRequest.getContentType());
         giftcardService.regist(userAuthentication.getId(),multipartFile);
 
