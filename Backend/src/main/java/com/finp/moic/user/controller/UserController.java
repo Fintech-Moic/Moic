@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.regex.Pattern;
+
 
 @RestController
 @RequestMapping("/user")
@@ -71,6 +73,13 @@ public class UserController {
     public ResponseEntity<ResponseDTO> isIdValidate(
             @RequestBody @Valid UserIdCheckRequestDTO dto
     ){
+
+        if(!Pattern.matches("^[a-z0-9]{6,12}$",dto.getId())){
+            return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                    .message(" ")
+                    .build());
+        }
+
         boolean isAble = userService.isIdValidate(dto);
 
         if(!isAble){
@@ -88,6 +97,13 @@ public class UserController {
     public ResponseEntity<ResponseDTO> isEmailValidate(
             @RequestBody @Valid UserEmailCheckRequestDTO dto
     ){
+
+        if(!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",dto.getEmail())){
+            return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                    .message(" ")
+                    .build());
+        }
+
         boolean isAble = userService.isEmailValidate(dto);
 
         if(!isAble){
