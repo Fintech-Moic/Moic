@@ -2,6 +2,8 @@ package com.finp.moic.shop.model.service;
 
 import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
+import com.finp.moic.shop.model.dto.request.CategoryRequestDTO;
+import com.finp.moic.shop.model.dto.request.ShopRecommandRequestDTO;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.repository.ShopRepository;
 import com.finp.moic.userBookmark.model.repository.UserBookmarkRepository;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -126,6 +129,48 @@ public class ShopServiceImpl implements ShopService{
             if(userBookmarkRepository.exist(userId,dto.get(idx).getShopName(),dto.get(idx).getShopLocation())) {
                 dto.get(idx).setBookmark(true);
             }
+        }
+
+        return dto;
+    }
+
+    @Override
+    public List<ShopRecommandResponseDTO> recommandShopList(ShopRecommandRequestDTO shopRecommandRequestDTO, String userId) {
+
+        /** DTO Builder **/
+        List<ShopRecommandResponseDTO> dto=new ArrayList<>();
+
+        for(CategoryRequestDTO categoryRequestDTO:shopRecommandRequestDTO.getCategoryList()) {
+
+            /** RDB Access **/
+            List<String> shopNameList = shopRepository.findAllShopNameByMainCategoryAndSubCategory
+                    (categoryRequestDTO.getMainCategory(),categoryRequestDTO.getSubCategory());
+
+            /** Validation **/
+            if(shopNameList==null){
+                throw new NotFoundException(ExceptionEnum.SHOP_RECOMMAND_ERROR);
+            }
+
+            Collections.shuffle(shopNameList);
+            String shopName=shopNameList.get(0);
+
+            /** Redis Access **/
+            ShopRecommandResponseDTO redisDTO=shopLocationRedisService.searchShopNearByUser//예외처리
+                    (shopName,shopRecommandRequestDTO.getLatitude(),shopRecommandRequestDTO.getLongitude());
+            /** Validation **/
+            if(redisDTO==null){
+                throw new NotFoundException(ExceptionEnum.SHOP_RECOMMAND_ERROR);
+            }
+
+            /** RDB Access **/
+            List<BenefitResponseDTO> benefitDTOList=cardBenefitRepository.findAllByUserIdAndShopName(userId,shopName);
+            List<GiftResponseDTO> giftcardDTOList=giftcardRepository.findAllByUserIdAndShopName(userId,shopName);
+
+            /** DTO Builder **/
+            redisDTO.setBenefits(benefitDTOList);
+            redisDTO.setGifts(giftcardDTOList);
+
+            dto.add(redisDTO);
         }
 
         return dto;

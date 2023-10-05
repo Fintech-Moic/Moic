@@ -1,10 +1,13 @@
 package com.finp.moic.shop.model.repository;
 
 import com.finp.moic.card.model.entity.QCardBenefit;
+import com.finp.moic.card.model.entity.QUserCard;
+import com.finp.moic.giftCard.model.entity.QGiftcard;
 import com.finp.moic.shop.model.dto.response.QShopDetailResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
 import com.finp.moic.shop.model.entity.QShop;
-import com.finp.moic.shop.model.entity.Shop;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,10 +24,6 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
     public ShopRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
-
-    /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
-     **/
 
     public Boolean exist(String shopName){
         QShop shop=QShop.shop;
@@ -83,6 +82,20 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
                 .where(
                         shop.mainCategory.contains(category)
                         .or(shop.category.contains(category))
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<String> findAllShopNameByMainCategoryAndSubCategory(String mainCategory, String subCategory) {
+        QShop shop=QShop.shop;
+
+        return queryFactory
+                .selectDistinct(shop.name)
+                .from(shop)
+                .where(
+                        shop.mainCategory.eq(mainCategory)
+                                .and(shop.category.eq(subCategory))
                 )
                 .fetch();
     }

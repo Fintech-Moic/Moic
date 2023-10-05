@@ -1,10 +1,13 @@
 package com.finp.moic.shop.controller;
 
+import com.finp.moic.shop.model.dto.request.ShopRecommandRequestDTO;
 import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
+import com.finp.moic.shop.model.dto.response.ShopRecommandResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopSearchResponseDTO;
 import com.finp.moic.shop.model.service.ShopService;
 import com.finp.moic.util.dto.ResponseDTO;
 import com.finp.moic.util.security.dto.UserAuthentication;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -69,7 +72,20 @@ public class ShopController {
         response.put("shopList",dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
-                .message("Redis 위경도 테스트")
+                .message("카테고리별 조회")
+                .data(response)
+                .build());
+    }
+
+    @PostMapping("/map/rec")
+    public ResponseEntity<ResponseDTO> recommandShopList(@Valid @RequestBody ShopRecommandRequestDTO shopRecommandRequestDTO,
+                                                             @AuthenticationPrincipal UserAuthentication userAuthentication){
+        List<ShopRecommandResponseDTO> dto= shopService.recommandShopList(shopRecommandRequestDTO, userAuthentication.getId());
+        HashMap<String,Object> response=new HashMap<>();
+        response.put("shopList",dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                .message("경로 추천")
                 .data(response)
                 .build());
     }
