@@ -4,6 +4,7 @@ import com.finp.moic.auth.model.dto.request.AuthRefreshRequestDTO;
 import com.finp.moic.auth.model.dto.response.AuthRefreshResponseDTO;
 import com.finp.moic.auth.model.service.AuthService;
 import com.finp.moic.util.dto.ResponseDTO;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,11 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<ResponseDTO> refresh(
             @RequestBody AuthRefreshRequestDTO dto,
-            @CookieValue(name = "refreshToken", required = false) String refreshToken
+            @CookieValue(name = "refreshToken", required = false) String refreshToken,
+            HttpServletResponse httpResponse
     ){
 
-        AuthRefreshResponseDTO response = authService.refresh(dto.getAccessToken(), refreshToken);
+        AuthRefreshResponseDTO response = authService.refresh(dto.getAccessToken(), refreshToken, httpResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("Refresh")

@@ -1,15 +1,18 @@
 package com.finp.moic.auth.model.service;
 
 import com.finp.moic.auth.model.dto.response.AuthRefreshResponseDTO;
+import com.finp.moic.util.cookie.CookieService;
 import com.finp.moic.util.database.service.RedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.DeniedException;
 import com.finp.moic.util.exception.list.TokenException;
 import com.finp.moic.util.security.service.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -19,15 +22,17 @@ public class AuthServiceImpl implements AuthService{
 
     private final JwtService jwtService;
     private final RedisService redisService;
+    private final CookieService cookieService;
 
     @Autowired
-    public AuthServiceImpl(JwtService jwtService, RedisService redisService){
+    public AuthServiceImpl(JwtService jwtService, RedisService redisService, CookieService cookieService){
         this.jwtService = jwtService;
         this.redisService = redisService;
+        this.cookieService = cookieService;
     }
 
     @Override
-    public AuthRefreshResponseDTO refresh(String accessToken, String refreshToken) {
+    public AuthRefreshResponseDTO refresh(String accessToken, String refreshToken, HttpServletResponse httpResponse) {
 
         /**
          * 1. 진짜 만료된 access Token인지 확인
@@ -55,22 +60,23 @@ public class AuthServiceImpl implements AuthService{
             try{
                 jwtService.validateToken(refreshToken);
             }catch (TokenException e2){
-                //재로그인 요청
+                //강제 로그아웃 후 재로그인 요청
+                httpResponse.addCookie(cookieService.deleteCookie());
+                SecurityContextHolder.clearContext();
+                redisService.deleteRefreshToken(userId);
                 throw new DeniedException(ExceptionEnum.RE_LOGIN);
             }
             //redis 검증
-            String dbRefreshToken = redisService.getRefreshToken(refreshToken);
+            String dbRefreshToken = redisService.getRefreshToken(userId);
 
             if(dbRefreshToken==null){
+                httpResponse.addCookie(cookieService.deleteCookie());
+                SecurityContextHolder.clearContext();
                 throw new TokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
             }
             //access 재발급
             newAccessToken = jwtService.createAccessToken(userId);
-
         }
-
-
-
 
         return AuthRefreshResponseDTO.builder()
                 .token(newAccessToken)
