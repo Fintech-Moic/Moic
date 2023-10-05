@@ -34,6 +34,7 @@ public enum ExceptionEnum {
     // 4. GIFT CARD (G)
     GIFTCARD_NOT_FOUND(HttpStatus.NOT_FOUND, "G001","등록된 기프트콘이 없습니다."),
     GIFTCATD_INVALID(HttpStatus.BAD_REQUEST, "G002", "올바르지 않은 기프티콘 이미지입니다."),
+    GIFTCATD_REGIST_ERROR(HttpStatus.BAD_REQUEST, "G003", "해당 기프티콘은 문의해주세요."),
 
     // 5. CARD BENEFIT (CB)
 

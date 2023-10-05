@@ -7,6 +7,7 @@ import com.finp.moic.giftCard.model.repository.jpa.GiftcardBrandRepository;
 import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
+import com.finp.moic.util.exception.list.DeniedException;
 import com.finp.moic.util.service.ChatGptService;
 import com.finp.moic.util.service.NaverOcrService;
 import com.finp.moic.util.database.service.S3Service;
@@ -63,6 +64,9 @@ public class GiftcardServiceImpl{
 
 
         GiftcardBrandResponseDTO categoryDTO=giftcardBrandRepository.findByName(shopName);
+        if(categoryDTO==null){
+            throw new DeniedException(ExceptionEnum.GIFTCATD_REGIST_ERROR);
+        }
 
         Giftcard giftcard = Giftcard.builder()
                 .user(user)
