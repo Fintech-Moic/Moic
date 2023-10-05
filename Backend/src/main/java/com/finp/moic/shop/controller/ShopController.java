@@ -4,12 +4,14 @@ import com.finp.moic.shop.model.dto.response.ShopDetailResponseDTO;
 import com.finp.moic.shop.model.dto.response.ShopSearchResponseDTO;
 import com.finp.moic.shop.model.service.ShopService;
 import com.finp.moic.util.dto.ResponseDTO;
+import com.finp.moic.util.security.dto.UserAuthentication;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,18 +41,13 @@ public class ShopController {
                 .build());
     }
 
-    /**
-     * TO DO :: userId 삭제 및 어노테이션 활용
-     **/
     @GetMapping("/map/shops")
     public ResponseEntity<ResponseDTO> searchShop(@RequestParam("keyword") @NotNull String keyword,
                                                   @RequestParam("latitude") @Positive double latitude,
-                                                  @RequestParam("longitude") @Positive double longitude
-                                    /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+                                                  @RequestParam("longitude") @Positive double longitude,
+                                                    @AuthenticationPrincipal UserAuthentication userAuthentication){
 
-        String userId="test1111";
-
-        List<ShopSearchResponseDTO> dto= shopService.searchShop(keyword,latitude,longitude, userId);
+        List<ShopSearchResponseDTO> dto= shopService.searchShop(keyword,latitude,longitude, userAuthentication.getId());
         HashMap<String, Object> response=new HashMap<>();
         response.put("shopList",dto);
 
@@ -60,18 +57,13 @@ public class ShopController {
                 .build());
     }
 
-    /**
-     * TO DO :: userId 삭제 및 어노테이션 활용
-     **/
     @GetMapping("/map/category")
     public ResponseEntity<ResponseDTO> getShopListByCategory(@RequestParam("category") @NotBlank String category,
                                                              @RequestParam("latitude") @Positive double latitude,
-                                                             @RequestParam("longitude") @Positive double longitude
-                                                /*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+                                                             @RequestParam("longitude") @Positive double longitude,
+                                                                @AuthenticationPrincipal UserAuthentication userAuthentication){
 
-        String userId="test1111";
-
-        List<ShopSearchResponseDTO> dto= shopService.getShopListByCategory(category,latitude,longitude,userId);
+        List<ShopSearchResponseDTO> dto= shopService.getShopListByCategory(category,latitude,longitude, userAuthentication.getId());
         HashMap<String,Object> response=new HashMap<>();
         response.put("shopList",dto);
 
