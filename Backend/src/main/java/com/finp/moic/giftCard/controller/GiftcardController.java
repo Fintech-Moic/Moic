@@ -35,7 +35,8 @@ public class GiftcardController {
 
     @PostMapping("/regist")
     @Transactional
-    public ResponseEntity<ResponseDTO> regist(@RequestBody MultipartFile multipartFile,
+    public ResponseEntity<ResponseDTO> regist(@RequestParam(value = "file", required = false)
+                                                  MultipartFile multipartFile,
                                                 @AuthenticationPrincipal UserAuthentication userAuthentication
     ,HttpServletRequest httpServletRequest) {
 
