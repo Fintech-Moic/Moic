@@ -37,8 +37,8 @@ public class RedisService {
     public void setRefreshToken(String refreshToken, String userId){
         // key : refresh, value : userId
         securityRedis.opsForValue().set(refreshToken,userId);
-        //일단 60초
-        securityRedis.expire(refreshToken,60L, TimeUnit.SECONDS);
+        //30일
+        securityRedis.expire(refreshToken,30L, TimeUnit.DAYS);
     }
 
     public String getRefreshToken(String refreshToken){
