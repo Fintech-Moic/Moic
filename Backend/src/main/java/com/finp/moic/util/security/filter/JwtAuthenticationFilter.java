@@ -51,11 +51,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             jwtService.validateToken(token);
         }catch(ExpiredJwtException expiredJwtException){
             filterChain.doFilter(request,response);
-            System.out.println("만료 토큰 받음!");
             return;
         }catch (JwtException | IllegalArgumentException | NullPointerException e){
             filterChain.doFilter(request,response);
-            System.out.println("조작 토큰 받음!");
             return;
         }
 

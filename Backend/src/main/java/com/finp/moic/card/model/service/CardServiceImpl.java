@@ -15,14 +15,13 @@ import com.finp.moic.util.database.service.CacheRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.AlreadyExistException;
 import com.finp.moic.util.exception.list.NotFoundException;
+import jakarta.annotation.PostConstruct;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
-/**
- * CONFIRM :: Transaction
- **/
 @Service
 public class CardServiceImpl implements CardService {
 
@@ -31,6 +30,15 @@ public class CardServiceImpl implements CardService {
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
     private final CacheRedisService cacheRedisService;
+    private List<String> companyList;
+    private List<String> typeList;
+    @PostConstruct
+    public void initalize(){
+        companyList = cardRepository.findAllCompany();
+        typeList = cardRepository.findAllType();
+        Collections.sort(companyList);
+        Collections.sort(typeList);
+    }
 
     public CardServiceImpl(CardRepository cardRepository, CardBenefitRepository cardBenefitRepository,
                            UserRepository userRepository, UserCardRepository userCardRepository,
@@ -89,15 +97,7 @@ public class CardServiceImpl implements CardService {
          * TO DO :: SOFT DELETE 확인해, 삭제된 데이터 가져오지 않기
          * */
 
-        /*** RDB Access ***/
-        List<String> companyList=cardRepository.findAllCompany();
-        List<String> typeList=cardRepository.findAllType();
-
         List<CardResponseDTO> cardDTOList=cardRepository.findAllCard();
-
-        /**
-         * TO DO :: UserCard에 대한 캐싱 데이터 조회 및 백업
-         **/
         List<String> userCardNameList=userCardRepository.findAllCardNameByUserId(userId);
 
         /*** DTO Builder ***/
@@ -109,10 +109,6 @@ public class CardServiceImpl implements CardService {
                 }
             }
         }
-
-        Collections.sort(companyList);
-        Collections.sort(typeList);
-
         CardAllReponseDTO dto=CardAllReponseDTO.builder()
                 .companyList(companyList)
                 .typeList(typeList)

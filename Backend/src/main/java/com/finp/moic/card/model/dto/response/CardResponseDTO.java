@@ -33,9 +33,6 @@ public class CardResponseDTO implements Serializable {
         this.mine=false;
     }
 
-    /**
-     * CONFIRM :: DTO Builder를 줄이기 위해 setter 생성
-     **/
     public void setFlag(boolean mine){
         this.mine=mine;
     }

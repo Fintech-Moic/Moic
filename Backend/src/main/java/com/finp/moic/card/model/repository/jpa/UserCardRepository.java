@@ -10,9 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserCardRepository extends JpaRepository<UserCard,Long>, UserCardRepositoryCustom {
 
-    /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
-     **/
     Optional<UserCard> findByCardName(String cardName);
 
 }

@@ -37,7 +37,6 @@ public class SecurityRedisConfig {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
-        // 다른 설정을 추가할 수 있습니다.
         return redisTemplate;
     }
 }

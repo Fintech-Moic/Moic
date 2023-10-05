@@ -28,9 +28,7 @@ public class NaverOcrService {
 
     @Value("${OCR_SECRET}")
     private String secretKey;
-    /**
-     * 네이버 OCR 호출
-     */
+
     public List<String> naverOcrApi(String filePath, String ext) {
         String apiURL = this.apiURL;
         String secretKey = this.secretKey;
@@ -85,9 +83,6 @@ public class NaverOcrService {
         return parseData;
     }
 
-    /**
-     * 성재 : json 데이터를 String으로 변환하여 모든 데이터를 담는다.
-     */
     public List<String> jsonParse(StringBuffer response) throws ParseException {
 
             List<String> inferTextList = new ArrayList<>();
@@ -103,7 +98,7 @@ public class NaverOcrService {
                     inferTextList.add(inferText);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new BusinessException(ExceptionEnum.INTERNAL_SERVER_ERROR);
             }
 
             return inferTextList;

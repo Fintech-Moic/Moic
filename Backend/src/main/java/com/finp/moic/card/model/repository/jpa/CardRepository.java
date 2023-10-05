@@ -12,10 +12,6 @@ import java.util.UUID;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, UUID>, CardRepositoryCustom {
-
-    /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
-     **/
     Optional<Card> findByName(String name);
 
     @Query(value = "SELECT DISTINCT company FROM card", nativeQuery = true)
