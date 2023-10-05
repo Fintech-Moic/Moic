@@ -13,8 +13,8 @@ public class QBenefitResponseDTO extends ConstructorExpression<BenefitResponseDT
 
     private static final long serialVersionUID = 452047742L;
 
-    public QBenefitResponseDTO(com.querydsl.core.types.Expression<String> cardName, com.querydsl.core.types.Expression<String> content, com.querydsl.core.types.Expression<String> discount, com.querydsl.core.types.Expression<String> point, com.querydsl.core.types.Expression<String> cashBack) {
-        super(BenefitResponseDTO.class, new Class<?>[]{String.class, String.class, String.class, String.class, String.class}, cardName, content, discount, point, cashBack);
+    public QBenefitResponseDTO(com.querydsl.core.types.Expression<String> cardName, com.querydsl.core.types.Expression<String> cardImage, com.querydsl.core.types.Expression<String> content, com.querydsl.core.types.Expression<String> discount, com.querydsl.core.types.Expression<String> point, com.querydsl.core.types.Expression<String> cashBack) {
+        super(BenefitResponseDTO.class, new Class<?>[]{String.class, String.class, String.class, String.class, String.class, String.class}, cardName, cardImage, content, discount, point, cashBack);
     }
 
 }

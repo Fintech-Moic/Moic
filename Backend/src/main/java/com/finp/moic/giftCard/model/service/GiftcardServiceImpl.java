@@ -97,12 +97,17 @@ public class GiftcardServiceImpl{
         return localDate;
     }
 
-    public void delete(String imageUrl) {
+    public void delete(String id, String imageUrl) {
 
         Giftcard giftcard = giftcardRepository.findByImageUrl(imageUrl)
                 .orElseThrow(() -> new NotFoundException(ExceptionEnum.GIFTCARD_NOT_FOUND));
         s3Service.deleteGiftcard(imageUrl);
         giftcardRepository.delete(giftcard);
+
+        /*** Redis Access ***/
+        /* 혜지 : 값 업데이트가 되었으므로 캐싱 데이터 삭제 */
+        cacheRedisService.removeUserGiftShop(id);
+
     }
 
 
