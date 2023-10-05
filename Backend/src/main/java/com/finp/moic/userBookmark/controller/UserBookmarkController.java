@@ -5,10 +5,12 @@ import com.finp.moic.userBookmark.model.dto.request.UserBookmarkRegistRequestDTO
 import com.finp.moic.userBookmark.model.dto.response.UserBookmarkLookupResponseDTO;
 import com.finp.moic.userBookmark.model.service.UserBookmarkService;
 import com.finp.moic.util.dto.ResponseDTO;
+import com.finp.moic.util.security.dto.UserAuthentication;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,47 +27,32 @@ public class UserBookmarkController {
         this.userBookmarkService = userBookmarkService;
     }
 
-    /**
-     * TO DO :: userId 삭제 및 주석 해제
-     * **/
     @PostMapping("/regist")
-    public ResponseEntity<ResponseDTO> registBookmark(@RequestBody @Valid UserBookmarkRegistRequestDTO userBookmarkRegistRequestDTO/*,
-                                                  @AuthenticationPrincipal UserAuthentication userAuthentication*/){
+    public ResponseEntity<ResponseDTO> registBookmark(@RequestBody @Valid UserBookmarkRegistRequestDTO userBookmarkRegistRequestDTO,
+                                                  @AuthenticationPrincipal UserAuthentication userAuthentication){
 
-        String userId="test1111";
-
-        userBookmarkService.registBookmark(userBookmarkRegistRequestDTO, /*userAuthentication.getId()*/userId);
+        userBookmarkService.registBookmark(userBookmarkRegistRequestDTO, userAuthentication.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("북마크 등록이 완료되었습니다.")
                 .build());
     }
 
-    /**
-     * TO DO :: userId 삭제 및 주석 해제
-     * **/
     @PostMapping("/delete")
-    public ResponseEntity<ResponseDTO> deleteBookmarkList(@RequestBody @Valid UserBookmarkDeleteRequestDTO userBookmarkDeleteRequestDTO/*,
-                                                  @AuthenticationPrincipal UserAuthentication userAuthentication*/){
+    public ResponseEntity<ResponseDTO> deleteBookmarkList(@RequestBody @Valid UserBookmarkDeleteRequestDTO userBookmarkDeleteRequestDTO,
+                                                  @AuthenticationPrincipal UserAuthentication userAuthentication){
 
-        String userId="test1111";
-
-        userBookmarkService.deleteBookmarkList(userBookmarkDeleteRequestDTO, /*userAuthentication.getId()*/userId);
+        userBookmarkService.deleteBookmarkList(userBookmarkDeleteRequestDTO, userAuthentication.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("북마크 삭제가 완료되었습니다.")
                 .build());
     }
 
-    /**
-     * TO DO :: userId 삭제 및 주석 해제
-     * **/
     @GetMapping("/lookup")
-    public ResponseEntity<ResponseDTO> getBookmarkList(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/){
+    public ResponseEntity<ResponseDTO> getBookmarkList(@AuthenticationPrincipal UserAuthentication userAuthentication){
 
-        String userId="test1111";
-
-        List<UserBookmarkLookupResponseDTO> dto=userBookmarkService.getBookmarkList(/*userAuthentication.getId()*/userId);
+        List<UserBookmarkLookupResponseDTO> dto=userBookmarkService.getBookmarkList(userAuthentication.getId());
         HashMap<String,Object> response=new HashMap<>();
         response.put("shopList",dto);
 

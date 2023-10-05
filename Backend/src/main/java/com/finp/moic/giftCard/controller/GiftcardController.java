@@ -5,9 +5,11 @@ import com.finp.moic.giftCard.model.dto.response.GiftcardListResponseDTO;
 import com.finp.moic.giftCard.model.service.GiftcardServiceImpl;
 import com.finp.moic.util.database.service.S3Service;
 import com.finp.moic.util.dto.ResponseDTO;
+import com.finp.moic.util.security.dto.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,18 +29,13 @@ public class GiftcardController {
         this.s3Service = s3Service;
     }
 
-    /**
-     * 성재 : Front 코드 작성 완료 시 param에 id 추가해야 함.
-     * @param multipartFile
-     */
     @PostMapping("/regist")
     @Transactional
     public ResponseEntity<ResponseDTO> regist(@RequestParam(value = "file", required = false)
-                                                  MultipartFile multipartFile
-            /*@AuthenticationPrincipal UserAuthentication userAuthentication*/) {
+                                                  MultipartFile multipartFile,
+                                                @AuthenticationPrincipal UserAuthentication userAuthentication) {
 
-        String id="test1111";
-        giftcardService.regist(/*userAuthentication.getId()*/id,multipartFile);
+        giftcardService.regist(userAuthentication.getId(),multipartFile);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("등록이 완료되었습니다.")
@@ -46,23 +43,20 @@ public class GiftcardController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<ResponseDTO> delete(@RequestBody GiftcardDeleteRequestDTO giftcardDeleteRequestDTO) {
+    public ResponseEntity<ResponseDTO> delete(@RequestBody GiftcardDeleteRequestDTO giftcardDeleteRequestDTO,
+                                              @AuthenticationPrincipal UserAuthentication userAuthentication) {
 
-        giftcardService.delete(giftcardDeleteRequestDTO.getImageUrl());
+        giftcardService.delete(userAuthentication.getId(),giftcardDeleteRequestDTO.getImageUrl());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("삭제가 완료되었습니다.")
                 .build());
     }
 
-    /**
-     * 성재 : Front 코드 작성 완료 시 param에 id 변경해야 함.
-     */
     @GetMapping("/mygifts")
-    public ResponseEntity<ResponseDTO> mygifts(/*@AuthenticationPrincipal UserAuthentication userAuthentication*/) {
+    public ResponseEntity<ResponseDTO> mygifts(@AuthenticationPrincipal UserAuthentication userAuthentication) {
 
-        String id="test1111";
-        List<GiftcardListResponseDTO> list = giftcardService.mygifts(/*userAuthentication.getId()*/id);
+        List<GiftcardListResponseDTO> list = giftcardService.mygifts(userAuthentication.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("내 기프티콘 목록 조회")

@@ -10,6 +10,7 @@ import lombok.ToString;
 public class BenefitResponseDTO {
 
     private String cardName;
+    private String cardImage;
     private String content;
     private String discount;
     private String point;
@@ -20,9 +21,10 @@ public class BenefitResponseDTO {
 
     @QueryProjection
     @Builder
-    public BenefitResponseDTO(String cardName, String content,
+    public BenefitResponseDTO(String cardName, String cardImage, String content,
                               String discount, String point, String cashBack) {
         this.cardName = cardName;
+        this.cardImage = cardImage;
         this.content = content;
         this.discount = discount;
         this.point = point;
