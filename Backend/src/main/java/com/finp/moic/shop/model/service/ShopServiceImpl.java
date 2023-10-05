@@ -85,6 +85,9 @@ public class ShopServiceImpl implements ShopService{
                 dto.get(idx).setBenefits(true);
             if(cacheRedisService.existUserGiftShop(dto.get(idx).getShopName(),userId))
                 dto.get(idx).setGifts(true);
+            if(userBookmarkRepository.exist(userId,dto.get(idx).getShopName(),dto.get(idx).getShopLocation())){
+                dto.get(idx).setBookmark(true);
+            }
         }
 
         return dto;
