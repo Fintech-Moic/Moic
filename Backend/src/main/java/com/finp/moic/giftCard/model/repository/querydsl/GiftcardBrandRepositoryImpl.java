@@ -29,7 +29,7 @@ public class GiftcardBrandRepositoryImpl implements GiftcardBrandRepositoryCusto
                         )
                 )
                 .from(giftcardBrand)
-                .where(giftcardBrand.name.eq(shopName))
+                .where(giftcardBrand.name.contains(shopName))
                 .fetchOne();
     }
 }
