@@ -66,6 +66,7 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
                 .select(
                         new QBenefitResponseDTO(
                                 cardBenefit.card.name.as("cardName"),
+                                cardBenefit.card.cardImage.as("cardImage"),
                                 cardBenefit.content,
                                 cardBenefit.discount,
                                 cardBenefit.point,
