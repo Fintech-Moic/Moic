@@ -1,6 +1,5 @@
 package com.finp.moic.util.security.oauth.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
