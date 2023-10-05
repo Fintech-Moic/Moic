@@ -21,7 +21,7 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<ResponseDTO> refresh(
             @RequestBody AuthRefreshRequestDTO dto,
-            @CookieValue(name = "refreshToken") String refreshToken
+            @CookieValue(name = "refreshToken", required = false) String refreshToken
     ){
 
         AuthRefreshResponseDTO response = authService.refresh(dto.getAccessToken(), refreshToken);
