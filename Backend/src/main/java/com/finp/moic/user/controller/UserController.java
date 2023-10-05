@@ -71,7 +71,13 @@ public class UserController {
     public ResponseEntity<ResponseDTO> isIdValidate(
             @RequestBody @Valid UserIdCheckRequestDTO dto
     ){
-        userService.isIdValidate(dto);
+        boolean isAble = userService.isIdValidate(dto);
+
+        if(!isAble){
+            return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                    .message("중복된 ID입니다.")
+                    .build());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("사용가능한 ID입니다.")
@@ -82,7 +88,13 @@ public class UserController {
     public ResponseEntity<ResponseDTO> isEmailValidate(
             @RequestBody @Valid UserEmailCheckRequestDTO dto
     ){
-        userService.isEmailValidate(dto);
+        boolean isAble = userService.isEmailValidate(dto);
+
+        if(!isAble){
+            return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
+                    .message("중복된 email입니다.")
+                    .build());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("사용가능한 email입니다.")

@@ -12,8 +12,8 @@ public interface UserService {
 
     UserLoginResponseDTO login(UserLoginRequestDTO dto, HttpServletResponse httpResponse);
     void regist(UserRegistRequestDTO dto);
-    void isIdValidate(UserIdCheckRequestDTO dto);
-    void isEmailValidate(UserEmailCheckRequestDTO dto);
+    boolean isIdValidate(UserIdCheckRequestDTO dto);
+    boolean isEmailValidate(UserEmailCheckRequestDTO dto);
     void isPasswordValidate(String id, UserPasswordCheckRequestDTO dto);
     void logout(UserAuthentication userAuthentication,String refreshToken);
     UserDetailResponseDTO getUserDetail(String id);
