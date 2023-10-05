@@ -64,9 +64,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-//                                .requestMatchers("/user/login","/user/regist","/auth/refresh","/user/check/**").permitAll()
+                                .requestMatchers("/user/login","/user/regist","/auth/**","/user/check/**",
+                                        "/user/lookup/id", "/user/temp/password", "/user/reset/password",
+                                        "/user/verify/password").permitAll()
                                 /** 편리한 개발을 위해 권한이 없어도 접근 허가 => 추후에 꼭 변경 해야 함!! **/
-                                .requestMatchers("/**").permitAll()
+//                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(handler ->
