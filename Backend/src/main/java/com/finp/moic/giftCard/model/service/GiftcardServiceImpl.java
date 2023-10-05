@@ -8,12 +8,13 @@ import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
 import com.finp.moic.user.model.entity.User;
 import com.finp.moic.user.model.repository.UserRepository;
 import com.finp.moic.util.service.ChatGptService;
-import com.finp.moic.util.database.service.CacheRedisService;
 import com.finp.moic.util.service.NaverOcrService;
 import com.finp.moic.util.database.service.S3Service;
 import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,25 +27,24 @@ public class GiftcardServiceImpl{
 
     private final S3Service s3Service;
     private final NaverOcrService naverOcrService;
-    private final CacheRedisService cacheRedisService;
     private final ChatGptService chatGptService;
     private final UserRepository userRepository;
     private final GiftcardRepository giftcardRepository;
     private final GiftcardBrandRepository giftcardBrandRepository;
 
     @Autowired
-    public GiftcardServiceImpl(S3Service s3Service, NaverOcrService naverOcrService, CacheRedisService cacheRedisService,
+    public GiftcardServiceImpl(S3Service s3Service, NaverOcrService naverOcrService,
                                ChatGptService chatGptService, UserRepository userRepository, GiftcardRepository giftcardRepository,
                                GiftcardBrandRepository giftcardBrandRepository) {
         this.s3Service = s3Service;
         this.naverOcrService = naverOcrService;
-        this.cacheRedisService = cacheRedisService;
         this.chatGptService = chatGptService;
         this.userRepository = userRepository;
         this.giftcardRepository = giftcardRepository;
         this.giftcardBrandRepository = giftcardBrandRepository;
     }
 
+    @CacheEvict(value="giftcardList", key="#id")
     public void regist (String id, MultipartFile multipartFile){
 
         String filePath = s3Service.uploadFile(multipartFile);
@@ -53,12 +53,6 @@ public class GiftcardServiceImpl{
                 naverOcrService.naverOcrApi(filePath, originalName.substring(originalName.lastIndexOf(".") + 1));
 
         String content = chatGptService.response(texts);
-
-        /**
-         * TO DO :: 로그 삭제
-         * 성재 : 기프티콘 테스트가 다양하게 이루어 질 때 까지 결과값 확인을 위해 로그를 남겨두겠음.
-         **/
-        System.out.println(content);
 
         String[] lines = content.split("\n");
         String shopName= parseShopName(lines[0]);
@@ -83,7 +77,6 @@ public class GiftcardServiceImpl{
 
         /*** Redis Access ***/
         /* 혜지 : 값 업데이트가 되었으므로 캐싱 데이터 삭제 */
-        cacheRedisService.removeUserGiftShop(id);
 
     }
 
@@ -97,6 +90,7 @@ public class GiftcardServiceImpl{
         return localDate;
     }
 
+    @CacheEvict(value="giftcardList", key="#id")
     public void delete(String id, String imageUrl) {
 
         Giftcard giftcard = giftcardRepository.findByImageUrl(imageUrl)
@@ -104,16 +98,9 @@ public class GiftcardServiceImpl{
         s3Service.deleteGiftcard(imageUrl);
         giftcardRepository.delete(giftcard);
 
-        /*** Redis Access ***/
-        /* 혜지 : 값 업데이트가 되었으므로 캐싱 데이터 삭제 */
-        cacheRedisService.removeUserGiftShop(id);
-
     }
 
-
-    /**
-     * TO DO :: 캐시에 List 존재할 시 바로 return 하도록 추가해야 함.
-     **/
+    @Cacheable(value="giftcardList", key="#id")
     public List<GiftcardListResponseDTO> mygifts(String id) {
 
         return giftcardRepository.findAllByUserId(id);

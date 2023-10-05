@@ -7,6 +7,7 @@ import com.finp.moic.util.database.service.S3Service;
 import com.finp.moic.util.dto.ResponseDTO;
 import com.finp.moic.util.security.dto.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
