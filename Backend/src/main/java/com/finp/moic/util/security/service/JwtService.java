@@ -19,8 +19,8 @@ public class JwtService {
     private final String secretKey;
 
     //30분
-    private final long expirationHours = 60 * 30;
-//    private final long expirationHours = 30;
+//    private final long expirationHours = 60 * 30;
+    private final long expirationHours = 30;
     private final String issuer;
 
     //30일

@@ -46,9 +46,9 @@ public enum ExceptionEnum {
     MAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"E002", "메일 전송에 실패하였습니다."),
 
     // 8. SECURITY ERROR(SE)
-    EXPIRED_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SE001", "토큰이 만료되었습니다."),
-    INVALID_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SE002", "토큰이 유효하지 않습니다."),
-    RE_LOGIN(HttpStatus.INTERNAL_SERVER_ERROR, "SE003", "다시 로그인 해주세요."),
+    EXPIRED_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "SE001", "토큰이 만료되었습니다."),
+    INVALID_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "SE002", "토큰이 유효하지 않습니다."),
+    RE_LOGIN(HttpStatus.UNAUTHORIZED, "SE003", "다시 로그인 해주세요."),
     HANDLE_ACCESS_DENIED(HttpStatus.FORBIDDEN, "SE004", "접근권한이 없습니다."),
     UNAUTHENTICATED_MEMBER(HttpStatus.UNAUTHORIZED,"SE005","인증되지 않은 사용자입니다."),
     FORGERY_DATA(HttpStatus.BAD_REQUEST,"SE006","유효한 값이 아닙니다."),
