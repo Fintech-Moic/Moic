@@ -116,19 +116,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void isIdValidate(UserIdCheckRequestDTO dto){
+    public boolean isIdValidate(UserIdCheckRequestDTO dto){
         Optional<User> byId = userRepository.findById(dto.getId());
         if(byId.isPresent()){
-            throw new AlreadyExistException(ExceptionEnum.USER_REGIST_DUPLICATE);
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void isEmailValidate(UserEmailCheckRequestDTO dto){
+    public boolean isEmailValidate(UserEmailCheckRequestDTO dto){
         User user = userRepository.findByEmail(dto.getEmail());
         if(user!=null){
-            throw new AlreadyExistException(ExceptionEnum.USER_REGIST_DUPLICATE);
+            return false;
         }
+        return true;
     }
 
     @Override
