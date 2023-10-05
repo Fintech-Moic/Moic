@@ -23,11 +23,8 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
         this.queryFactory = queryFactory;
     }
 
-    /**
-     * TO DO :: 필요한 칼럼만 받고, DTO로 리턴하도록 수정
-     **/
     @Override
-    public List<GiftResponseDTO> findAllByShopName(String shopName) {
+    public List<GiftResponseDTO> findAllByUserIdAndShopName(String userId, String shopName) {
         QGiftcard giftcard=QGiftcard.giftcard;
 
         return queryFactory
@@ -38,9 +35,13 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
                         )
                 )
                 .from(giftcard)
-                .where(giftcard.shopName.eq(shopName))
+                .where(
+                        giftcard.user.id.eq(userId)
+                        .and(giftcard.shopName.eq(shopName))
+                )
                 .fetch();
     }
+
     @Override
     public List<String> findAllShopNameByUserId(String userId) {
         QGiftcard giftcard=QGiftcard.giftcard;
@@ -67,5 +68,4 @@ public class GiftcardRepositoryImpl implements GiftcardRepositoryCustom{
                 .where(giftcard.user.id.eq(userId))
                 .fetch();
     }
-
 }

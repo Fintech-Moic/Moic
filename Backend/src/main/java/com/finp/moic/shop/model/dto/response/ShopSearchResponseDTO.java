@@ -13,6 +13,7 @@ public class ShopSearchResponseDTO {
     private String shopName;
     private String shopLocation;
     private String address;
+    private boolean bookmark;
     private double latitude;
     private double longitude;
     private boolean benefits;
@@ -30,11 +31,14 @@ public class ShopSearchResponseDTO {
         this.shopName = shopName;
         this.shopLocation = shopLocation;
         this.address = address;
+        this.bookmark=false;
         this.latitude = latitude;
         this.longitude = longitude;
         this.benefits=false;
         this.gifts=false;
     }
+
+    public void setBookmark(boolean bookmark) { this.bookmark = bookmark; }
 
     public void setBenefits(boolean flag){
         this.benefits=flag;

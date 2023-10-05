@@ -31,9 +31,10 @@ public class ShopController {
 
     @GetMapping("/map/shops/detail")
     public ResponseEntity<ResponseDTO> detailShop(@RequestParam("shopName") @NotBlank String shopName,
-                                                  @RequestParam("shopLocation") @NotNull String shopLocation){
+                                                  @RequestParam("shopLocation") @NotNull String shopLocation,
+                                                  @AuthenticationPrincipal UserAuthentication userAuthentication){
 
-        ShopDetailResponseDTO response= shopService.detailShop(shopName, shopLocation);
+        ShopDetailResponseDTO response= shopService.detailShop(shopName, shopLocation, userAuthentication.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.builder()
                 .message("내 카드혜택, 기프티콘 가맹점 상세 조회")
