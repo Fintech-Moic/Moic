@@ -1,7 +1,5 @@
 package com.finp.moic.util.security.filter;
 
-import com.finp.moic.util.exception.ExceptionEnum;
-import com.finp.moic.util.exception.list.TokenException;
 import com.finp.moic.util.security.dto.UserAuthentication;
 import com.finp.moic.util.security.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -51,11 +49,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             jwtService.validateToken(token);
         }catch(ExpiredJwtException expiredJwtException){
             filterChain.doFilter(request,response);
-            System.out.println("만료 토큰 받음!");
             return;
         }catch (JwtException | IllegalArgumentException | NullPointerException e){
             filterChain.doFilter(request,response);
-            System.out.println("조작 토큰 받음!");
             return;
         }
 
@@ -77,9 +73,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String parseBearerToken(HttpServletRequest request) {
         String authorization = request.getHeader(AUTHORIZATION);
-//        if(authorization==null){
-//            throw new TokenException(ExceptionEnum.INVALID_TOKEN_ERROR);
-//        }
         return authorization;
     }
 
