@@ -34,19 +34,19 @@ public class RedisService {
     /* 성재 : Auto Complete 작성 부분 남겨두기 */
 
     /***** [Refresh Token] *****/
-    public void setRefreshToken(String refreshToken, String userId){
+    public void setRefreshToken(String userId, String refreshToken){
         // key : refresh, value : userId
-        securityRedis.opsForValue().set(refreshToken,userId);
+        securityRedis.opsForValue().set(userId,refreshToken);
         //30일
-        securityRedis.expire(refreshToken,30L, TimeUnit.DAYS);
+        securityRedis.expire(userId,30L, TimeUnit.DAYS);
     }
 
-    public String getRefreshToken(String refreshToken){
-        return securityRedis.opsForValue().get(refreshToken);
+    public String getRefreshToken(String userId){
+        return securityRedis.opsForValue().get(userId);
     }
 
-    public boolean deleteRefreshToken(String refreshToken){
-        return securityRedis.delete(refreshToken);
+    public boolean deleteRefreshToken(String userId){
+        return securityRedis.delete(userId);
     }
 
     public void setCertNumber(String userId, String certNumber){

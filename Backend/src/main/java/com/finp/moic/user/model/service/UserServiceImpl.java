@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService{
         String refreshToken = jwtService.createRefreshToken();
 
         //Redis에 저장
-        redisService.setRefreshToken(refreshToken, user.getId());
+        redisService.setRefreshToken(user.getId(), refreshToken);
 
         //Cookie에 refresh 저장
         httpResponse.addCookie(cookieService.createCookie(refreshToken));
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService{
         SecurityContextHolder.clearContext();
 
         // 2. Redis에서 refresh 지우기
-        redisService.deleteRefreshToken(refreshToken);
+        redisService.deleteRefreshToken(userAuthentication.getId());
     }
 
     @Override
