@@ -15,6 +15,7 @@ public class ShopDetailResponseDTO {
     private String shopName;
     private String shopLocation;
     private String address;
+    private boolean bookmark;
     private List<BenefitResponseDTO> benefits;
     private List<GiftResponseDTO> gifts;
 
@@ -29,7 +30,10 @@ public class ShopDetailResponseDTO {
         this.shopName = shopName;
         this.shopLocation = shopLocation;
         this.address = address;
+        this.bookmark=false;
     }
+
+    public void setBookmark(boolean bookmark) { this.bookmark = bookmark; }
 
     public void setBenefits(List<BenefitResponseDTO> benefits){
         this.benefits=benefits;

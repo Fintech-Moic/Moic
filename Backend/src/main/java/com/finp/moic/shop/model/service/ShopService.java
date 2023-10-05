@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ShopService {
 
-    ShopDetailResponseDTO detailShop(String shopName, String ShopLocation);
+    ShopDetailResponseDTO detailShop(String shopName, String ShopLocation, String userId);
 
     List<ShopSearchResponseDTO> searchShop(String keyword, double latitude, double longitude, String userId);
 

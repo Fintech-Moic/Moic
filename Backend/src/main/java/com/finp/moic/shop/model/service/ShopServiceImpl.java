@@ -4,6 +4,7 @@ import com.finp.moic.card.model.repository.jpa.CardBenefitRepository;
 import com.finp.moic.giftCard.model.repository.jpa.GiftcardRepository;
 import com.finp.moic.shop.model.dto.response.*;
 import com.finp.moic.shop.model.repository.ShopRepository;
+import com.finp.moic.userBookmark.model.repository.UserBookmarkRepository;
 import com.finp.moic.util.database.service.CacheRedisService;
 import com.finp.moic.util.database.service.ShopLocationRedisService;
 import com.finp.moic.util.exception.ExceptionEnum;
@@ -20,30 +21,36 @@ public class ShopServiceImpl implements ShopService{
     private final ShopRepository shopRepository;
     private final CardBenefitRepository cardBenefitRepository;
     private final GiftcardRepository giftcardRepository;
+    private final UserBookmarkRepository userBookmarkRepository;
     private final ShopLocationRedisService shopLocationRedisService;
     private final CacheRedisService cacheRedisService;
 
     @Autowired
     public ShopServiceImpl(ShopRepository shopRepository, CardBenefitRepository cardBenefitRepository,
-                           GiftcardRepository giftcardRepository, ShopLocationRedisService shopLocationRedisService,
-                           CacheRedisService cacheRedisService) {
+                           GiftcardRepository giftcardRepository, UserBookmarkRepository userBookmarkRepository,
+                           ShopLocationRedisService shopLocationRedisService, CacheRedisService cacheRedisService) {
         this.shopRepository = shopRepository;
         this.cardBenefitRepository = cardBenefitRepository;
         this.giftcardRepository = giftcardRepository;
+        this.userBookmarkRepository = userBookmarkRepository;
         this.shopLocationRedisService = shopLocationRedisService;
         this.cacheRedisService = cacheRedisService;
     }
 
     @Override
-    public ShopDetailResponseDTO detailShop(String shopName, String shopLocation) {
+    public ShopDetailResponseDTO detailShop(String shopName, String shopLocation, String userId) {
 
         /** Validation, RDB Access **/
         ShopDetailResponseDTO dto=shopRepository
                 .findByNameAndLocation(shopName,shopLocation)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.SHOP_NOT_FOUND));
 
-        List<BenefitResponseDTO> benefitDTOList=cardBenefitRepository.findAllByShopName(shopName);
-        List<GiftResponseDTO> giftcardDTOList=giftcardRepository.findAllByShopName(shopName);
+        if(userBookmarkRepository.exist(userId,shopName,shopLocation)){
+            dto.setBookmark(true);
+        }
+
+        List<BenefitResponseDTO> benefitDTOList=cardBenefitRepository.findAllByUserIdAndShopName(userId,shopName);
+        List<GiftResponseDTO> giftcardDTOList=giftcardRepository.findAllByUserIdAndShopName(userId,shopName);
 
         /** DTO Builder **/
         dto.setBenefits(benefitDTOList);

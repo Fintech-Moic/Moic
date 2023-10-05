@@ -9,6 +9,8 @@ import com.finp.moic.card.model.entity.QUserCard;
 import com.finp.moic.shop.model.dto.response.BenefitResponseDTO;
 import com.finp.moic.shop.model.dto.response.QBenefitResponseDTO;
 import com.finp.moic.shop.model.entity.QShop;
+import com.finp.moic.user.model.entity.QUser;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,10 +59,10 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
                 .fetch();
     }
 
-
     @Override
-    public List<BenefitResponseDTO> findAllByShopName(String shopName) {
+    public List<BenefitResponseDTO> findAllByUserIdAndShopName(String userId, String shopName) {
         QCardBenefit cardBenefit=QCardBenefit.cardBenefit;
+        QUserCard userCard=QUserCard.userCard;
 
         return queryFactory
                 .select(
@@ -74,7 +76,14 @@ public class CardBenefitRepositoryImpl implements CardBenefitRepositoryCustom{
                         )
                 )
                 .from(cardBenefit)
-                .where(cardBenefit.shopName.eq(shopName))
+                .where(
+                        cardBenefit.card.in(
+                                JPAExpressions.select(userCard.card)
+                                        .from(userCard)
+                                        .where(userCard.user.id.eq(userId))
+                        )
+                                        .and(cardBenefit.shopName.eq(shopName))
+                )
                 .fetch();
     }
 
