@@ -16,7 +16,6 @@ import com.finp.moic.util.exception.ExceptionEnum;
 import com.finp.moic.util.exception.list.AlreadyExistException;
 import com.finp.moic.util.exception.list.NotFoundException;
 import jakarta.annotation.PostConstruct;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -137,7 +136,7 @@ public class CardServiceImpl implements CardService {
         /*** Validation ***/
         User user=userRepository.findById(userId)
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
-        UserCard userCard=userCardRepository.findByCardName(cardDeleteRequestDTO.getCardName())
+        UserCard userCard=userCardRepository.findByUserIdAndCardName(userId,cardDeleteRequestDTO.getCardName())
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.CARD_USER_NOT_FOUND));
 
         /*** RDB Access ***/

@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserCardRepository extends JpaRepository<UserCard,Long>, UserCardRepositoryCustom {
 
-    Optional<UserCard> findByCardName(String cardName);
+    Optional<UserCard> findByUserIdAndCardName(String userId,String cardName);
 
 }
