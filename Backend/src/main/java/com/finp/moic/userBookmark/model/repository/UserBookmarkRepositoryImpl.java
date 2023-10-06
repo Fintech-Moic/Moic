@@ -54,6 +54,7 @@ public class UserBookmarkRepositoryImpl implements UserBookmarkRepositoryCustom{
                         )
                 )
                 .from(userBookmark)
+                .where(userBookmark.user.id.eq(userId))
                 .fetch();
     }
 
