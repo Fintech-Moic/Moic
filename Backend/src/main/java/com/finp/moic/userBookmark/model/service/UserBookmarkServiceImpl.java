@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserBookmarkServiceImpl implements UserBookmarkService{
@@ -79,8 +80,11 @@ public class UserBookmarkServiceImpl implements UserBookmarkService{
                 .orElseThrow(()->new NotFoundException(ExceptionEnum.USER_NOT_FOUND));
 
         /*** RDB Access ***/
-        for(ShopRequestDTO shop:userBookmarkDeleteRequestDTO.getShopList()){
-            UserBookmark userBookmark=userBookmarkRepository.findByUserIdAndShopSeq(user.getId(),shop.getShopName(),shop.getShopLocation())
+        for(ShopRequestDTO shopDTO:userBookmarkDeleteRequestDTO.getShopList()){
+            Long shopSeq=shopRepository.findSeqByNameAndLocation(shopDTO.getShopName(),shopDTO.getShopLocation())
+                    .orElseThrow(()->new NotFoundException(ExceptionEnum.SHOP_NOT_FOUND));
+
+            UserBookmark userBookmark=userBookmarkRepository.findByUserIdAndShopSeq(user.getId(),shopSeq)
                     .orElseThrow(()->new NotFoundException(ExceptionEnum.BOOKMARK_DELETE_ERROR));
             userBookmarkRepository.delete(userBookmark);
         }

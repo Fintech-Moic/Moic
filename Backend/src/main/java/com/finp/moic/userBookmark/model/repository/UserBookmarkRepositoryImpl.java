@@ -39,21 +39,6 @@ public class UserBookmarkRepositoryImpl implements UserBookmarkRepositoryCustom{
     }
 
     @Override
-    public Optional<UserBookmark> findByUserIdAndShopSeq(String id, String shopName, String shopLocation) {
-        QUserBookmark userBookmark=QUserBookmark.userBookmark;
-
-        return Optional.ofNullable(queryFactory
-                .select(userBookmark)
-                .from(userBookmark)
-                .where(
-                        userBookmark.user.id.eq(id)
-                                .and(userBookmark.shop.name.eq(shopName))
-                                .and(userBookmark.shop.location.eq(shopLocation))
-                )
-                .fetchOne());
-    }
-
-    @Override
     public List<UserBookmarkLookupResponseDTO> findAllByUserId(String userId) {
         QUserBookmark userBookmark=QUserBookmark.userBookmark;
 
@@ -70,5 +55,16 @@ public class UserBookmarkRepositoryImpl implements UserBookmarkRepositoryCustom{
                 )
                 .from(userBookmark)
                 .fetch();
+    }
+
+    @Override
+    public Optional<UserBookmark> findByUserIdAndShopSeq(String id, Long shopSeq) {
+        QUserBookmark userBookmark=QUserBookmark.userBookmark;
+
+        return Optional.ofNullable(queryFactory
+                .selectFrom(userBookmark)
+                .where(userBookmark.user.id.eq(id)
+                        .and(userBookmark.shop.shopSeq.eq(shopSeq)))
+                .fetchOne());
     }
 }

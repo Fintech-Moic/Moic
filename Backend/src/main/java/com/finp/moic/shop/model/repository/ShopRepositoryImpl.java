@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class ShopRepositoryImpl implements ShopRepositoryCustom{
@@ -98,5 +99,19 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
                                 .and(shop.category.eq(subCategory))
                 )
                 .fetch();
+    }
+
+    @Override
+    public Optional<Long> findSeqByNameAndLocation(String shopName, String shopLocation) {
+        QShop shop=QShop.shop;
+
+        return Optional.ofNullable(queryFactory
+                        .select(shop.shopSeq)
+                        .from(shop)
+                        .where(
+                                shop.name.contains(shopName)
+                                        .and(shop.location.contains(shopLocation))
+                        )
+                        .fetchOne());
     }
 }
