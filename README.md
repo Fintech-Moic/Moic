@@ -100,10 +100,10 @@
     </tr>
     <tr align="center">
         <td>
-            ![스플래시](https://github.com/Hyeon0706/imageRepository/assets/83438780/a3fdf1af-be01-44f3-8312-71b77191c296)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/a3fdf1af-be01-44f3-8312-71b77191c296" alt="스플래시">
         </td>
         <td>
-            ![로그인](https://github.com/Hyeon0706/imageRepository/assets/83438780/31932f9a-c113-4372-837b-ad4c34124510)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/31932f9a-c113-4372-837b-ad4c34124510" alt="로그인">
         </td>
     </tr>
 </table>
@@ -123,13 +123,13 @@
     </tr>
     <tr align="center">
         <td>
-            ![회원가입1](https://github.com/Hyeon0706/imageRepository/assets/83438780/5758873e-73ca-4360-aa35-1787ab5f410b)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/5758873e-73ca-4360-aa35-1787ab5f410b" alt="회원가입1">
         </td>
         <td>
-            ![회원가입2](https://github.com/Hyeon0706/imageRepository/assets/83438780/e4725afb-47d3-483b-bc12-7628fb42bb59)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/e4725afb-47d3-483b-bc12-7628fb42bb59" alt="회원가입2">
         </td>
         <td>
-            ![회원가입3](https://github.com/Hyeon0706/imageRepository/assets/83438780/79f869aa-ecd3-4151-8d15-6c688015f239)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/79f869aa-ecd3-4151-8d15-6c688015f239" alt="회원가입3">
         </td>
     </tr>
 </table>
@@ -147,13 +147,13 @@
     </tr>
     <tr align="center">
         <td>
-            ![아이디찾기1](https://github.com/Hyeon0706/imageRepository/assets/83438780/e37e4508-f4c3-4ec5-86a6-9a4957452446)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/e37e4508-f4c3-4ec5-86a6-9a4957452446" alt="아이디찾기1">
         </td>
         <td>
-            ![아이디찾기2](https://github.com/Hyeon0706/imageRepository/assets/83438780/591ba2e8-0352-4c69-aedf-556ef7be305d)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/591ba2e8-0352-4c69-aedf-556ef7be305d" alt="아이디찾기2">
         </td>
         <td>
-            ![아이디찾기3](https://github.com/Hyeon0706/imageRepository/assets/83438780/e29625d1-8eb2-4f93-a693-28f3cb4c8752)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/e29625d1-8eb2-4f93-a693-28f3cb4c8752" alt="아이디찾기3">
         </td>
     </tr>
 </table>
@@ -170,10 +170,10 @@
     </tr>
     <tr align="center">
         <td>
-            ![메인1](https://github.com/Hyeon0706/imageRepository/assets/83438780/d4a52d9d-c0a5-4eef-a123-f669f4d93313)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/d4a52d9d-c0a5-4eef-a123-f669f4d93313" alt="메인1">
         </td>
         <td>
-            ![메인2](https://github.com/Hyeon0706/imageRepository/assets/83438780/aa4e987a-7e08-4788-b48d-8e41ba52cdd0)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/aa4e987a-7e08-4788-b48d-8e41ba52cdd0" alt="메인2">
         </td>
     </tr>
 </table>
@@ -193,13 +193,13 @@
     </tr>
     <tr align="center">
         <td>
-            ![회원정보1](https://github.com/Hyeon0706/imageRepository/assets/83438780/e42da023-4d2b-4de6-9c9f-29d7a5aaf689)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/e42da023-4d2b-4de6-9c9f-29d7a5aaf689" alt="회원정보1">
         </td>
         <td>
-            ![회원정보2](https://github.com/Hyeon0706/imageRepository/assets/83438780/0d976389-a5a8-444a-9900-c5b219143a0c)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/0d976389-a5a8-444a-9900-c5b219143a0c" alt="회원정보2">
         </td>
         <td>
-            ![회원정보3](https://github.com/Hyeon0706/imageRepository/assets/83438780/b2e9903a-ff77-4618-b5ef-471887b88f0e)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/b2e9903a-ff77-4618-b5ef-471887b88f0e" alt="회원정보3">
         </td>
     </tr>
 </table>
@@ -213,10 +213,10 @@
     </tr>
     <tr align="center">
         <td>
-            ![북마크](https://github.com/Hyeon0706/imageRepository/assets/83438780/2e0d118d-3952-4cf0-b3ce-6bdc7448e4c9)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/2e0d118d-3952-4cf0-b3ce-6bdc7448e4c9" alt="북마크">
         </td>
         <td>
-            ![문의](https://github.com/Hyeon0706/imageRepository/assets/83438780/73fa5d1a-e29a-4579-ad93-e4f385de2d9e)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/73fa5d1a-e29a-4579-ad93-e4f385de2d9e" alt="문의">
         </td>
     </tr>
 </table>
@@ -234,13 +234,13 @@
     </tr>
     <tr align="center">
         <td>
-            ![카드1](https://github.com/Hyeon0706/imageRepository/assets/83438780/7429f61b-68e8-4f6a-946c-c6d2eea7eca3)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/7429f61b-68e8-4f6a-946c-c6d2eea7eca3" alt="카드1">
         </td>
         <td>
-            ![카드2](https://github.com/Hyeon0706/imageRepository/assets/83438780/b928cbd5-a304-43db-b379-f600e2e0d656)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/b928cbd5-a304-43db-b379-f600e2e0d656" alt="카드2">
         </td>
         <td>
-            ![카드3](https://github.com/Hyeon0706/imageRepository/assets/83438780/98aa4d0e-0a66-4783-9514-b82383aab222)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/98aa4d0e-0a66-4783-9514-b82383aab222" alt="카드3">
         </td>
     </tr>
 </table>
@@ -255,13 +255,13 @@
     </tr>
     <tr align="center">
         <td>
-            ![지도1](https://github.com/Hyeon0706/imageRepository/assets/83438780/52906356-9abd-4e9a-8cc9-d0f6bdfba54e)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/52906356-9abd-4e9a-8cc9-d0f6bdfba54e" alt="지도1">
         </td>
         <td>
-            ![지도2](https://github.com/Hyeon0706/imageRepository/assets/83438780/8a9ed5b3-2be6-402b-b1c9-4424ad39dd98)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/8a9ed5b3-2be6-402b-b1c9-4424ad39dd98" alt="지도2">
         </td>
         <td>
-            ![지도3](https://github.com/Hyeon0706/imageRepository/assets/83438780/aa13e357-c54a-4bd5-9dc6-5da2d2232d08)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/aa13e357-c54a-4bd5-9dc6-5da2d2232d08" alt="지도3">
         </td>
     </tr>
 </table>
@@ -281,19 +281,19 @@
     </tr>
     <tr align="center">
         <td>
-            ![기프티콘1](https://github.com/Hyeon0706/imageRepository/assets/83438780/7b3656f5-84c8-45ba-861f-da9b3640dfb4)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/7b3656f5-84c8-45ba-861f-da9b3640dfb4" alt="기프티콘1">
         </td>
         <td>
-            ![기프티콘2](https://github.com/Hyeon0706/imageRepository/assets/83438780/f8308b4b-dca1-4609-b52a-9722195942da)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/f8308b4b-dca1-4609-b52a-9722195942da" alt="기프티콘2">
         </td>
         <td>
-            ![기프티콘3](https://github.com/Hyeon0706/imageRepository/assets/83438780/7e5231d0-7d58-4df9-8f60-6bc6d131ded3)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/7e5231d0-7d58-4df9-8f60-6bc6d131ded3" alt="기프티콘3">
         </td>
         <td>
-            ![기프티콘4](https://github.com/Hyeon0706/imageRepository/assets/83438780/0fbf8763-f45d-4493-aa99-0cd92dccefe5)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/0fbf8763-f45d-4493-aa99-0cd92dccefe5" alt="기프티콘4">
         </td>
         <td>
-            ![기프티콘5](https://github.com/Hyeon0706/imageRepository/assets/83438780/c68f58b3-45bc-4d1d-885a-bdfd3b4494e9)
+            <img src="https://github.com/Hyeon0706/imageRepository/assets/83438780/c68f58b3-45bc-4d1d-885a-bdfd3b4494e9" alt="기프티콘5">
         </td>
     </tr>
 </table>
