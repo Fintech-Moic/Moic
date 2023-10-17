@@ -2,15 +2,16 @@ import { UseFormRegister, FieldValues } from 'react-hook-form';
 
 /**
  * @param {UseFormRegister<FieldValues>} register React-Hook-Form에서 값 등록에 사용되는 props
- * @param {any} errors React-Hook-Form에서 error처리에 사용되는 props
+ * @param {Any} errors React-Hook-Form에서 error처리에 사용되는 props
  * @param {() => void} onSubmit React-Hook-Form에서 등록에 사용되는 함수
+ * @param {String} watch ;
  */
 
 export interface ReactHookFormType {
   register: UseFormRegister<FieldValues>;
   errors: any;
   onSubmit: () => void;
-  watch?: any;
+  watch?: string;
 }
 /** ProgressBar Component
  * @param {String} percent ProgressBar의 퍼센테이지, width를 이용해 작성
