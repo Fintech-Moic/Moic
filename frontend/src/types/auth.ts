@@ -1,15 +1,15 @@
-import { UseFormRegister, FieldValues } from 'react-hook-form';
+import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
 
 /**
  * @param {UseFormRegister<FieldValues>} register React-Hook-Form에서 값 등록에 사용되는 props
- * @param {Any} errors React-Hook-Form에서 error처리에 사용되는 props
+ * @param {FieldErrors<FieldValues>} errors React-Hook-Form에서 error처리에 사용되는 props
  * @param {() => void} onSubmit React-Hook-Form에서 등록에 사용되는 함수
- * @param {String} watch ;
+ * @param {String} watch React-Hook-Form에서 입력값 추적에 사용되는 props;
  */
 
 export interface ReactHookFormType {
   register: UseFormRegister<FieldValues>;
-  errors: any;
+  errors: FieldErrors<FieldValues>;
   onSubmit: () => void;
   watch?: string;
 }
