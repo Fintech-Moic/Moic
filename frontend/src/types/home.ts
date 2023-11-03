@@ -13,7 +13,7 @@ export interface DropdownItem {
  * @param {String} items 클릭 시 이동될 경로
  * @param {() => void} onClick Callback 함수
  * @param {React.MouseEventHandler<HTMLButtonElement>} signOut
- * @returns {JSX.Element} borderRadius button의 테두리 기울기
+ * @returns {JSX.Element} HomeDropDown 컴포넌트
  */
 export interface HomeDropDownProps {
   isOpen: boolean;
