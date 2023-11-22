@@ -91,8 +91,7 @@
 - Framer-Motion 10.16.4
 
 
-## :star2: 시나리오
-
+## :star2: 시나리오([시연 영상](https://youtu.be/vNfzS5zWNRc?si=CNT6-2iqyX01nP6v))
 <table>
     <tr align="center">
         <td><B>스플래시</B></td>
