@@ -30,4 +30,68 @@ module.exports = withPWA({
     ],
   },
   reactStrictMode: false,
+  async redirects() {
+    return [
+      {
+        source: '/auth/:path*',
+        has: [
+          {
+            type: 'cookie',
+            key: 'refreshToken',
+            value: 'true',
+          },
+        ],
+        permanent: true,
+        destination: '/home',
+      },
+      {
+        source: '/home',
+        destination: '/auth/signIn',
+        permanent: true,
+        has: [
+          {
+            type: 'cookie',
+            key: 'refreshToken',
+            value: 'false',
+          },
+        ],
+      },
+      {
+        source: '/map/:path*',
+        destination: '/auth/signIn',
+        permanent: true,
+        has: [
+          {
+            type: 'cookie',
+            key: 'refreshToken',
+            value: 'false',
+          },
+        ],
+      },
+      {
+        source: '/mypage/:path*',
+        destination: '/auth/signIn',
+        permanent: true,
+        has: [
+          {
+            type: 'cookie',
+            key: 'refreshToken',
+            value: 'false',
+          },
+        ],
+      },
+      {
+        source: '/profit/:path*',
+        destination: '/auth/signIn',
+        permanent: true,
+        has: [
+          {
+            type: 'cookie',
+            key: 'refreshToken',
+            value: 'false',
+          },
+        ],
+      },
+    ];
+  },
 });
