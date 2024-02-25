@@ -7,11 +7,9 @@ import SignInForm from '../organisms/SignInForm';
 import Divider from '../atoms/Divider';
 import { signInApi } from '@/api/auth';
 import TextButton from '@/components/atoms/TextButton';
-import { useAlreadySignInChecker } from '@/hooks/useSignInChecker';
 import TitleSentence from '@/components/atoms/TitleSentence';
 
 export default function Page() {
-  useAlreadySignInChecker();
   const {
     register,
     handleSubmit,
