@@ -13,11 +13,9 @@ import SignUpAccountForm from '../organisms/SignUpAccountForm';
 import AuthSuccessForm from '../organisms/AuthSuccessForm';
 import BothButtonGroup from '@/components/molecules/BothButtonGroup';
 import { signUpApi } from '@/api/auth';
-import { useAlreadySignInChecker } from '@/hooks/useSignInChecker';
 import TitleSentence from '@/components/atoms/TitleSentence';
 
 export default function Page() {
-  useAlreadySignInChecker();
   const {
     register,
     watch,
